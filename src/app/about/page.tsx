@@ -1,9 +1,16 @@
+"use client"
+
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/footer";
+import { toast } from "sonner";
 
 export default function AboutPage() {
+  const handleJoinEpidemic = () => {
+    toast.success("Idk what this means yet :)")
+  }
+
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       <div className="max-w-2xl w-full space-y-8 text-center h-full flex flex-col flex-1 justify-center">
@@ -24,7 +31,7 @@ export default function AboutPage() {
           with patient 0. Will it be you?
         </p>
         <div className="flex justify-center">
-          <Button className="font-semibold">
+          <Button className="font-semibold" onClick={handleJoinEpidemic}>
             Join the Epidemic
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>

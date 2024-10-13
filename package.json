@@ -9,15 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.1",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "drizzle-orm": "^0.34.1",
     "lucide-react": "^0.381.0",
     "next": "14.2.3",
     "next-themes": "^0.3.0",
+    "posthog-js": "^1.167.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-markdown": "^9.0.1",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"
@@ -26,6 +30,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.25.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "eslint-plugin-tailwindcss": "^3.17.0",

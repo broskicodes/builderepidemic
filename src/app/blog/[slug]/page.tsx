@@ -2,7 +2,7 @@
 
 import { BlogPost } from "@/components/blog/blog-post";
 import Footer from "@/components/layout/footer";
-// import Header from "@/components/layout/header";
+import { Header } from "@/components/layout/header";
 import { useParams } from "next/navigation";
 import posthog from "posthog-js";
 import { useEffect } from "react";
@@ -21,7 +21,7 @@ export default function BlogPostPage() {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <BlogPost slug={slug} />
       <Footer />
     </div>

@@ -3,9 +3,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MobileNavbar } from "@/components/layout/mobile-navbar";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 
 export function Header() {
     const handleJoinEpidemic = () => {
+      posthog.capture("cta-clicked")
         toast.success("Idk what this means yet :)")
      }
 

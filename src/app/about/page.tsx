@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/footer";
 import { toast } from "sonner";
 import { Header } from "@/components/layout/header";
+import posthog from "posthog-js";
 
 export default function AboutPage() {
   const handleJoinEpidemic = () => {
+    posthog.capture("cta-clicked")
     toast.success("Idk what this means yet :)")
   }
 

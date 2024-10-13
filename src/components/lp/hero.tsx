@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import SocialProofUsers from "./social-proof-users";
 import { toast } from "sonner";
+import posthog from "posthog-js";
 
 export default function Hero() {
     const handleJoinEpidemic = () => {
+      posthog.capture("cta-clicked")
        toast.success("Idk what this means yet :)")
     }
 

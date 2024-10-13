@@ -10,3 +10,18 @@ export async function GET() {
 
     return NextResponse.json(posts.reverse());
 }
+
+export async function POST(request: Request) {
+    const { title, content, slug, author, description, image_url } = await request.json();
+
+    const newPost = await db.insert(blogposts).values({
+        title,
+        content,
+        slug,
+        author,
+        description,
+        image_url,
+    });
+
+    return NextResponse.json(newPost);
+}

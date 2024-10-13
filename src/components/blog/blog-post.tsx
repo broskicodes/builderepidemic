@@ -46,37 +46,35 @@ export const BlogPost = ({ slug }: { slug: string }) => {
 
   const handleSubscribe = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
-  //     e.preventDefault();
+      e.preventDefault();
 
-  //     setLoading(true);
+      setLoading(true);
 
-  //     // const userEmail = form.getValues("email");
-  //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //     if (!emailRegex.test(email)) {
-  //       toast.error("Please enter a valid email address");
-  //       setLoading(false);
-  //       return;
-  //     }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        toast.error("Please enter a valid email address");
+        setLoading(false);
+        return;
+      }
 
-  //     const response = await fetch(`${CONSOLE_API_URL}/users/subscribe`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         "user-id": user?.id || "",
-  //       },
-  //       method: "POST",
-  //       body: JSON.stringify({ email }),
-  //     });
+      const response = await fetch(`/api/subscribe`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
 
-  //     if (response.ok) {
-  //       setEmail("");
-  //       setRegistered(true);
-  //       posthog.capture("newlestter-sub", { email });
-  //     } else {
-  //       toast.error("An error occurred while subscribing");
-  //       posthog.capture("newlestter-sub-failed", { email });
-  //     }
+      if (response.ok) {
+        setEmail("");
+        setRegistered(true);
+        posthog.capture("newlestter-sub", { email });
+      } else {
+        toast.error("An error occurred while subscribing");
+        posthog.capture("newlestter-sub-failed", { email });
+      }
 
-  //     setLoading(false);
+      setLoading(false);
     },
     [email],
   );

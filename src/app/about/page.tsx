@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/footer";
 import { toast } from "sonner";
+import { Header } from "@/components/layout/header";
 
 export default function AboutPage() {
   const handleJoinEpidemic = () => {
@@ -12,7 +13,8 @@ export default function AboutPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+    <main className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
+      <Header />
       <div className="max-w-2xl w-full space-y-8 text-center h-full flex flex-col flex-1 justify-center">
         <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
           The Builder Epidemic

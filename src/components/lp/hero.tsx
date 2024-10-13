@@ -25,9 +25,6 @@ export default function Hero() {
             Join the Epidemic
           </Button>
         </div>
-        <div className="relative sm:mt-8">
-          <div className="absolute inset-0 -z-10 bg-primary/20 [filter:blur(180px)]" />
-        </div>
       </section>
     )
 }

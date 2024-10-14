@@ -39,7 +39,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
     } else {
       toast.error("An error occurred while saving the post");
     }
-  }, []);
+  }, [slug]);
 
   const sendPost = useCallback(async () => {
     console.log("send post");
@@ -197,7 +197,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="flex-grow"
+              className="grow"
             />
             <Button type="submit" disabled={loading}>
               {loading ? "Subscribing..." : "Subscribe"}

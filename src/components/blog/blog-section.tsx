@@ -83,7 +83,7 @@ export const BlogSection = () => {
                   className="w-full h-48 object-cover rounded-t-lg"
                 />
               </CardHeader>
-              <CardContent className="flex-grow p-6">
+              <CardContent className="grow p-6">
                 <h3 className="text-xl font-semibold mb-1">{post.title}</h3>
                 <p className="text-muted-foreground mb-4">{post.description}</p>
                 <div className="flex justify-between items-center">

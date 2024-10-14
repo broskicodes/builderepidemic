@@ -43,4 +43,6 @@ const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, edit
   return <EditorContent editor={editor} />
 });
 
+TiptapContent.displayName = 'TiptapContent';
+
 export default TiptapContent

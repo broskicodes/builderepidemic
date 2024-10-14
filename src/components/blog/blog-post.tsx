@@ -19,7 +19,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
   const router = useRouter();
 
   const tiptapEditorRef = useRef<TiptapContentRef>(null);
-
+  const [canEdit] = useState(false);
   // const { user } = useAuth();
 
   const savePost = useCallback(async () => {
@@ -169,16 +169,18 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         >
           {post.content.replace(/\n/g, "  \n")}
         </ReactMarkdown> */}
-        <TiptapContent content={post.content} editable={false} ref={tiptapEditorRef} />
+        <TiptapContent content={post.content} editable={canEdit} ref={tiptapEditorRef} />
       </div>
-      {/* <div className="mt-12">
-        <Button onClick={savePost}>
+      {canEdit && (
+        <div className="mt-4">
+          <Button onClick={savePost}>
           Save
         </Button>
         <Button onClick={sendPost}>
           Send
-        </Button>
-      </div> */}
+          </Button>
+        </div>
+      )}
       {!registered ? (
         <div className="mt-12 p-6 rounded-lg">
           <h3 className="text-2xl font-semibold mb-2">

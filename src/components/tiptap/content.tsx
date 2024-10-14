@@ -34,10 +34,6 @@ const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, edit
     ],
     content: content,
     editable: editable,
-
-    // onUpdate: ({ editor }) => {
-    //   console.log(editor.getJSON())
-    // }
   })
 
   useImperativeHandle(ref, () => ({

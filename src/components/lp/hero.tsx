@@ -21,7 +21,7 @@ export default function Hero() {
         </h1>
         <div className="grid grid-cols-2 gap-3">
           <Button size="lg" asChild variant="outline" className="cursor-pointer border-border">
-            <Link href="/about">Learn More</Link>
+            <Link href="/blog/why-build">Learn More</Link>
           </Button>
           <Button size="lg" className="cursor-pointer" onClick={handleJoinEpidemic}>
             Join the Epidemic

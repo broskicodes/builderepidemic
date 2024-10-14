@@ -2,12 +2,7 @@ import { BlogPost } from "@/lib/types";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
@@ -68,9 +63,7 @@ export const BlogSection = () => {
   return (
     <section className="flex-1 flex flex-col pt-12 bg-background h-full">
       <div className="flex-1 flex flex-col container mx-auto px-8 h-full">
-        <h2 className="text-3xl font-bold text-center mb-8 text-foreground">
-          Latest Blog Posts
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-8 text-foreground">Latest Blog Posts</h2>
         <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 h-full">
           {currentPosts.map((post) => (
             <Card key={post.slug} className="flex flex-col h-fit">
@@ -87,20 +80,14 @@ export const BlogSection = () => {
                 <h3 className="text-xl font-semibold mb-1">{post.title}</h3>
                 <p className="text-muted-foreground mb-4">{post.description}</p>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    By {post.author}
-                  </span>
-                  <time className="text-sm text-muted-foreground">
-                    {post.date}
-                  </time>
+                  <span className="text-sm text-muted-foreground">By {post.author}</span>
+                  <time className="text-sm text-muted-foreground">{post.date}</time>
                 </div>
               </CardContent>
               <CardFooter className="px-6 pb-6">
                 <Button asChild className="w-full">
                   <Link
-                    onClick={() =>
-                      posthog.capture("blog-clicked", { post: post.slug })
-                    }
+                    onClick={() => posthog.capture("blog-clicked", { post: post.slug })}
                     href={`/blog/${post.slug}`}
                   >
                     Read More
@@ -116,9 +103,7 @@ export const BlogSection = () => {
               <PaginationPrevious
                 href="#"
                 onClick={() => paginate(Math.max(1, currentPage - 1))}
-                className={
-                  currentPage === 1 ? "pointer-events-none opacity-50" : ""
-                }
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
             {[...Array(totalPages)].map((_, index) => (
@@ -136,11 +121,7 @@ export const BlogSection = () => {
               <PaginationNext
                 href="#"
                 onClick={() => paginate(Math.min(totalPages, currentPage + 1))}
-                className={
-                  currentPage === totalPages
-                    ? "pointer-events-none opacity-50"
-                    : ""
-                }
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
           </PaginationContent>

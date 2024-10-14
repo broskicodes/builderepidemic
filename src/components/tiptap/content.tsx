@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import {Markdown} from 'tiptap-markdown'
-import Typography from '@tiptap/extension-typography'
-import Link from '@tiptap/extension-link'
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Markdown } from "tiptap-markdown";
+import Typography from "@tiptap/extension-typography";
+import Link from "@tiptap/extension-link";
 
-import '@/components/tiptap/styles.css'
-import { forwardRef, useImperativeHandle } from 'react'
+import "@/components/tiptap/styles.css";
+import { forwardRef, useImperativeHandle } from "react";
 
 interface TiptapProps {
-  content: string,
-  editable: boolean
+  content: string;
+  editable: boolean;
 }
 
 export interface TiptapContentRef {
@@ -34,15 +34,15 @@ const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, edit
     ],
     content: content,
     editable: editable,
-  })
+  });
 
   useImperativeHandle(ref, () => ({
     getEditor: () => editor,
   }));
 
-  return <EditorContent editor={editor} />
+  return <EditorContent editor={editor} />;
 });
 
-TiptapContent.displayName = 'TiptapContent';
+TiptapContent.displayName = "TiptapContent";
 
-export default TiptapContent
+export default TiptapContent;

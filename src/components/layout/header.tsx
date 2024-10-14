@@ -6,10 +6,10 @@ import { toast } from "sonner";
 import posthog from "posthog-js";
 
 export function Header() {
-    const handleJoinEpidemic = () => {
-      posthog.capture("cta-clicked")
-        toast.success("Idk what this means yet :)")
-     }
+  const handleJoinEpidemic = () => {
+    posthog.capture("cta-clicked");
+    toast.success("Idk what this means yet :)");
+  };
 
   return (
     <header className="container flex items-center justify-between gap-4 sm:gap-10 py-4">
@@ -28,7 +28,7 @@ export function Header() {
       </Link>
       <div className="flex items-center gap-10">
         <nav className="hidden items-center gap-10 md:flex justify-end">
-        <Link
+          <Link
             href="/about"
             className="flex cursor-pointer items-center text-lg font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
           >
@@ -42,9 +42,7 @@ export function Header() {
           </Link>
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <Button onClick={handleJoinEpidemic}>
-              Join the Epidemic
-          </Button>
+          <Button onClick={handleJoinEpidemic}>Join the Epidemic</Button>
         </div>
       </div>
       <MobileNavbar>
@@ -63,7 +61,7 @@ export function Header() {
               Blog
             </Link>
             <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full">
-                Join the Epidemic
+              Join the Epidemic
             </Button>
           </nav>
         </div>

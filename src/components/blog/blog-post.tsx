@@ -173,22 +173,14 @@ export const BlogPost = ({ slug }: { slug: string }) => {
       </div>
       {canEdit && (
         <div className="mt-4">
-          <Button onClick={savePost}>
-          Save
-        </Button>
-        <Button onClick={sendPost}>
-          Send
-          </Button>
+          <Button onClick={savePost}>Save</Button>
+          <Button onClick={sendPost}>Send</Button>
         </div>
       )}
       {!registered ? (
         <div className="mt-12 p-6 rounded-lg">
-          <h3 className="text-2xl font-semibold mb-2">
-            Subscribe to our newsletter
-          </h3>
-          <p className="mb-4">
-            Stay up to date with our latest blog posts and news.
-          </p>
+          <h3 className="text-2xl font-semibold mb-2">Subscribe to our newsletter</h3>
+          <p className="mb-4">Stay up to date with our latest blog posts and news.</p>
           <form onSubmit={handleSubscribe} className="flex gap-2">
             <Input
               type="text"
@@ -206,9 +198,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         </div>
       ) : (
         <div className="mt-12 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-primary">
-            {"You're subscribed!"}
-          </h3>
+          <h3 className="text-xl font-semibold text-primary">{"You're subscribed!"}</h3>
         </div>
       )}
     </article>

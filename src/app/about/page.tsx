@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { ArrowRight } from "lucide-react";
 
@@ -10,9 +10,9 @@ import posthog from "posthog-js";
 
 export default function AboutPage() {
   const handleJoinEpidemic = () => {
-    posthog.capture("cta-clicked")
-    toast.success("Idk what this means yet :)")
-  }
+    posthog.capture("cta-clicked");
+    toast.success("Idk what this means yet :)");
+  };
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center justify-center px-4">

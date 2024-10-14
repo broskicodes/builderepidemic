@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -9,7 +9,7 @@ import { BlogPost as BlogPostType } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import posthog from "posthog-js";
-import TiptapContent from "../tiptap/content";
+import TiptapContent, { TiptapContentRef } from "../tiptap/content";
 
 export const BlogPost = ({ slug }: { slug: string }) => {
   const [email, setEmail] = useState("");
@@ -18,7 +18,32 @@ export const BlogPost = ({ slug }: { slug: string }) => {
   const [post, setPost] = useState<BlogPostType | null>(null);
   const router = useRouter();
 
+  const tiptapEditorRef = useRef<TiptapContentRef>(null);
+
   // const { user } = useAuth();
+
+  const savePost = useCallback(async () => {
+    const editor = tiptapEditorRef.current?.getEditor();
+
+    if (!editor) return;
+
+    const markdown = editor.storage.markdown.getMarkdown();
+
+    const response = await fetch(`/api/blogposts/${slug}`, {
+      method: "POST",
+      body: JSON.stringify({ content: markdown }),
+    });
+
+    if (response.ok) {
+      toast.success("Post saved");
+    } else {
+      toast.error("An error occurred while saving the post");
+    }
+  }, []);
+
+  const sendPost = useCallback(async () => {
+    console.log("send post");
+  }, []);
 
   const fetchPost = useCallback(async () => {
     // if (!user) return;
@@ -144,8 +169,16 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         >
           {post.content.replace(/\n/g, "  \n")}
         </ReactMarkdown> */}
-        <TiptapContent content={post.content} editable={false} />
+        <TiptapContent content={post.content} editable={false} ref={tiptapEditorRef} />
       </div>
+      {/* <div className="mt-12">
+        <Button onClick={savePost}>
+          Save
+        </Button>
+        <Button onClick={sendPost}>
+          Send
+        </Button>
+      </div> */}
       {!registered ? (
         <div className="mt-12 p-6 rounded-lg">
           <h3 className="text-2xl font-semibold mb-2">

@@ -7,13 +7,18 @@ import Typography from '@tiptap/extension-typography'
 import Link from '@tiptap/extension-link'
 
 import '@/components/tiptap/styles.css'
+import { forwardRef, useImperativeHandle } from 'react'
 
 interface TiptapProps {
   content: string,
   editable: boolean
 }
 
-const TiptapContent = ({ content, editable }: TiptapProps) => {
+export interface TiptapContentRef {
+  getEditor: () => ReturnType<typeof useEditor> | null;
+}
+
+const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, editable }, ref) => {
   const editor = useEditor({
     extensions: [
       Markdown.configure({
@@ -30,12 +35,16 @@ const TiptapContent = ({ content, editable }: TiptapProps) => {
     content: content,
     editable: editable,
 
-    onUpdate: ({ editor }) => {
-      console.log(editor.getJSON())
-    }
+    // onUpdate: ({ editor }) => {
+    //   console.log(editor.getJSON())
+    // }
   })
 
+  useImperativeHandle(ref, () => ({
+    getEditor: () => editor,
+  }));
+
   return <EditorContent editor={editor} />
-}
+});
 
 export default TiptapContent

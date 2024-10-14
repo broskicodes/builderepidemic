@@ -1,0 +1,60 @@
+.tiptap {
+    blockquote {
+        border-left: 4px solid hsl(var(--primary));
+        padding-left: 1rem;
+        margin: 1rem 0;
+        font-style: italic;
+    }
+
+    ol {
+        margin-left: 1rem;
+        list-style-type: decimal;
+        font-weight: bold;
+    }
+
+    ul {
+        margin-left: 1rem;
+        list-style-type: disc;
+        margin-bottom: 1rem;
+    }
+
+    li {
+        p {
+            margin-bottom: 0rem;
+            font-weight: normal;
+        }
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    hr {
+        margin: 1rem 0;
+        border-top: 2px solid hsl(var(--primary));
+    }
+
+    p {
+        margin-bottom: 0.7rem;
+    }
+    
+    a {
+        color: hsl(var(--primary));
+        text-decoration: underline;
+        font-weight: 500;
+        cursor: pointer;
+        &:hover {
+            color: hsl(var(--primary) / 0.7);
+        }
+    }
+}

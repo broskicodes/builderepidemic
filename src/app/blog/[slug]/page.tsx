@@ -3,6 +3,7 @@
 import { BlogPost } from "@/components/blog/blog-post";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import Tiptap from "@/components/tiptap/content";
 import { useParams } from "next/navigation";
 import posthog from "posthog-js";
 import { useEffect } from "react";

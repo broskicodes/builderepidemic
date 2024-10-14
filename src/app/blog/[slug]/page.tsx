@@ -21,9 +21,11 @@ export default function BlogPostPage() {
   }, [slug]);
 
   return (
-    <div>
-      <Header />
-      <BlogPost slug={slug} />
+    <div className="flex flex-col min-h-screen w-full bg-background">
+      <main className="flex-1 flex flex-col h-screen w-full bg-background">
+        <Header />
+        <BlogPost slug={slug} />
+      </main>
       <Footer />
     </div>
   );

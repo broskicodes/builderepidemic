@@ -111,12 +111,15 @@ export const BlogPost = ({ slug }: { slug: string }) => {
           components={{
             blockquote: ({ node, ...props }) => (
               <blockquote
-                className="border-l-4 border-gray-300 pl-4 italic my-4"
+                className="border-l-4 border-primary pl-4 italic my-4"
                 {...props}
               />
             ),
+            ol: ({ node, ...props }) => (
+              <ol className="ml-6 list-decimal [&>li::marker]:font-bold my-0" {...props} />
+            ),
             ul: ({ node, ...props }) => (
-              <ul className="ml-6 list-disc my-4" {...props} />
+              <ul className="ml-6 list-disc mb-4" {...props} />
             ),
             h3: ({ node, ...props }) => (
               <h3 className="text-2xl font-semibold mt-4 mb-2" {...props} />
@@ -125,7 +128,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
               <hr className="my-4 border-t-2 border-gray-200" {...props} />
             ),
             p: ({ node, ...props }) => (
-              <p className="mb-2 text-lg" {...props} />
+              <p className="mb-2" {...props} />
             ),
             a: ({ node, ...props }) => (
               <a

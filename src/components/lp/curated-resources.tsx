@@ -12,7 +12,7 @@ export function CuratedResources() {
     },
     {
       title: "Epidemic Blog",
-      description: "Read the latest news and insights from the Epidemic team.",
+      description: "A collection of articles and guides to help you on your builder journey.",
       link: "/blog",
       newTab: false,
     }

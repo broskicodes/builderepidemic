@@ -8,6 +8,13 @@ export function CuratedResources() {
       title: "Recommended Reading",
       description: "A list of books related to marketing, product design, and general builder mindset.",
       link: "https://crystalline-athlete-cc7.notion.site/recommended-reading-11dedcf0f3ba80428dcec83619e3279b?pvs=4",
+      newTab: true,
+    },
+    {
+      title: "Epidemic Blog",
+      description: "Read the latest news and insights from the Epidemic team.",
+      link: "/blog",
+      newTab: false,
     }
   ]
 
@@ -27,7 +34,7 @@ export function CuratedResources() {
                 {resource.description}
               </CardDescription>
             </CardHeader>
-            <a href={resource.link} target="_blank" rel="noopener noreferrer" className="absolute inset-0">
+            <a href={resource.link} target={resource.newTab ? "_blank" : "_self"} rel="noopener noreferrer" className="absolute inset-0">
               <span className="sr-only">Visit {resource.title}</span>
               </a>
             </Card>

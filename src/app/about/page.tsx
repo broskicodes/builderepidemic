@@ -18,7 +18,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-background flex flex-col items-center justify-center px-4">
       <Header />
       <div className="max-w-2xl w-full space-y-6 text-center h-full flex flex-col flex-1 justify-center mt-8 px-4 sm:px-0">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+        <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
           The Builder Epidemic
         </h1>
         <p className="text-base sm:text-xl text-muted-foreground">

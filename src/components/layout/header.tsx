@@ -12,7 +12,7 @@ export function Header() {
      }
 
   return (
-    <header className="container flex items-center justify-between gap-10 py-4">
+    <header className="container flex items-center justify-between gap-4 sm:gap-10 py-4">
       <Link href="/" className="flex items-center gap-3">
         <svg viewBox="0 0 238 238" fill="none" className="size-6 text-primary">
           <path
@@ -57,27 +57,13 @@ export function Header() {
               About
             </Link>
             <Link
-              href="/docs"
-              className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
-            >
-              Docs
-            </Link>
-            <Link
               href="/blog"
               className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
             >
               Blog
             </Link>
-            <Link
-              href="/pricing"
-              className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
-            >
-              Pricing
-            </Link>
-            <Button asChild size="lg" className="mt-2 w-full">
-              <Link href="#" className="cursor-pointer">
-                Get Started
-              </Link>
+            <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full">
+                Join the Epidemic
             </Button>
           </nav>
         </div>

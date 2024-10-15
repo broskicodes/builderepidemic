@@ -10,6 +10,7 @@
     margin-left: 1.5rem;
     list-style-type: decimal;
     font-weight: bold;
+    margin-bottom: 0.5rem;
   }
 
   ul {
@@ -29,14 +30,12 @@
     font-size: 1.75rem;
     font-weight: 600;
     margin-top: 1rem;
-    margin-bottom: 0.5rem;
   }
 
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-top: 1rem;
-    margin-bottom: 0.5rem;
   }
 
   hr {

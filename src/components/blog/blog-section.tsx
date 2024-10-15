@@ -1,26 +1,21 @@
+"use client";
+
 import { BlogPost } from "@/lib/types";
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-// import { CONSOLE_API_URL } from "@/lib/constants";
-// import { useAuth } from "@/providers/auth-provider";
 import posthog from "posthog-js";
 
-export const BlogSection = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  // const { user } = useAuth();
-
+export const BlogSection = ({ posts }: { posts: BlogPost[] }) => {
   const postsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(posts.length / postsPerPage);
@@ -31,33 +26,8 @@ export const BlogSection = () => {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  const fetchPosts = useCallback(async () => {
-    // if (!user) return;
-
-    const response = await fetch(`/api/blogposts/`, {
-      method: "GET",
-    });
-    const data = await response.json();
-
-    setPosts((_) => {
-      return data.map((post: any) => ({
-        ...post,
-        date: new Date(post.created_at).toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }),
-      }));
-    });
-    // setPosts(data);
-  }, []);
-
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
-
   if (posts.length === 0) {
-    return <div className="container mx-auto px-8">Loading...</div>;
+    return <div className="container mx-auto px-8">No posts available.</div>;
   }
 
   return (

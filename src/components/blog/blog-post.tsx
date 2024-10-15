@@ -1,26 +1,23 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+"use client";
+
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
-// import { CONSOLE_API_URL } from "@/lib/constants";
-// import { useAuth } from "@/providers/auth-provider";
 import { BlogPost as BlogPostType } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import posthog from "posthog-js";
 import TiptapContent, { TiptapContentRef } from "../tiptap/content";
 
-export const BlogPost = ({ slug }: { slug: string }) => {
+export const BlogPost = ({ post }: { post: BlogPostType }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [registered, setRegistered] = useState(false);
-  const [post, setPost] = useState<BlogPostType | null>(null);
   const router = useRouter();
 
   const tiptapEditorRef = useRef<TiptapContentRef>(null);
-  const [canEdit] = useState(false);
-  // const { user } = useAuth();
+  const [canEdit] = useState(true);
 
   const savePost = useCallback(async () => {
     const editor = tiptapEditorRef.current?.getEditor();
@@ -29,7 +26,7 @@ export const BlogPost = ({ slug }: { slug: string }) => {
 
     const markdown = editor.storage.markdown.getMarkdown();
 
-    const response = await fetch(`/api/blogposts/${slug}`, {
+    const response = await fetch(`/api/blogposts/${post.slug}`, {
       method: "POST",
       body: JSON.stringify({ content: markdown }),
     });
@@ -39,36 +36,11 @@ export const BlogPost = ({ slug }: { slug: string }) => {
     } else {
       toast.error("An error occurred while saving the post");
     }
-  }, [slug]);
+  }, [post.slug]);
 
   const sendPost = useCallback(async () => {
     console.log("send post");
   }, []);
-
-  const fetchPost = useCallback(async () => {
-    // if (!user) return;
-
-    // if (user.email) {
-    //   setRegistered(true);
-    // }
-
-    const response = await fetch(`/api/blogposts/${slug}`, {
-      method: "GET",
-    });
-
-    const data = await response.json();
-
-    setPost((_) => {
-      return {
-        ...data,
-        date: new Date(data.created_at).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }),
-      };
-    });
-  }, [slug]);
 
   const handleSubscribe = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,14 +77,6 @@ export const BlogPost = ({ slug }: { slug: string }) => {
     [email],
   );
 
-  useEffect(() => {
-    fetchPost();
-  }, [fetchPost]);
-
-  if (!post) {
-    return <div className="container mx-auto px-4 py-8">Loading...</div>;
-  }
-
   return (
     <article className="container mx-auto px-4 py-8 max-w-3xl">
       <Button variant="ghost" className="mb-4" onClick={() => router.back()}>
@@ -133,42 +97,6 @@ export const BlogPost = ({ slug }: { slug: string }) => {
         <time>{post.date}</time>
       </div>
       <div className="prose prose-lg w-full text-foreground">
-        {/* <ReactMarkdown
-          components={{
-            blockquote: ({ node, ...props }) => (
-              <blockquote
-                className="border-l-4 border-primary pl-4 italic my-4"
-                {...props}
-              />
-            ),
-            ol: ({ node, ...props }) => (
-              <ol className="ml-6 list-decimal [&>li::marker]:font-bold my-0" {...props} />
-            ),
-            ul: ({ node, ...props }) => (
-              <ul className="ml-6 list-disc mb-4" {...props} />
-            ),
-            h2: ({ node, ...props }) => (
-              <h2 className="text-3xl font-semibold mt-4 mb-2" {...props} />
-            ),
-            h3: ({ node, ...props }) => (
-              <h3 className="text-2xl font-semibold mt-4 mb-2" {...props} />
-            ),
-            hr: ({ node, ...props }) => (
-              <hr className="my-4 border-t-2 border-gray-200" {...props} />
-            ),
-            p: ({ node, ...props }) => (
-              <p className="mb-2" {...props} />
-            ),
-            a: ({ node, ...props }) => (
-              <a
-                className="text-primary hover:text-primary/70 underline"
-                {...props}
-              />
-            ),
-          }}
-        >
-          {post.content.replace(/\n/g, "  \n")}
-        </ReactMarkdown> */}
         <TiptapContent content={post.content} editable={canEdit} ref={tiptapEditorRef} />
       </div>
       {canEdit && (

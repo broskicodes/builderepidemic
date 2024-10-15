@@ -7,7 +7,7 @@
   }
 
   ol {
-    margin-left: 1rem;
+    margin-left: 1.5rem;
     list-style-type: decimal;
     font-weight: bold;
   }
@@ -15,7 +15,7 @@
   ul {
     margin-left: 1rem;
     list-style-type: disc;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   li {

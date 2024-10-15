@@ -1,30 +1,38 @@
-"use client";
-
 import { BlogPost } from "@/components/blog/blog-post";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
-import Tiptap from "@/components/tiptap/content";
-import { useParams } from "next/navigation";
-import posthog from "posthog-js";
-import { useEffect } from "react";
+import { BlogPost as BlogPostType } from "@/lib/types";
 
-export default function BlogPostPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+async function getBlogPost(slug: string): Promise<BlogPostType> {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/blogposts/${slug}`, {
+    method: "GET",
+    cache: 'no-store'
+  });
 
-  useEffect(() => {
-    if (!slug) return;
+  if (!response.ok) {
+    throw new Error('Failed to fetch blog post');
+  }
 
-    posthog.capture("blog-viewed", {
-      post: slug,
-    });
-  }, [slug]);
+  const data = await response.json();
+  return {
+    ...data,
+    date: new Date(data.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+  };
+}
+
+export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const slug = params.slug;
+  const post = await getBlogPost(slug);
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-background">
       <main className="flex-1 flex flex-col h-screen w-full bg-background">
         <Header />
-        <BlogPost slug={slug} />
+        <BlogPost post={post} />
       </main>
       <Footer />
     </div>

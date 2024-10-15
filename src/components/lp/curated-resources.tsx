@@ -5,17 +5,17 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 export function CuratedResources() {
   const resources = [
     {
+      title: "Epidemic Blog",
+      description: "A collection of articles and guides to help you on your builder journey.",
+      link: "/blog",
+      newTab: false,
+    },
+    {
       title: "Recommended Reading",
       description:
         "A list of books related to marketing, product design, and general builder mindset.",
       link: "https://crystalline-athlete-cc7.notion.site/recommended-reading-11dedcf0f3ba80428dcec83619e3279b?pvs=4",
       newTab: true,
-    },
-    {
-      title: "Epidemic Blog",
-      description: "A collection of articles and guides to help you on your builder journey.",
-      link: "/blog",
-      newTab: false,
     },
   ];
 

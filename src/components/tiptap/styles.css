@@ -56,4 +56,58 @@
       color: hsl(var(--primary) / 0.7);
     }
   }
+
+  img {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  code {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+    padding: 0.1rem 0.2rem;
+    border-radius: 0.2rem;
+    font-size: 0.9em;
+  }
+
+  pre {
+    background-color: hsl(var(--foreground));
+    color: hsl(var(--background));
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    position: relative;
+    
+    code {
+      background-color: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: 0.9em;
+    }
+/* 
+    .code-block {
+      position: relative;
+    }
+
+    .copy-button {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background-color: hsl(var(--primary));
+      color: hsl(var(--background));
+      border: none;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 1em;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease-in-out; */
+    /* } */
+
+    /* .code-block:hover .copy-button {
+      opacity: 1;
+    } */
+  }
 }

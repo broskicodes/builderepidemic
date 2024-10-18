@@ -3,7 +3,7 @@
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Dock, DockIcon } from "@/components/magicui/dock";
-import { HomeIcon, MessageCircleWarningIcon, PlusIcon } from "lucide-react";
+import { HomeIcon, MessageCircleWarningIcon, PlusIcon, AlertCircle } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -106,7 +106,11 @@ export default function MapPage() {
             </Button>
           </DockIcon> */}
           </Dock>
-        </main>
+        <div className="absolute bottom-4 right-4 bg-white/40 backdrop-blur-sm p-2 rounded-md shadow-md z-50 flex items-center space-x-2">
+          <AlertCircle className="text-gray-500" size={16} />
+          <span className="text-xs text-gray-600">These communities are not affiliated with Builder Epidemic</span>
+        </div>
+      </main>
       )}
       {!showMap && <Footer />}
     </div>

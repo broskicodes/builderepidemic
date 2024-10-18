@@ -8,6 +8,21 @@ import { toast } from "sonner";
 import posthog from "posthog-js";
 import { Logo } from "./logo";
 
+const links = [
+  {
+    title: "Blog",
+    link: "/blog",
+  },
+  {
+    title: "Map",
+    link: "/map",
+  },
+  {
+    title: "About",
+    link: "/about",
+  },
+];
+
 export function Header() {
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
@@ -22,18 +37,15 @@ export function Header() {
       </Link>
       <div className="flex items-center gap-10">
         <nav className="hidden items-center gap-10 md:flex justify-end">
-          <Link
-            href="/about"
-            className="flex cursor-pointer items-center text-lg font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
-          >
-            About
-          </Link>
-          <Link
-            href="/blog"
-            className="flex cursor-pointer items-center text-lg font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
-          >
-            Blog
-          </Link>
+          {links.map((link) => (
+            <Link
+              key={link.title}
+              href={link.link}
+              className="flex cursor-pointer items-center text-lg font-medium text-muted-foreground transition-colors hover:text-foreground sm:text-sm"
+            >
+              {link.title}
+            </Link>
+          ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <Button onClick={handleJoinEpidemic}>Join the Epidemic</Button>
@@ -54,6 +66,7 @@ export function Header() {
             >
               Blog
             </Link>
+
             <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full">
               Join the Epidemic
             </Button>

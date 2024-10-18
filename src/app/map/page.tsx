@@ -68,7 +68,7 @@ export default function MapPage() {
       {showMap && (
       <main className="flex-1 flex flex-col h-screen w-full bg-background relative">
         <WorldMap />
-        <Dock direction="middle" className="absolute bg-white bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <Dock direction="middle" className="absolute bg-white sm:bottom-8 bottom-20 left-1/2 -translate-x-1/2 z-50">
           <DockIcon>
             <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full")}>
               <HomeIcon className="size-6" />
@@ -106,7 +106,7 @@ export default function MapPage() {
             </Button>
           </DockIcon> */}
           </Dock>
-        <div className="absolute bottom-4 right-4 bg-white/40 backdrop-blur-sm p-2 rounded-md shadow-md z-50 flex items-center space-x-2">
+        <div className="absolute sm:bottom-4 bottom-16 right-4 bg-white/40 backdrop-blur-sm p-2 rounded-md shadow-md z-50 flex items-center space-x-2">
           <AlertCircle className="text-gray-500" size={16} />
           <span className="text-xs text-gray-600">These communities are not affiliated with Builder Epidemic</span>
         </div>

@@ -7,7 +7,7 @@ import Hero from "@/components/lp/hero";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="h-screen flex flex-col">
       <Header />
       <Hero />
       <CuratedResources />

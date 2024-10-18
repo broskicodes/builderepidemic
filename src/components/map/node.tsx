@@ -1,19 +1,11 @@
 import { Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
-
-// Define the type for our node data
-export type NodeData = {
-  id: number
-  name: string
-  lat: number
-  lng: number
-  info: string
-}
+import { Node as NodeData } from '@/lib/types'
 
 // Props for the Node component
 interface NodeProps {
   data: NodeData
-  onClick: (node: NodeData) => void
+  onClick: () => void
 }
 
 // Custom icon for nodes
@@ -27,16 +19,30 @@ const NodeIcon = L.icon({
 const Node: React.FC<NodeProps> = ({ data, onClick }) => {
   return (
     <Marker
-      position={[data.lat, data.lng]}
+      position={[data.latitude, data.longitude]}
       icon={NodeIcon}
       eventHandlers={{
-        click: () => onClick(data),
+        click: onClick,
       }}
     >
       <Popup>
         <div>
-          <h3 className="font-bold">{data.name}</h3>
-          <p>{data.info}</p>
+          <h3>{data.name}</h3>
+          <p>{data.description}</p>
+          <p>Type: {data.node_type}</p>
+          <p>Location: {data.location}</p>
+          {data.links.length > 0 && (
+            <div>
+              <p>Links:</p>
+              <ul>
+                {data.links.map((link, index) => (
+                  <li key={index}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer">{link.name}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </Popup>
     </Marker>

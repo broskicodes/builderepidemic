@@ -10,18 +10,22 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { name, description, location, longitude, latitude, node_type, links, connection } = await request.json();
+  const nodesList = await request.json();
 
-  const newNode = await db.insert(nodes).values({
-    name,
-    description,
-    location,
-    longitude,
-    latitude,
-    node_type,
-    links,
-    connection,
-  }).returning();
+  if (!Array.isArray(nodesList)) {
+    return NextResponse.json({ error: "Invalid input. Expected an array of nodes." }, { status: 400 });
+  }
 
-  return NextResponse.json(newNode[0]);
+  const newNodes = await db.insert(nodes).values(nodesList.map(node => ({
+    name: node.name,
+    description: node.description,
+    location: node.location,
+    longitude: node.longitude,
+    latitude: node.latitude,
+    node_type: node.node_type,
+    links: node.links,
+    connection: node.connection,
+  }))).returning();
+
+  return NextResponse.json(newNodes);
 }

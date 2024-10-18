@@ -16,6 +16,14 @@ export enum NodeType {
   Other = "other",
 }
 
+export const NodeColorMap = {
+  [NodeType.Coworking]: "7358F9",
+  [NodeType.Meetup]: "8765F9",
+  [NodeType.Hackathon]: "000000",
+  [NodeType.IncubatorOrAccelerator]: "000000",
+  [NodeType.Other]: "000000",
+}
+
 export interface Link {
   name: string;
   url: string;

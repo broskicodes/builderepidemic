@@ -4,16 +4,151 @@ import { WorldMap } from "@/components/map/leaflet";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Dock, DockIcon } from "@/components/magicui/dock";
-import { HomeIcon, LayersIcon, MessageCircleWarningIcon, PlusIcon, SearchIcon, SettingsIcon } from "lucide-react";
+import { HomeIcon, MessageCircleWarningIcon, PlusIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useCallback, useState } from "react";
-import { NodeType } from "@/lib/types";
+import { useCallback, useState, useEffect } from "react";
+import { Hero } from "@/components/lp/hero-2";
 
 export default function MapPage() {
+  const [showMap, setShowMap] = useState(false);
   const [newNodeData, setNewNodeData] = useState([
+    // {
+    //   name: "Aurea",
+    //   description: "Hacker house in Berlin, Germany",
+    //   location: "Berlin, Germany",
+    //   longitude: 13.404954,
+    //   latitude: 52.520008,
+    //   node_type: NodeType.HackerHouse,
+    //   links: [{
+    //     name: "Website",
+    //     url: "https://joinaurea.com/"
+    //   }, {
+    //     name: "Twitter",
+    //     url: "https://x.com/AureaBerlin"
+    //   }],
+    //   connection: null,
+    // },
+    // {
+    //   name: "SF2",
+    //   description: "Hacker house in San Francisco, USA",
+    //   location: "San Francisco, USA",
+    //   longitude: -122.4794, // Shifted much further west (towards Ocean Beach)
+    //   latitude: 37.7549,    // Shifted slightly south
+    //   node_type: NodeType.HackerHouse,
+    //   links: [{
+    //     name: "Website",
+    //     url: "https://sf2.sh/"
+    //   }, {
+    //     name: "Twitter",
+    //     url: "https://x.com/_TheResidency"
+    //   }],
+    //   connection: null,
+    // },
+    // {
+    //   name: "SF Parc",
+    //   description: "Group house in San Francisco, USA",
+    //   location: "San Francisco, USA",
+    //   longitude: -122.4194, // Moved back to central San Francisco
+    //   latitude: 37.7749,    // Standard coordinates for San Francisco
+    //   node_type: NodeType.HackerHouse,
+    //   links: [{
+    //     name: "Website",
+    //     url: "https://www.sfparc.com/"
+    //   }, {
+    //     name: "Twitter",
+    //     url: "https://x.com/_TheResidency"
+    //   }],
+    //   connection: null,
+    // },
+    // {
+    //   name: "Arcadia",
+    //   description: "Hacker house in Berkeley, USA",
+    //   location: "Berkeley, USA",
+    //   longitude: -122.2727,
+    //   latitude: 37.8719,
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://www.joinarcadia.org/"
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/_TheResidency"
+    //     }
+    //   ],
+    //   connection: null,
+    // },
+    // // {
+    // //   name: "Alexandria",
+    // //   description: "Group house in Munich, Germany",
+    // //   location: "Munich, Germany",
+    // //   longitude: 11.5761,
+    // //   latitude: 48.1374,
+    // //   node_type: NodeType.HackerHouse,
+    // //   links: [],
+    // //   connection: null,
+    // // },
+    // {
+    //   name: "C-House",
+    //   description: "Group house in Cambridge, USA",
+    //   location: "Cambridge, USA",
+    //   longitude: -71.1072,
+    //   latitude: 42.3736,
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://harvardentrepreneurs.com/"
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/_TheResidency"
+    //     }
+    //   ],
+    //   connection: null,
+    // },
+    // {
+    //   name: "Bangalore Group House",
+    //   description: "Group house in Bangalore, India",
+    //   location: "Bangalore, India",
+    //   longitude: 77.5946,
+    //   latitude: 12.9716,
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://www.livetheresidency.com/"
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/_TheResidency"
+    //     }
+    //   ],
+    //   connection: null,
+    // },
+    // {
+    //   name: "Dubai Group House",
+    //   description: "Group house in Dubai, UAE",
+    //   location: "Dubai, UAE",
+    //   longitude: 55.2708, // Adjusted to be on land in Dubai
+    //   latitude: 25.2048,  // Adjusted to be on land in Dubai
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://www.livetheresidency.com/"
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/_TheResidency"
+    //     }
+    //   ],
+    //   connection: null,
+    // },
     // {
     //   name: "Socratica",
     //   description: "Weekly coworking sessions in Waterloo, Ontario",
@@ -82,25 +217,25 @@ export default function MapPage() {
     // //   links: [],
     // //   connection: null,
     // // },
-    // {
-    //   name: "Playspace",
-    //   description: "Weekly coworking sessions in San Francisco, California",
-    //   location: "San Francisco, California",
-    //   longitude: -122.4194,
-    //   latitude: 37.7749,
-    //   node_type: NodeType.Coworking,
-    //   links: [
-    //     {
-    //       name: "RSVP",
-    //       url: "https://lu.ma/playspace"
-    //     },
-    //     {
-    //       name: "Website",
-    //       url: "https://playspace.club/"
-    //     }
-    //   ],
-    //   connection: null,
-    // },
+    // // {
+    // //   name: "Playspace",
+    // //   description: "Weekly coworking sessions in San Francisco, California",
+    // //   location: "San Francisco, California",
+    // //   longitude: -122.4194,
+    // //   latitude: 37.7749,
+    // //   node_type: NodeType.Coworking,
+    // //   links: [
+    // //     {
+    // //       name: "RSVP",
+    // //       url: "https://lu.ma/playspace"
+    // //     },
+    // //     {
+    // //       name: "Website",
+    // //       url: "https://playspace.club/"
+    // //     }
+    // //   ],
+    // //   connection: null,
+    // // },
     // {
     //   name: "Making@UMN",
     //   description: "Weekly coworking sessions in Minneapolis, Minnesota",
@@ -286,6 +421,21 @@ export default function MapPage() {
     // },
   ]);
 
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("subscribedEmail");
+    if (storedEmail) {
+      setShowMap(true);
+    }
+    
+    const handleShowMap = () => setShowMap(true);
+    window.addEventListener('showMap', handleShowMap);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('showMap', handleShowMap);
+    };
+  }, []);
+
   const handleAddNode = useCallback(async () => {
     try {
       const res = await fetch("/api/nodes", {
@@ -310,8 +460,14 @@ export default function MapPage() {
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-background">
+      {!showMap && (
+        <main className="flex-1 flex flex-col h-screen w-full bg-background">
+          <Header />
+          <Hero />
+        </main>
+      )}
+      {showMap && (
       <main className="flex-1 flex flex-col h-screen w-full bg-background relative">
-        {/* <Header /> */}
         <WorldMap />
         <Dock direction="middle" className="absolute bg-white bottom-8 left-1/2 transform -translate-x-1/2 z-50">
           <DockIcon>
@@ -350,9 +506,10 @@ export default function MapPage() {
               <SearchIcon className="size-6" />
             </Button>
           </DockIcon> */}
-        </Dock>
-      </main>
-      <Footer />
+          </Dock>
+        </main>
+      )}
+      {!showMap && <Footer />}
     </div>
   );
 }

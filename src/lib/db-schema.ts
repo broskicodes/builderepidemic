@@ -24,6 +24,7 @@ export const subscribers = pgTable("subscribers", {
 export const nodeType = pgEnum("node_type", [
   "coworking",
   "meetup",
+  "hackerhouse",
   "hackathon",
   "incubator/accelerator",
   "other"

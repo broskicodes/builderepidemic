@@ -11,6 +11,7 @@ export interface BlogPost {
 export enum NodeType {
   Coworking = "coworking",
   Meetup = "meetup",
+  HackerHouse = "hackerhouse",
   Hackathon = "hackathon",
   IncubatorOrAccelerator = "incubator/accelerator",
   Other = "other",
@@ -18,8 +19,9 @@ export enum NodeType {
 
 export const NodeColorMap = {
   [NodeType.Coworking]: "7358F9",
-  [NodeType.Meetup]: "8765F9",
-  [NodeType.Hackathon]: "000000",
+  [NodeType.Meetup]: "EE8434",
+  [NodeType.HackerHouse]: "D7FDEC",
+  [NodeType.Hackathon]: "65334D",
   [NodeType.IncubatorOrAccelerator]: "000000",
   [NodeType.Other]: "000000",
 }

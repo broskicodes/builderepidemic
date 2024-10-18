@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -76,7 +77,7 @@ export function Hero() {
           </Button>
         </form>
       ) : (
-        <p className="text-green-500">You're subscribed with: {email}</p>
+        <p className="text-green-500">{"You're subscribed with: " + email}</p>
       )}
       {error && <p className="text-red-500">{error}</p>}
       <div className="relative sm:mt-8">

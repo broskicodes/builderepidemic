@@ -13,7 +13,7 @@ const maxBounds: LatLngBoundsExpression = [
   [90, 180]    // Northeast coordinates
 ];
 
-export function WorldMap() {
+export default function WorldMap() {
   const [isMounted, setIsMounted] = useState(false)
   const [nodes, setNodes] = useState<NodeData[]>([])
 

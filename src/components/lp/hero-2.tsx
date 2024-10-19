@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import posthog from "posthog-js";
 
 export function Hero() {
   const [email, setEmail] = useState("");
@@ -43,6 +44,7 @@ export function Hero() {
 
       if (response.ok) {
         setSuccess(true);
+        posthog.capture("newsletter-sub", { email });
         localStorage.setItem("subscribedEmail", email);
         window.dispatchEvent(new Event('showMap'));
       } else {

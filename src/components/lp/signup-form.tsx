@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select"
 import { toast } from 'sonner'
 import { SIGNUP_EVENT } from '@/lib/types';
+import posthog from 'posthog-js'
 
 type ErrorState = {
   [key: string]: string;
@@ -132,6 +133,7 @@ export function SignupForm({ children }: { children: React.ReactNode }) {
         });
 
         if (response.ok) {
+          posthog.capture("new-signup");
           toast.success("You're infected!", {
             description: "Thanks for joining the epidemic! We'll be in touch soon.",
           });

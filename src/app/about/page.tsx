@@ -36,7 +36,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
-      <main className="flex-grow flex flex-col items-center justify-center px-4">
+      <main className="grow flex flex-col items-center justify-center px-4">
         <div className="max-w-2xl w-full space-y-6 text-center py-8">
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
             The Builder Epidemic

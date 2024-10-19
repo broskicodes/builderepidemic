@@ -186,7 +186,7 @@ export function SignupForm({ children }: { children: React.ReactNode }) {
         <DialogHeader>
           <DialogTitle>Join the Epidemic</DialogTitle>
           <DialogDescription>
-            We'll use this info to contact you when our platform goes live.
+            {"We'll use this info to contact you when our platform goes live."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -254,7 +254,7 @@ export function SignupForm({ children }: { children: React.ReactNode }) {
                   <SelectContent>
                     <SelectItem value="yes">I am building something</SelectItem>
                     <SelectItem value="no">I have an idea to build</SelectItem>
-                    <SelectItem value="none">I don't have an idea yet</SelectItem>
+                    <SelectItem value="none">{"I don't have an idea yet"}</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.buildingStatus && <p className="text-red-500 text-sm mt-1">{errors.buildingStatus}</p>}

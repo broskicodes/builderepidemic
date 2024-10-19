@@ -1,13 +1,33 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import SocialProofUsers from "./social-proof-users";
 import { toast } from "sonner";
 import posthog from "posthog-js";
+import { SignupForm } from "./signup-form";
+import { SIGNUP_EVENT } from '@/lib/types';
 
 export default function Hero() {
+  const [isSignedUp, setIsSignedUp] = useState(false);
+
+  useEffect(() => {
+    const signedUp = localStorage.getItem('signedUp') === 'true';
+    setIsSignedUp(signedUp);
+
+    const handleSignup = () => {
+      setIsSignedUp(true);
+    };
+
+    window.addEventListener(SIGNUP_EVENT, handleSignup);
+
+    return () => {
+      window.removeEventListener(SIGNUP_EVENT, handleSignup);
+    };
+  }, []);
+
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
     toast.success("Idk what this means yet :)");
@@ -23,9 +43,11 @@ export default function Hero() {
         <Button size="lg" asChild variant="outline" className="cursor-pointer border-border">
           <Link href="/blog/why-build">Learn More</Link>
         </Button>
-        <Button size="lg" className="cursor-pointer" onClick={handleJoinEpidemic}>
-          Join the Epidemic
-        </Button>
+        <SignupForm>
+          <Button size="lg" className="cursor-pointer" disabled={isSignedUp}>
+            {isSignedUp ? "Already Joined" : "Join the Epidemic"}
+          </Button>
+        </SignupForm>
       </div>
     </section>
   );

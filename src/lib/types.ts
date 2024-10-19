@@ -42,3 +42,7 @@ export interface Node {
   links: Link[];
   connection: string | null;
 }
+
+// Events
+export const SIGNUP_EVENT = 'user-signed-up';
+export const SHOW_MAP_EVENT = 'show-map';

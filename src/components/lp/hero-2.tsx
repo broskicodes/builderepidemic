@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import posthog from "posthog-js";
+import { SHOW_MAP_EVENT } from '@/lib/types';
 
 export function Hero() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ export function Hero() {
     if (storedEmail) {
       setEmail(storedEmail);
       setSuccess(true);
-      window.dispatchEvent(new Event('showMap'));
+      window.dispatchEvent(new Event(SHOW_MAP_EVENT));
     }
   }, []);
 
@@ -46,7 +47,7 @@ export function Hero() {
         setSuccess(true);
         posthog.capture("newsletter-sub", { email });
         localStorage.setItem("subscribedEmail", email);
-        window.dispatchEvent(new Event('showMap'));
+        window.dispatchEvent(new Event(SHOW_MAP_EVENT));
       } else {
         throw new Error("Failed to subscribe");
       }

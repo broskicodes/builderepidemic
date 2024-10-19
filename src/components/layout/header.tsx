@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MobileNavbar } from "@/components/layout/mobile-navbar";
 import { toast } from "sonner";
 import posthog from "posthog-js";
 import { Logo } from "./logo";
+import { SignupForm } from "../lp/signup-form";
+import { SIGNUP_EVENT } from '@/lib/types';
 
 const links = [
   {
@@ -24,6 +26,23 @@ const links = [
 ];
 
 export function Header() {
+  const [isSignedUp, setIsSignedUp] = useState(false);
+
+  useEffect(() => {
+    const signedUp = localStorage.getItem('signedUp') === 'true';
+    setIsSignedUp(signedUp);
+
+    const handleSignup = () => {
+      setIsSignedUp(true);
+    };
+
+    window.addEventListener(SIGNUP_EVENT, handleSignup);
+
+    return () => {
+      window.removeEventListener(SIGNUP_EVENT, handleSignup);
+    };
+  }, []);
+
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
     toast.success("Idk what this means yet :)");
@@ -48,7 +67,11 @@ export function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <Button onClick={handleJoinEpidemic}>Join the Epidemic</Button>
+          <SignupForm>
+            <Button disabled={isSignedUp}>
+              {isSignedUp ? "Already Joined" : "Join the Epidemic"}
+            </Button>
+          </SignupForm>
         </div>
       </div>
       <MobileNavbar>
@@ -67,9 +90,11 @@ export function Header() {
               Blog
             </Link>
 
-            <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full">
-              Join the Epidemic
-            </Button>
+            <SignupForm>
+              <Button size="lg" className="mt-2 w-full" disabled={isSignedUp}>
+                {isSignedUp ? "Already Joined" : "Join the Epidemic"}
+              </Button>
+            </SignupForm>
           </nav>
         </div>
       </MobileNavbar>

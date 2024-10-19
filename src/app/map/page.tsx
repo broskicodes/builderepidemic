@@ -3,7 +3,7 @@
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Dock, DockIcon } from "@/components/magicui/dock";
-import { HomeIcon, MessageCircleWarningIcon, PlusIcon, AlertCircle } from "lucide-react";
+import { HomeIcon, MessageCircleWarningIcon, PlusIcon, AlertCircle, SearchIcon } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useCallback, useState, useEffect } from "react";
 import { Hero } from "@/components/lp/hero-2";
 import dynamic from "next/dynamic";
+import { Node, NodeType } from "@/lib/types";
+import { SHOW_MAP_EVENT } from '@/lib/types';
 
 const WorldMap = dynamic(() => import('@/components/map/leaflet'), {
   ssr: false,
@@ -18,7 +20,82 @@ const WorldMap = dynamic(() => import('@/components/map/leaflet'), {
 
 export default function MapPage() {
   const [showMap, setShowMap] = useState(false);
-  const [newNodeData, setNewNodeData] = useState([]);
+  const [newNodeData, setNewNodeData] = useState<Omit<Node, 'id'>[]>([
+    // {
+    //   name: "Escuelita Maker",
+    //   description: "A maker space in Chihuahua, Mexico",
+    //   location: "Chihuahua, Mexico",
+    //   longitude: -106.0653,
+    //   latitude: 28.6352,
+    //   node_type: NodeType.IncubatorOrAccelerator,
+    //   links: [{
+    //     name: "Website",
+    //     url: "https://escuelitamaker.com",
+    //   }],
+    //   connection: null,
+    // }
+    // {
+    //   name: "hsr hacker house",
+    //   description: "A hacker house in Bangalore, India",
+    //   location: "Bangalore, India",
+    //   longitude: 77.6200, // Further adjusted longitude
+    //   latitude: 12.9900,  // Further adjusted latitude
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://hsrhackerhouse.lol/",
+    //     },
+    //     {
+    //       name: "RSVP",
+    //       url: "https://lu.ma/hsrhackerhouse",
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/hsrhackerhouse",
+    //     },
+    //   ],
+    //   connection: null,
+    // }
+    // {
+    //   name: "Urbe.eth",
+    //   description: "A community of builders and a maker space in Rome, Italy",
+    //   location: "Rome, Italy",
+    //   longitude: 12.4964,
+    //   latitude: 41.9028,
+    //   node_type: NodeType.HackerHouse,
+    //   links: [
+    //     {
+    //       name: "Website",
+    //       url: "https://urbe.build",
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/urbeEth",
+    //     },
+    //   ],
+    //   connection: null,
+    // },
+    // {
+    //   name: "Localhost",
+    //   description: "Monthly coworking sessions in Hong Kong",
+    //   location: "Hong Kong",
+    //   longitude: 114.1650,
+    //   latitude: 22.3264,
+    //   node_type: NodeType.Coworking,
+    //   links: [
+    //     {
+    //       name: "RSVP",
+    //       url: "https://lu.ma/devansh",
+    //     },
+    //     {
+    //       name: "Twitter",
+    //       url: "https://x.com/itzdgofficial",
+    //     },
+    //   ],
+    //   connection: null,
+    // }
+  ]);
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("subscribedEmail");
@@ -27,11 +104,11 @@ export default function MapPage() {
     }
     
     const handleShowMap = () => setShowMap(true);
-    window.addEventListener('showMap', handleShowMap);
+    window.addEventListener(SHOW_MAP_EVENT, handleShowMap);
 
     // Cleanup function
     return () => {
-      window.removeEventListener('showMap', handleShowMap);
+      window.removeEventListener(SHOW_MAP_EVENT, handleShowMap);
     };
   }, []);
 

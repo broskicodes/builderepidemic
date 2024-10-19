@@ -54,3 +54,18 @@ export const nodes = pgTable("nodes", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),
 });
+
+export const buildingStatusEnum = pgEnum("building_status", ["yes", "no", "none"]);
+
+export const signups = pgTable("signups", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  name: text("name").notNull(),
+  twitter: text("twitter").notNull(),
+  email: text("email").notNull(),
+  buildingStatus: buildingStatusEnum("building_status").notNull(),
+  projectLink: text("project_link"),
+  projectDescription: text("project_description"),
+  idea: text("idea"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});

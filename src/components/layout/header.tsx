@@ -45,7 +45,7 @@ export function Header() {
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
-    toast.success("Idk what this means yet :)");
+    // toast.success("Idk what this means yet :)");
   };
 
   return (
@@ -68,7 +68,7 @@ export function Header() {
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           <SignupForm>
-            <Button disabled={isSignedUp}>
+            <Button onClick={handleJoinEpidemic} disabled={isSignedUp}>
               {isSignedUp ? "Already Joined" : "Join the Epidemic"}
             </Button>
           </SignupForm>
@@ -91,7 +91,7 @@ export function Header() {
             </Link>
 
             <SignupForm>
-              <Button size="lg" className="mt-2 w-full" disabled={isSignedUp}>
+              <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full" disabled={isSignedUp}>
                 {isSignedUp ? "Already Joined" : "Join the Epidemic"}
               </Button>
             </SignupForm>

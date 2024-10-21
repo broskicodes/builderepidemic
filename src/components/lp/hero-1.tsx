@@ -30,7 +30,7 @@ export default function Hero() {
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
-    toast.success("Idk what this means yet :)");
+    // toast.success("Idk what this means yet :)");
   };
 
   return (
@@ -44,7 +44,7 @@ export default function Hero() {
           <Link href="/blog/why-build">Learn More</Link>
         </Button>
         <SignupForm>
-          <Button size="lg" className="cursor-pointer" disabled={isSignedUp}>
+          <Button onClick={handleJoinEpidemic} size="lg" className="cursor-pointer" disabled={isSignedUp}>
             {isSignedUp ? "Already Joined" : "Join the Epidemic"}
           </Button>
         </SignupForm>

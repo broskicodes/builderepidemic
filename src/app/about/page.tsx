@@ -30,7 +30,7 @@ export default function AboutPage() {
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
-    toast.success("Idk what this means yet :)");
+    // toast.success("Idk what this means yet :)");
   };
 
   return (
@@ -56,7 +56,7 @@ export default function AboutPage() {
           </p>
           <div className="flex justify-center">
             <SignupForm>
-              <Button className="font-semibold" disabled={isSignedUp}>
+              <Button onClick={handleJoinEpidemic} className="font-semibold" disabled={isSignedUp}>
                 {isSignedUp ? "Already Joined" : "Join the Epidemic"}
                 {!isSignedUp && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>

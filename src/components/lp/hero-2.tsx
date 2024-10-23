@@ -64,7 +64,7 @@ export function Hero() {
         Find inspiring builder communities near you
       </h1>
       <p className="max-w-lg text-center text-lg text-muted-foreground sm:text-xl">
-        Use this interactive map to discover builder events and communities happening near you
+        Use this interactive map to discover builder events and communities near you
       </p>
       {!success ? (
         <form onSubmit={handleSubmit} className="flex w-full max-w-md flex-col gap-2 sm:flex-row sm:items-center">

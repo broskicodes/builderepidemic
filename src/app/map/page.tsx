@@ -13,33 +13,6 @@ import { Hero } from "@/components/lp/hero-2";
 import dynamic from "next/dynamic";
 import { Node, NodeType } from "@/lib/types";
 import { SHOW_MAP_EVENT } from '@/lib/types';
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Builder Epidemic Map",
-  description: "An interactive map to discover builder events and communities happening near you.",
-  openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://builderepidemic.com/map",
-    title: "Builder Epidemic Map",
-    description: "An interactive map to discover builder events and communities happening near you.",
-    siteName: "Builder Epidemic Map",
-    images: [{
-      url: "https://builderepidemic.com/images/map.png",
-      width: 800,
-      height: 548,
-      alt: "Builder Epidemic Map",
-    }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Builder Epidemic Map",
-    description: "An interactive map to discover builder events and communities happening near you.",
-    images: ["https://builderepidemic.com/images/map.png"],
-    creator: "@braedenhall_",
-  },
-};
 
 const WorldMap = dynamic(() => import('@/components/map/leaflet'), {
   ssr: false,

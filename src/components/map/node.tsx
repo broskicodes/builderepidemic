@@ -1,6 +1,7 @@
 import { Marker, Popup } from 'react-leaflet'
-import { NodeColorMap, Node as NodeData } from '@/lib/types'
+import { Link, NodeColorMap, Node as NodeData } from '@/lib/types'
 import L from 'leaflet'
+import posthog from 'posthog-js'
 
 // Props for the Node component
 interface NodeProps {
@@ -8,14 +9,6 @@ interface NodeProps {
   onClick: () => void
   isOverlapping: boolean
 }
-
-// Custom icon for nodes
-// const NodeIcon = L.icon({
-//   iconUrl: '/node-icon.svg',
-//   iconSize: [40, 40],
-//   iconAnchor: [20, 40],
-//   popupAnchor: [0, -40],
-// })
 
 const createColoredNodeIcon = (color: string) => {  
   return L.icon({
@@ -27,7 +20,12 @@ const createColoredNodeIcon = (color: string) => {
 }
 
   export default function Node({ data, onClick, isOverlapping }: NodeProps) {
-    return (
+
+  const handleLinkClick = (link: Link) => {
+    posthog.capture('link-clicked', { node: { name: data.name, location: data.location, node_type: data.node_type, link_name: link.name } })
+  }
+
+  return (
     <Marker
       position={[data.latitude, data.longitude]}
       icon={createColoredNodeIcon(NodeColorMap[data.node_type])}
@@ -52,7 +50,7 @@ const createColoredNodeIcon = (color: string) => {
                   <ul className="list-disc list-inside space-y-1">
                     {data.links.map((link, index) => (
                       <li key={index} className="text-sm">
-                        <a href={link.url} target="_blank" rel="noopener noreferrer"><span className="text-primary hover:underline">{link.name}</span></a>
+                        <a href={link.url} target="_blank" onClick={() => handleLinkClick(link)} rel="noopener noreferrer"><span className="text-primary hover:underline">{link.name}</span></a>
                       </li>
                     ))}
                   </ul>

@@ -22,79 +22,63 @@ export default function MapPage() {
   const [showMap, setShowMap] = useState(false);
   const [newNodeData, setNewNodeData] = useState<Omit<Node, 'id'>[]>([
     // {
-    //   name: "Escuelita Maker",
-    //   description: "A maker space in Chihuahua, Mexico",
-    //   location: "Chihuahua, Mexico",
-    //   longitude: -106.0653,
-    //   latitude: 28.6352,
-    //   node_type: NodeType.IncubatorOrAccelerator,
-    //   links: [{
-    //     name: "Website",
-    //     url: "https://escuelitamaker.com",
-    //   }],
-    //   connection: null,
-    // }
-    // {
-    //   name: "hsr hacker house",
-    //   description: "A hacker house in Bangalore, India",
-    //   location: "Bangalore, India",
-    //   longitude: 77.6200, // Further adjusted longitude
-    //   latitude: 12.9900,  // Further adjusted latitude
-    //   node_type: NodeType.HackerHouse,
-    //   links: [
-    //     {
-    //       name: "Website",
-    //       url: "https://hsrhackerhouse.lol/",
-    //     },
-    //     {
-    //       name: "RSVP",
-    //       url: "https://lu.ma/hsrhackerhouse",
-    //     },
-    //     {
-    //       name: "Twitter",
-    //       url: "https://x.com/hsrhackerhouse",
-    //     },
-    //   ],
-    //   connection: null,
-    // }
-    // {
-    //   name: "Urbe.eth",
-    //   description: "A community of builders and a maker space in Rome, Italy",
-    //   location: "Rome, Italy",
-    //   longitude: 12.4964,
-    //   latitude: 41.9028,
-    //   node_type: NodeType.HackerHouse,
-    //   links: [
-    //     {
-    //       name: "Website",
-    //       url: "https://urbe.build",
-    //     },
-    //     {
-    //       name: "Twitter",
-    //       url: "https://x.com/urbeEth",
-    //     },
-    //   ],
-    //   connection: null,
-    // },
-    // {
-    //   name: "Localhost",
-    //   description: "Monthly coworking sessions in Hong Kong",
-    //   location: "Hong Kong",
-    //   longitude: 114.1650,
-    //   latitude: 22.3264,
-    //   node_type: NodeType.Coworking,
-    //   links: [
-    //     {
-    //       name: "RSVP",
-    //       url: "https://lu.ma/devansh",
-    //     },
-    //     {
-    //       name: "Twitter",
-    //       url: "https://x.com/itzdgofficial",
-    //     },
-    //   ],
-    //   connection: null,
-    // }
+    //     name: "The Quest",
+    //     description: "A startup studio in Paris",
+    //     location: "Paris, France",
+    //     longitude: 2.3522,
+    //     latitude: 48.8566,
+    //     node_type: NodeType.IncubatorOrAccelerator,
+    //     links: [
+    //       {
+    //         name: "Website",
+    //         url: "https://jointhequest.co",
+    //       },
+    //       {
+    //         name: "Instagram",
+    //         url: "https://www.instagram.com/thequest_fr/",
+    //       },
+    //       {
+    //         name: "Youtube",
+    //         url: "https://www.youtube.com/@thequest_fr",
+    //       },
+    //       {
+    //         name: "LinkedIn",
+    //         url: "https://www.linkedin.com/company/the-quest-1er-centre-de-formation-entrepreneurial/",
+    //       }
+    //     ],
+    //     connection: null,
+    //   },
+    //   {
+    //     name: "Station F",
+    //     description: "A startup campus in Paris",
+    //     location: "Paris, France",
+    //     longitude: 2.3710,
+    //     latitude: 48.8336,
+    //     node_type: NodeType.IncubatorOrAccelerator,
+    //     links: [
+    //       {
+    //         name: "Website",
+    //         url: "https://stationf.co/",
+    //       },
+    //       {
+    //         name: "Instagram",
+    //         url: "https://www.instagram.com/joinstationf",
+    //       },
+    //       {
+    //         name: "Twitter",
+    //         url: "https://x.com/joinstationf",
+    //       },
+    //       {
+    //         name: "LinkedIn",
+    //         url: "https://www.linkedin.com/company/stationf/",
+    //       },
+    //       {
+    //         name: "Youtube",
+    //         url: "https://www.youtube.com/channel/UCJdVyJNEdvWrQrUBGq6moIw",
+    //       }
+    //     ],
+    //     connection: null,
+    //   }
   ]);
 
   useEffect(() => {

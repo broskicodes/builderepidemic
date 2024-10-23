@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import { LatLngBoundsExpression } from 'leaflet'
 import Node from './node'
 import { Node as NodeData } from '@/lib/types'
+import posthog from 'posthog-js'
 
 // Define the maximum bounds (adjust these coordinates as needed)
 const maxBounds: LatLngBoundsExpression = [
@@ -35,6 +36,14 @@ export default function WorldMap() {
     }
   }
 
+  const handleNodeClick = (node: NodeData) => {
+    posthog.capture('node-clicked', { node: {
+      name: node.name,
+      location: node.location,
+      node_type: node.node_type,
+    } })
+  }
+
   if (!isMounted) {
     return null // or a loading spinner
   }
@@ -55,7 +64,7 @@ export default function WorldMap() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {nodes.map((node) => (
-          <Node key={node.id} data={node} onClick={() => {}} />
+          <Node key={node.id} data={node} onClick={() => { handleNodeClick(node) }} />
         ))}
       </MapContainer>
     </div>

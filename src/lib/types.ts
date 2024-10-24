@@ -48,6 +48,24 @@ export enum TwitterScrapeType {
   Update = "update"
 }
 
+export interface TwitterAuthor {
+  id: string;
+  handle: string;
+}
+
+export interface Tweet {
+  tweet_id: string;
+  author: TwitterAuthor;
+  url: string;
+  date: string;
+  bookmark_count: number;
+  retweet_count: number;
+  reply_count: number;
+  like_count: number;
+  quote_count: number;
+  view_count: number;
+}
+
 // Events
 export const SIGNUP_EVENT = 'user-signed-up';
 export const SHOW_MAP_EVENT = 'show-map';

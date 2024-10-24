@@ -71,7 +71,7 @@ export const signups = pgTable("signups", {
 });
 
 export const twitterHandles = pgTable("twitter_handles", {
-  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  id: bigint("id", { mode: 'bigint' }).primaryKey().notNull(),
   handle: text("handle").notNull().unique(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
@@ -82,7 +82,7 @@ export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
-  twitter_handle_id: uuid("twitter_handle_id").references(() => twitterHandles.id).notNull(),
+  twitter_handle_id: bigint("twitter_handle_id", { mode: 'bigint' }).references(() => twitterHandles.id).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),
@@ -90,7 +90,7 @@ export const users = pgTable("users", {
 
 export const tweets = pgTable("tweets", {
   tweet_id: bigint("tweet_id", { mode: 'bigint' }).primaryKey().notNull(),
-  handle_id: uuid("handle_id").references(() => twitterHandles.id).notNull(),
+  handle_id: bigint("handle_id", { mode: 'bigint' }).references(() => twitterHandles.id).notNull(),
   url: text("url").notNull(),
   date: timestamp("date").notNull(),
   bookmark_count: integer("bookmark_count").notNull(),

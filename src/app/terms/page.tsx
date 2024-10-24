@@ -9,7 +9,7 @@ export default function TermsOfService() {
         <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
         
         <p className="mb-4">
-          Builder Epidemic ("The Company") is granting access to the Builder Epidemic product ("The Product") to you as the individual, company, or legal entity ("The Customer") on the condition that you accept all of the terms of this ("Terms of Service", "TOS") as defined below. This TOS constitutes a legal and enforceable contract between The Customer and The Company. By using Builder Epidemic and related services you implicitly agree to this Terms of Service. If The Customer does not agree to this Terms of Service, they should make no further use of The Product.
+          {"Builder Epidemic (\"The Company\") is granting access to the Builder Epidemic product (\"The Product\") to you as the individual, company, or legal entity (\"The Customer\") on the condition that you accept all of the terms of this (\"Terms of Service\", \"TOS\") as defined below. This TOS constitutes a legal and enforceable contract between The Customer and The Company. By using Builder Epidemic and related services you implicitly agree to this Terms of Service. If The Customer does not agree to this Terms of Service, they should make no further use of The Product."}
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Ownership of Platform</h2>
@@ -24,7 +24,7 @@ export default function TermsOfService() {
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Term</h2>
         <p className="mb-4">
-          This Terms of Service will be effective upon The Customer's first access of The Product and shall remain in force during the applicable throughout The Customer's continued use of The Product, as applicable.
+          {"This Terms of Service will be effective upon The Customer's first access of The Product and shall remain in force during the applicable throughout The Customer's continued use of The Product, as applicable."}
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Governing Law and Jurisdiction</h2>

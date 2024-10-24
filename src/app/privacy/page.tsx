@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
         <p className="mb-4"><strong>Effective Date: October 24, 2024</strong></p>
 
         <p className="mb-4">
-          Builder Epidemic ("The Company") are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, including our website, applications, and related services (collectively, "The Product"). By accessing or using The Product, you agree to this Privacy Policy.
+          {"Builder Epidemic (\"The Company\") are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services, including our website, applications, and related services (collectively, \"The Product\"). By accessing or using The Product, you agree to this Privacy Policy."}  
         </p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Information We Collect</h2>
@@ -53,15 +53,15 @@ export default function PrivacyPolicy() {
         </p>
         <ul className="list-disc list-inside mb-4">
           <li>Legal Requirements: If required by law or in response to valid requests by public authorities (e.g., a court or a government agency).</li>
-          <li>Protection of Rights: To protect and defend the rights or property of Reweb, including enforcing our Terms of Service.</li>
+          <li>Protection of Rights: To protect and defend the rights or property of Builder Epidemic, including enforcing our Terms of Service.</li>
         </ul>
 
         <h2 className="text-2xl font-semibold mt-6 mb-2">Third-Party Services</h2>
         <p className="mb-4">
-          Reweb may contain links to third-party websites and services. We are not responsible for the privacy practices or the content of these third parties. We encourage you to review the privacy policies of any third-party services you use.
+          The Product may contain links to third-party websites and services. We are not responsible for the privacy practices or the content of these third parties. We encourage you to review the privacy policies of any third-party services you use.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-2">Children's Privacy</h2>
+        <h2 className="text-2xl font-semibold mt-6 mb-2">{"Children's Privacy"}</h2>
         <p className="mb-4">
           Our services are not intended for people under the age of 18. We do not knowingly collect personal information from people under 18.
         </p>

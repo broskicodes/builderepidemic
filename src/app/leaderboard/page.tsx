@@ -3,7 +3,7 @@ import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { LeaderboardData } from "@/lib/types";
 
-const getLeaderboardData = async (): Promise<Record<string, LeaderboardData>> => {
+async function getLeaderboardData(): Promise<Record<string, LeaderboardData>> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/tweets`, {
     method: "GET",
   });

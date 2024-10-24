@@ -1,14 +1,9 @@
 import { LeaderboardSection } from "@/components/leaderboard/leaderboard-section";
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
-import { GetServerSideProps } from 'next';
-import { LeaderboardData, Tweet } from "@/lib/types";
+import { LeaderboardData } from "@/lib/types";
 
-interface LeaderboardPageProps {
-  leaderboardData: Record<string, LeaderboardData>;
-}
-
-export const getLeaderboardData = async (): Promise<Record<string, LeaderboardData>> => {
+const getLeaderboardData = async (): Promise<Record<string, LeaderboardData>> => {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/tweets`, {
     method: "GET",
   });

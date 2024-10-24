@@ -45,12 +45,16 @@ export interface Node {
 
 export enum TwitterScrapeType {
   Initialize = "initialize",
-  Update = "update"
+  Monthly = "monthly",
+  Weekly = "weekly",
+  Daily = "daily"
 }
 
 export interface TwitterAuthor {
   id: string;
   handle: string;
+  pfp: string;
+  url: string;
 }
 
 export interface Tweet {
@@ -64,6 +68,12 @@ export interface Tweet {
   like_count: number;
   quote_count: number;
   view_count: number;
+}
+
+export interface LeaderboardData {
+  url: string;
+  pfp: string | null;
+  tweets: Omit<Tweet, 'author'>[];
 }
 
 // Events

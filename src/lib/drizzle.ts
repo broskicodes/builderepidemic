@@ -26,6 +26,8 @@ export async function addTweetsToDb(tweets: Tweet[]) {
         .values({
           id: BigInt(tweet.author.id),
           handle: tweet.author.handle,
+          url: tweet.author.url,
+          pfp: tweet.author.pfp,
         })
         .returning({ id: schema.twitterHandles.id });
 

@@ -15,7 +15,7 @@ export default function HomePage() {
       <Button onClick={() => {
         fetch('/api/scrape/twitter', {
           method: 'POST',
-          body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handle: 'braedenhall_' }),
+          body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: ['levelsio'] }),
         })
       }}>Scrape Twitter</Button>
       <CuratedResources />

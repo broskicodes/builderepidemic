@@ -226,15 +226,15 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
       <div className="flex justify-center items-end mb-12 mt-8">
         {first && second && third && [second, first, third].map((player, index) => {
           const isFirst = index === 1;
-          const avatarSize = isFirst ? 'w-24 h-24' : index === 0 ? 'w-20 h-20' : 'w-16 h-16';
-          const podiumHeight = isFirst ? 'h-32' : index === 0 ? 'h-24' : 'h-16';
-          const textSize = isFirst ? 'text-2xl' : 'text-xl';
-          const marginTop = isFirst ? 'mt-0' : 'mt-8';
+          const avatarSize = isFirst ? 'w-20 h-20 sm:w-24 sm:h-24' : index === 0 ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16';
+          const podiumHeight = isFirst ? 'h-24 sm:h-32' : index === 0 ? 'h-20 sm:h-24' : 'h-12 sm:h-16';
+          const textSize = isFirst ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
+          const marginTop = isFirst ? 'mt-0' : 'mt-4 sm:mt-8';
 
           return (
             <Popover key={player.handle}>
               <PopoverTrigger asChild>
-                <div className={`flex flex-col items-center mx-4 cursor-pointer ${marginTop}`}>
+                <div className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32`}>
                   <Avatar className={`${avatarSize} mb-2`}>
                     <AvatarImage src={player.pfp} alt={player.handle} />
                     <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
@@ -243,8 +243,8 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
                     <div className={`font-semibold ${textSize}`}>{player.handle}</div>
                     <div className={`font-bold text-primary ${textSize}`}>{player.scoreData.score.toLocaleString()}</div>
                   </div>
-                  <div className={`w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}>
-                    <span className="text-primary-foreground font-bold text-2xl">{index === 1 ? 1 : index === 0 ? 2 : 3}</span>
+                  <div className={`w-20 sm:w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}>
+                    <span className="text-primary-foreground font-bold text-xl sm:text-2xl">{index === 1 ? 1 : index === 0 ? 2 : 3}</span>
                   </div>
                 </div>
               </PopoverTrigger>
@@ -281,7 +281,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
             <div className="w-8 text-center font-bold flex justify-center items-center">
               {index + 4}
             </div>
-            <Avatar className="">
+            <Avatar>
               <AvatarImage src={player.pfp} alt={player.handle} />
               <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
             </Avatar>
@@ -295,6 +295,9 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
           </div>
         </PopoverTrigger>
         <PopoverContent className="w-auto">
+          <div className="sm:hidden flex">
+            {renderPlayerInfo(player.scoreData)}
+          </div>
           {activeTab === "monthly" && renderScoreGraph(
             player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
             "score",

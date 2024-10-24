@@ -1,4 +1,4 @@
-import { pgTable, text, uuid, timestamp, doublePrecision, pgEnum, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, uuid, timestamp, doublePrecision, pgEnum, jsonb, integer, bigint } from "drizzle-orm/pg-core";
 
 export const blogposts = pgTable("blogposts", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
@@ -68,4 +68,38 @@ export const signups = pgTable("signups", {
   idea: text("idea"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const twitterHandles = pgTable("twitter_handles", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  handle: text("handle").notNull().unique(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at"),
+});
+
+export const users = pgTable("users", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull().unique(),
+  twitter_handle_id: uuid("twitter_handle_id").references(() => twitterHandles.id).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at"),
+});
+
+export const tweets = pgTable("tweets", {
+  tweet_id: bigint("tweet_id", { mode: 'bigint' }).primaryKey().notNull(),
+  handle_id: uuid("handle_id").references(() => twitterHandles.id).notNull(),
+  url: text("url").notNull(),
+  date: timestamp("date").notNull(),
+  bookmark_count: integer("bookmark_count").notNull(),
+  retweet_count: integer("retweet_count").notNull(),
+  reply_count: integer("reply_count").notNull(),
+  like_count: integer("like_count").notNull(),
+  quote_count: integer("quote_count").notNull(),
+  view_count: integer("view_count").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at"),
 });

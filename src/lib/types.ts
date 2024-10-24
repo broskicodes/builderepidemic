@@ -43,6 +43,14 @@ export interface Node {
   connection: string | null;
 }
 
+export enum TwitterScrapeType {
+  Initialize = "initialize",
+  Update = "update"
+}
+
 // Events
 export const SIGNUP_EVENT = 'user-signed-up';
 export const SHOW_MAP_EVENT = 'show-map';
+
+// Constants
+export const APIFY_TWEET_SCRAPER_ACTOR = "61RPP7dywgiy0JPD0";

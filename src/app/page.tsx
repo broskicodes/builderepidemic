@@ -12,12 +12,12 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col">
       <Header />
       <Hero />
-      <Button onClick={() => {
+      {/* <Button onClick={() => {
         fetch('/api/scrape/twitter', {
           method: 'POST',
           body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: ['levelsio'] }),
         })
-      }}>Scrape Twitter</Button>
+      }}>Scrape Twitter</Button> */}
       <CuratedResources />
       <Footer />
     </main>

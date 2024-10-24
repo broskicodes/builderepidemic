@@ -49,38 +49,45 @@ const links: Link[] = [
 export default function Footer() {
   return (
     <footer className="flex flex-col gap-y-5 rounded-lg px-7 py-5 md:px-10">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-x-1">
+      <div className="flex flex-row justify-between sm:flex-col gap-y-4">
+        <div className="flex sm:items-center gap-x-1">
           <Logo scale={0.7} />
-          <h2 className="text-lg font-bold text-neutral-900 dark:text-white mt-1">Builder Epidemic</h2>
+          <h2 className="whitespace-nowrap text-lg font-bold text-neutral-900 dark:text-white mt-1">Builder Epidemic</h2>
         </div>
-
-        <div className="flex gap-x-2">
-          {icons.map((icon, index) => (
-            <a
-              key={index}
-              href={icon.url}
-              target="_blank"
-              className="flex h-5 w-5 items-center justify-center text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-500 hover:dark:text-neutral-100"
-            >
-              {icon.icon}
-            </a>
-          ))}
+        <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-y-2">
+          <div className="flex gap-x-2 sm:ml-2 mt-2 sm:mt-0">
+            {icons.map((icon, index) => (
+              <a
+                key={index}
+                href={icon.url}
+                target="_blank"
+                className="flex h-5 w-5 items-center justify-center text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-500 hover:dark:text-neutral-100"
+              >
+                {icon.icon}
+              </a>
+            ))}
+          </div>
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-neutral-500">
+            {links.map((link, index) => (
+              <li
+                key={index}
+                className="text-[15px]/normal font-medium text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-400 hover:dark:text-neutral-100"
+              >
+                <a href={link.url}>{link.text}</a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-      <div className="flex flex-col justify-between gap-y-5 md:flex-row md:items-center">
-        <ul className="flex flex-col gap-x-5 gap-y-2 text-neutral-500 md:flex-row md:items-center ">
-          {links.map((link, index) => (
-            <li
-              key={index}
-              className="text-[15px]/normal font-medium text-neutral-400 transition-all duration-100 ease-linear hover:text-neutral-900 hover:underline hover:underline-offset-4 dark:font-medium dark:text-neutral-400 hover:dark:text-neutral-100"
-            >
-              <a href={link.url}>{link.text}</a>
-            </li>
-          ))}
-        </ul>
-        <div className="flex items-center justify-between text-sm font-medium tracking-tight text-neutral-500 dark:text-neutral-400">
-          <p>© 2024 The Kaizen Company. All rights reserved.</p>
+      <div className="mt-2 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+        <p>© {new Date().getFullYear()} The Kaizen Company. All rights reserved.</p>
+        <div className="flex space-x-4 mt-4 md:mt-0">
+          <a href="/privacy" className="hover:text-primary transition-colors">
+            Privacy Policy
+          </a>
+          <a href="/terms" className="hover:text-primary transition-colors">
+            Terms of Service
+          </a>
         </div>
       </div>
     </footer>

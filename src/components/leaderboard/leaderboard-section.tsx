@@ -10,6 +10,8 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { Eye, ThumbsUp, Bookmark, MessageCircle } from "lucide-react"
 import { LeaderboardData, Tweet } from "@/lib/types"
 import { useSession } from "next-auth/react"
+import { useMediaQuery } from "react-responsive"
+import { Pagination } from "@/components/ui/pagination"
 
 // Define interfaces and types
 interface Score {
@@ -142,6 +144,9 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("monthly")
   const [playerData, setPlayerData] = useState<{ user_id: string, handle: string, pfp: string, scoreData: ScoreData }[]>([])
+  const isMobile = useMediaQuery({ maxWidth: 640 })
+  const itemsPerPage = isMobile ? 10 : 10
+  const [currentPage, setCurrentPage] = useState(1)
 
   
   // Process the leaderboard data
@@ -226,7 +231,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
                     <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div className="text-center">
-                    <div className={`font-semibold ${textSize}`}>{player.handle}</div>
+                    <div className={`font-semibold ${textSize}`}>@{player.handle}</div>
                     <div className={`font-bold text-primary ${textSize}`}>{player.scoreData.score.toLocaleString()}</div>
                   </div>
                   <div className={`w-20 sm:w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}>
@@ -260,23 +265,28 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
   };
 
   const renderLeaderboard = () => {
-    return playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(3).map((player, index) => {
-      // Update highlight class to use primary/40
+    const sortedPlayers = playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(3)
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex)
+
+    return paginatedPlayers.map((player, index) => {
       const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
+      const playerRank = startIndex + index + 4
 
       return (
         <Popover key={player.handle}>
           <PopoverTrigger asChild>
             <div className={`flex items-center space-x-4 mb-4 cursor-pointer hover:bg-muted p-2 rounded-md ${highlightClass}`}>
               <div className="w-8 text-center font-bold flex justify-center items-center">
-                {index + 4}
+                {playerRank}
               </div>
               <Avatar>
                 <AvatarImage src={player.pfp} alt={player.handle} />
                 <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <div className="font-semibold">{player.handle}</div>
+                <div className="font-semibold">@{player.handle}</div>
               </div>
               <div className="hidden sm:block">
                 {renderPlayerInfo(player.scoreData)}
@@ -326,16 +336,34 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
             <h3 className="text-lg font-semibold mb-2 text-center">Monthly Leaders</h3>
             {renderPodium()}
             {renderLeaderboard()}
+            <Pagination
+              currentPage={currentPage}
+              totalItems={playerData.length - 3}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
+            />
           </TabsContent>
           <TabsContent value="weekly" className="mt-4">
             <h3 className="text-lg font-semibold mb-2 text-center">Weekly Leaders</h3>
             {renderPodium()}
             {renderLeaderboard()}
+            <Pagination
+              currentPage={currentPage}
+              totalItems={playerData.length - 3}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
+            />
           </TabsContent>
           <TabsContent value="daily" className="mt-4">
             <h3 className="text-lg font-semibold mb-2 text-center">Daily Leaders</h3>
             {renderPodium()}
             {renderLeaderboard()}
+            <Pagination
+              currentPage={currentPage}
+              totalItems={playerData.length - 3}
+              itemsPerPage={itemsPerPage}
+              onPageChange={setCurrentPage}
+            />
           </TabsContent>
         </Tabs>
       </CardContent>

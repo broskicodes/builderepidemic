@@ -15,7 +15,37 @@ export default function HomePage() {
       {/* <Button onClick={() => {
         fetch('/api/scrape/twitter', {
           method: 'POST',
-          body: JSON.stringify({ scrapeType: TwitterScrapeType.Weekly, handles: ["levelsio", "mattiapomelli", "iamgdsa"] }),
+          body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
+            // "_alexshaq",
+            // "marc_louvion",
+            // "DhravyaShah",
+            // "avansteenweghen",
+            // "mrmagan_",
+            // "thiteanish",
+            // "mattrothenberg",
+            // "adamchenchew",
+            // "hypercosmac",
+            // "jean__gatt",
+            // "_baretto",
+            // "jakezward",
+            // "mckaywrigley",
+            // "hardeep_gambhir",
+            // "arvidkahl",
+            // "yongfook",
+            // "tdinh_me",
+            // "tibo_maker",
+            // "csallen",
+            // "czue",
+            // "TheRaymondYeh",
+            // "qayyumrajan",
+            // "DannyPostmaa",
+            // "JosephKChoi",
+            // "itsandrewgao",
+            // "mountain_mal",
+            // "aribk24",
+            // "desmondhth",
+            // "TheSlavant"
+          ] }),
         })
       }}>Scrape Twitter</Button> */}
       <CuratedResources />

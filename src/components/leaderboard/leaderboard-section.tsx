@@ -325,7 +325,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     <Card className="w-full max-w-5xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">Leaderboard</CardTitle>
-        <CardDescription className="text-center">Top performers across different time periods</CardDescription>
+        <CardDescription className="text-center">The best Twitter shippers of our generation</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">

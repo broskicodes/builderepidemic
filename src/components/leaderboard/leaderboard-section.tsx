@@ -227,10 +227,12 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
             <Popover key={player.handle}>
               <PopoverTrigger asChild>
                 <div className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32 ${highlightClass} rounded-lg p-2`}>
+                  <a href={`https://x.com/${player.handle}`} target="_blank" rel="noopener noreferrer">
                   <Avatar className={`${avatarSize} mb-2`}>
                     <AvatarImage src={player.pfp} alt={player.handle} />
                     <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
+                  </a>
                   <div className="text-center">
                     <div className={`font-semibold ${textSize}`}>@{player.handle}</div>
                     <div className={`font-bold text-primary ${textSize}`}>{player.scoreData.score.toLocaleString()}</div>
@@ -283,10 +285,12 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
               <div className="w-8 text-center font-bold flex justify-center items-center">
                 {playerRank}
               </div>
+              <a href={`https://x.com/${player.handle}`} target="_blank" rel="noopener noreferrer">
               <Avatar>
                 <AvatarImage src={player.pfp} alt={player.handle} />
                 <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
+              </a>
               <div className="flex-1">
                 <div className="font-semibold">@{player.handle}</div>
               </div>

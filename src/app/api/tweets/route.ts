@@ -8,6 +8,7 @@ export async function GET(request: Request) {
   try {
     // Fetch all unique handles with their data
     const handles = await db.select({
+      user_id: twitterHandles.id,
       handle: twitterHandles.handle,
       url: twitterHandles.url,
       pfp: twitterHandles.pfp
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
     const tweetsByHandle: Record<string, LeaderboardData> = {};
 
     // Fetch tweets for each handle
-    for (const { handle, url, pfp } of handles) {
+    for (const { user_id, handle, url, pfp } of handles) {
       const tweetData = await db.select({
         date: tweets.date,
         url: tweets.url,
@@ -34,6 +35,7 @@ export async function GET(request: Request) {
         .orderBy(tweets.date);
 
       tweetsByHandle[handle] = {
+        user_id: user_id.toString(),
         url,
         pfp,
         tweets: tweetData.map((tweet) => ({

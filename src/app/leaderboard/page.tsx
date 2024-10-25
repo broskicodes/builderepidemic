@@ -2,6 +2,7 @@ import { LeaderboardSection } from "@/components/leaderboard/leaderboard-section
 import Footer from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { LeaderboardData } from "@/lib/types";
+import { getServerSession } from "next-auth/next";
 
 async function getLeaderboardData(): Promise<Record<string, LeaderboardData>> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/tweets`, {

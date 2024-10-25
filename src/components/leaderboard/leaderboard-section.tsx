@@ -9,6 +9,7 @@ import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Eye, ThumbsUp, Bookmark, MessageCircle } from "lucide-react"
 import { LeaderboardData, Tweet } from "@/lib/types"
+import { useSession } from "next-auth/react"
 
 // Define interfaces and types
 interface Score {
@@ -27,6 +28,7 @@ interface ScoreData {
 }
 
 interface ProcessedLeaderboardData {
+  user_id: string;
   handle: string;
   pfp: string;
   dailyScores: ScoreData[];
@@ -122,8 +124,9 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
     const monthlyScores = Object.values(monthlyScoresMap);
 
     processedData.push({
+      user_id: player.user_id,
       handle,
-      pfp: player.pfp || "", // Assuming player has a profile picture property
+      pfp: `https://unavatar.io/x/${handle}`,
       dailyScores,
       weeklyScores,
       monthlyScores
@@ -136,8 +139,9 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
 }
 
 export function LeaderboardSection({ leaderboardData }: { leaderboardData: Record<string, LeaderboardData> }) {
+  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("monthly")
-  const [playerData, setPlayerData] = useState<{ handle: string, pfp: string, scoreData: ScoreData }[]>([])
+  const [playerData, setPlayerData] = useState<{ user_id: string, handle: string, pfp: string, scoreData: ScoreData }[]>([])
 
   
   // Process the leaderboard data
@@ -147,11 +151,11 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     if (processedData.length === 0) return;
 
     if (activeTab === "monthly") {
-      setPlayerData(processedData.map(player => ({ handle: player.handle, pfp: player.pfp, scoreData: player.monthlyScores.at(-1)! })));
+      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.monthlyScores.at(-1)! })));
     } else if (activeTab === "weekly") {
-      setPlayerData(processedData.map(player => ({ handle: player.handle, pfp: player.pfp, scoreData: player.weeklyScores.at(-1)! })));
+      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.weeklyScores.at(-1)! })));
     } else {
-      setPlayerData(processedData.map(player => ({ handle: player.handle, pfp: player.pfp, scoreData: player.dailyScores.at(-1)! })));
+      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.dailyScores.at(-1)! })));
     }
   }, [activeTab, processedData])
 
@@ -210,11 +214,13 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
           const podiumHeight = isFirst ? 'h-24 sm:h-32' : index === 0 ? 'h-20 sm:h-24' : 'h-12 sm:h-16';
           const textSize = isFirst ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
           const marginTop = isFirst ? 'mt-0' : 'mt-4 sm:mt-8';
+          // Update highlight class to use primary/40
+          const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
 
           return (
             <Popover key={player.handle}>
               <PopoverTrigger asChild>
-                <div className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32`}>
+                <div className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32 ${highlightClass} rounded-lg p-2`}>
                   <Avatar className={`${avatarSize} mb-2`}>
                     <AvatarImage src={player.pfp} alt={player.handle} />
                     <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
@@ -254,48 +260,53 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
   };
 
   const renderLeaderboard = () => {
-    return playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(3).map((player, index) => (
-      <Popover key={player.handle}>
-        <PopoverTrigger asChild>
-          <div className="flex items-center space-x-4 mb-4 cursor-pointer hover:bg-muted p-2 rounded-md">
-            <div className="w-8 text-center font-bold flex justify-center items-center">
-              {index + 4}
+    return playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(3).map((player, index) => {
+      // Update highlight class to use primary/40
+      const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
+
+      return (
+        <Popover key={player.handle}>
+          <PopoverTrigger asChild>
+            <div className={`flex items-center space-x-4 mb-4 cursor-pointer hover:bg-muted p-2 rounded-md ${highlightClass}`}>
+              <div className="w-8 text-center font-bold flex justify-center items-center">
+                {index + 4}
+              </div>
+              <Avatar>
+                <AvatarImage src={player.pfp} alt={player.handle} />
+                <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="font-semibold">{player.handle}</div>
+              </div>
+              <div className="hidden sm:block">
+                {renderPlayerInfo(player.scoreData)}
+              </div>
+              <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">{player.scoreData.score.toLocaleString()}</div>
             </div>
-            <Avatar>
-              <AvatarImage src={player.pfp} alt={player.handle} />
-              <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <div className="font-semibold">{player.handle}</div>
-            </div>
-            <div className="hidden sm:block">
+          </PopoverTrigger>
+          <PopoverContent className="w-auto">
+            <div className="sm:hidden flex">
               {renderPlayerInfo(player.scoreData)}
             </div>
-            <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">{player.scoreData.score.toLocaleString()}</div>
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto">
-          <div className="sm:hidden flex">
-            {renderPlayerInfo(player.scoreData)}
-          </div>
-          {activeTab === "monthly" && renderScoreGraph(
-            player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-            "score",
-            "Weeks"
-          )}
-          {activeTab === "weekly" && renderScoreGraph(
-            player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-            "score",
-            "Days"
-          )}
-          {activeTab === "daily" && renderScoreGraph(
-            player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
-            "score",
-            "Tweets"
-          )}
-        </PopoverContent>
-      </Popover>
-    ));
+            {activeTab === "monthly" && renderScoreGraph(
+              player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
+              "score",
+              "Weeks"
+            )}
+            {activeTab === "weekly" && renderScoreGraph(
+              player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
+              "score",
+              "Days"
+            )}
+            {activeTab === "daily" && renderScoreGraph(
+              player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
+              "score",
+              "Tweets"
+            )}
+          </PopoverContent>
+        </Popover>
+      );
+    });
   };
 
   return (

@@ -71,6 +71,7 @@ export interface Tweet {
 }
 
 export interface LeaderboardData {
+  user_id: string;
   url: string;
   pfp: string | null;
   tweets: Omit<Tweet, 'author'>[];

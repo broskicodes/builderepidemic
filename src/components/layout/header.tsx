@@ -72,18 +72,15 @@ export function Header() {
       <MobileNavbar>
         <div className="rounded-b-lg bg-background py-4 container text-foreground shadow-xl">
           <nav className="flex flex-col gap-1 pt-2">
-            <Link
-              href="/about"
-              className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
-            >
-              About
-            </Link>
-            <Link
-              href="/blog"
-              className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
-            >
-              Blog
-            </Link>
+            {links.map((link) => (
+              <Link
+                key={link.title}
+                href={link.link}
+                className="flex w-full cursor-pointer items-center rounded-md p-2 font-medium text-muted-foreground hover:text-foreground"
+              >
+                {link.title}
+              </Link>
+            ))}
 
             {status === "authenticated" ? (
               <Button 

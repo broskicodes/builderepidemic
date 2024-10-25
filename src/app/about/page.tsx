@@ -8,7 +8,7 @@ import { Header } from "@/components/layout/header";
 import posthog from "posthog-js";
 
 export default function AboutPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");

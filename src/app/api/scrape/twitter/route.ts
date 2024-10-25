@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
       view_count: item.viewCount
     }));
 
-    console.log(stats);
+    // console.log(stats);
 
     await addTweetsToDb(stats);
 

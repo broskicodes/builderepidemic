@@ -111,7 +111,6 @@ export default function MapPage() {
       }
 
       const addedNode = await res.json();
-      console.log("New node added:", addedNode);
       // TODO: Update the map or state with the new node
     } catch (error) {
       console.error("Error adding node:", error);

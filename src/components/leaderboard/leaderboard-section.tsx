@@ -130,7 +130,7 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
     });
   });
 
-//   console.log(processedData);
+  // console.log(processedData);
 
   return processedData;
 }

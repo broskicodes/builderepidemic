@@ -8,16 +8,13 @@ import SocialProofUsers from "./social-proof-users";
 import posthog from "posthog-js";
 
 export default function Hero() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
     signIn("twitter");
   };
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
 
   return (
     <section className="container flex flex-col items-center gap-8 pt-20 sm:gap-10 h-full justify-center flex-1 min-h-96">

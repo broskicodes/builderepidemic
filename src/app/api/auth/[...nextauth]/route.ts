@@ -30,7 +30,9 @@ const handler = NextAuth({
     async signIn({ user, account, profile }) {
       console.log("signIn", user, account, profile);
 
-      if (user && user.id && profile) {
+      const profileData = (profile as any).data;
+
+      if (user && user.id && profileData) {
         try {
           let twitterHandleId: bigint;
 
@@ -38,7 +40,7 @@ const handler = NextAuth({
         const existingHandle = await db
           .select()
           .from(twitterHandles)
-          .where(eq(twitterHandles.handle, profile.data.username as string))
+          .where(eq(twitterHandles.handle, profileData.username as string))
           .limit(1);
 
           if (existingHandle.length === 0) {
@@ -48,21 +50,21 @@ const handler = NextAuth({
                 .insert(twitterHandles)
                 .values({
                   id: BigInt(user.id),
-                  handle: profile.data.username as string,
-                  url: profile.data.url as string,
-                  pfp: profile.data.image as string,
+                  handle: profileData.username as string,
+                  url: profileData.url as string,
+                  pfp: profileData.image as string,
                 })
                 .returning({ id: twitterHandles.id });
 
               twitterHandleId = newHandle.id;
-              console.log("New Twitter handle added:", profile.data.username);
+              console.log("New Twitter handle added:", profileData.username);
             } catch (error) {
               console.error("Error adding new Twitter handle:", error);
               return false; // Prevent sign in if we can't add the Twitter handle
             }
           } else {
             twitterHandleId = existingHandle[0].id;
-            console.log("Existing Twitter handle found:", profile.data.username);
+            console.log("Existing Twitter handle found:", profileData.username);
           }
 
           // Check if there's a user associated with this Twitter handle
@@ -86,10 +88,10 @@ const handler = NextAuth({
               return false; // Prevent sign in if we can't add the user
             }
 
-            console.log("Initializing Twitter handle:", profile.data.username);
+            console.log("Initializing Twitter handle:", profileData.username);
             fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/scrape/twitter`, {
               method: 'POST',
-              body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profile.data.username] }),
+              body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });
 
           } else {

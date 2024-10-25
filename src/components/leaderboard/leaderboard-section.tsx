@@ -220,6 +220,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
           const textSize = isFirst ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
           const marginTop = isFirst ? 'mt-0' : 'mt-4 sm:mt-8';
           // Update highlight class to use primary/40
+          // @ts-ignore
           const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
 
           return (
@@ -271,6 +272,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex)
 
     return paginatedPlayers.map((player, index) => {
+      // @ts-ignore
       const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
       const playerRank = startIndex + index + 4
 

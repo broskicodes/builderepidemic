@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
   return (
     <main className="min-h-screen flex flex-col">
       <Header />
-      <div className="container mx-auto py-8 flex-grow">
+      <div className="container mx-auto py-8 grow">
         <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
         
         <p className="mb-4"><strong>Effective Date: October 24, 2024</strong></p>

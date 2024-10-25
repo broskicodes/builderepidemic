@@ -79,7 +79,7 @@ export default function Footer() {
           </ul>
         </div>
       </div>
-      <div className="mt-2 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
+      <div className="mt-2 pt-4 border-t border-border flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
         <p>© {new Date().getFullYear()} The Kaizen Company. All rights reserved.</p>
         <div className="flex space-x-4 mt-4 md:mt-0">
           <a href="/privacy" className="hover:text-primary transition-colors">

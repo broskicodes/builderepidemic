@@ -1,5 +1,6 @@
 "use client";
 
+import { SessionProvider } from "next-auth/react";
 import dynamic from "next/dynamic";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
@@ -18,9 +19,11 @@ if (typeof window !== "undefined") {
 
 export default function Template({ children }: { children: React.ReactNode }) {
   return (
-    <PostHogProvider client={posthog}>
-      <PostHogPageView />
-      {children}
-    </PostHogProvider>
+    <SessionProvider>
+      <PostHogProvider client={posthog}>
+        <PostHogPageView />
+        {children}
+      </PostHogProvider>
+    </SessionProvider>
   );
 }

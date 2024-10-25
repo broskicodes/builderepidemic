@@ -26,26 +26,6 @@ interface ScoreData {
   scores: Score[];
 }
 
-// interface WeeklyScore {
-//   week: string;
-//   score: number;
-//   views: number;
-//   likes: number;
-//   bookmarks: number;
-//   replies: number;
-//   scores: Score[];
-// }
-
-// interface MonthlyScore {
-//   month: string;
-//   score: number;
-//   views: number;
-//   likes: number;
-//   bookmarks: number;
-//   replies: number;
-//   scores: Score[];
-// }
-
 interface ProcessedLeaderboardData {
   handle: string;
   pfp: string;

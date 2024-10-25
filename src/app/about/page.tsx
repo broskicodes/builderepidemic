@@ -1,36 +1,18 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/layout/footer";
-import { toast } from "sonner";
 import { Header } from "@/components/layout/header";
 import posthog from "posthog-js";
-import { SignupForm } from "@/components/lp/signup-form";
-import { SIGNUP_EVENT } from '@/lib/types';
 
 export default function AboutPage() {
-  const [isSignedUp, setIsSignedUp] = useState(false);
-
-  useEffect(() => {
-    const signedUp = localStorage.getItem('signedUp') === 'true';
-    setIsSignedUp(signedUp);
-
-    const handleSignup = () => {
-      setIsSignedUp(true);
-    };
-
-    window.addEventListener(SIGNUP_EVENT, handleSignup);
-
-    return () => {
-      window.removeEventListener(SIGNUP_EVENT, handleSignup);
-    };
-  }, []);
+  const { data: session, status } = useSession();
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
-    // toast.success("Idk what this means yet :)");
+    signIn("twitter");
   };
 
   return (
@@ -55,12 +37,14 @@ export default function AboutPage() {
             with patient 0. Will it be you?
           </p>
           <div className="flex justify-center">
-            <SignupForm>
-              <Button onClick={handleJoinEpidemic} className="font-semibold" disabled={isSignedUp}>
-                {isSignedUp ? "Already Joined" : "Join the Epidemic"}
-                {!isSignedUp && <ArrowRight className="ml-2 h-4 w-4" />}
-              </Button>
-            </SignupForm>
+            <Button 
+              onClick={handleJoinEpidemic} 
+              className="font-semibold" 
+              disabled={status === "authenticated"}
+            >
+              {status === "authenticated" ? "Already Joined" : "Join the Epidemic"}
+              {status !== "authenticated" && <ArrowRight className="ml-2 h-4 w-4" />}
+            </Button>
           </div>
         </div>
       </main>

@@ -1,23 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { MobileNavbar } from "@/components/layout/mobile-navbar";
-import { toast } from "sonner";
 import posthog from "posthog-js";
 import { Logo } from "./logo";
-import { SignupForm } from "../lp/signup-form";
 import { SIGNUP_EVENT } from '@/lib/types';
 
 const links = [
   {
-    title: "Blog",
-    link: "/blog",
+    title: "Leaderboard",
+    link: "/leaderboard",
   },
   {
     title: "Map",
     link: "/map",
+  },
+  {
+    title: "Blog",
+    link: "/blog",
   },
   {
     title: "About",
@@ -26,26 +28,15 @@ const links = [
 ];
 
 export function Header() {
-  const [isSignedUp, setIsSignedUp] = useState(false);
-
-  useEffect(() => {
-    const signedUp = localStorage.getItem('signedUp') === 'true';
-    setIsSignedUp(signedUp);
-
-    const handleSignup = () => {
-      setIsSignedUp(true);
-    };
-
-    window.addEventListener(SIGNUP_EVENT, handleSignup);
-
-    return () => {
-      window.removeEventListener(SIGNUP_EVENT, handleSignup);
-    };
-  }, []);
+  const { data: session, status } = useSession();
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");
-    // toast.success("Idk what this means yet :)");
+    signIn("twitter");
+  };
+
+  const handleSignOut = () => {
+    signOut();
   };
 
   return (
@@ -67,11 +58,15 @@ export function Header() {
           ))}
         </nav>
         <div className="hidden items-center gap-2 md:flex">
-          <SignupForm>
-            <Button onClick={handleJoinEpidemic} disabled={isSignedUp}>
-              {isSignedUp ? "Already Joined" : "Join the Epidemic"}
+          {status === "authenticated" ? (
+            <Button onClick={handleSignOut}>
+              Sign Out
             </Button>
-          </SignupForm>
+          ) : (
+            <Button onClick={handleJoinEpidemic}>
+              Join the Epidemic
+            </Button>
+          )}
         </div>
       </div>
       <MobileNavbar>
@@ -90,11 +85,23 @@ export function Header() {
               Blog
             </Link>
 
-            <SignupForm>
-              <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full" disabled={isSignedUp}>
-                {isSignedUp ? "Already Joined" : "Join the Epidemic"}
+            {status === "authenticated" ? (
+              <Button 
+                onClick={handleSignOut} 
+                size="lg" 
+                className="mt-2 w-full"
+              >
+                Sign Out
               </Button>
-            </SignupForm>
+            ) : (
+              <Button 
+                onClick={handleJoinEpidemic} 
+                size="lg" 
+                className="mt-2 w-full"
+              >
+                Join the Epidemic
+              </Button>
+            )}
           </nav>
         </div>
       </MobileNavbar>

@@ -5,9 +5,21 @@ import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/ca
 export function CuratedResources() {
   const resources = [
     {
+      title: "Shipper Leaderboard",
+      description: "A leaderboard of the top shippers on Twitter.",
+      link: "/leaderboard",
+      newTab: false,
+    },
+    {
       title: "Community Map",
       description: "A map of builder communities around the world.",
       link: "/map",
+      newTab: false,
+    },
+    {
+      title: "Epidemic Blog",
+      description: "A collection of articles and guides to help you on your builder journey.",
+      link: "/blog",
       newTab: false,
     },
     {
@@ -17,12 +29,7 @@ export function CuratedResources() {
       link: "https://crystalline-athlete-cc7.notion.site/recommended-reading-11dedcf0f3ba80428dcec83619e3279b?pvs=4",
       newTab: true,
     },
-    {
-      title: "Epidemic Blog",
-      description: "A collection of articles and guides to help you on your builder journey.",
-      link: "/blog",
-      newTab: false,
-    },
+    
   ];
 
   return (

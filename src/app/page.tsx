@@ -12,7 +12,7 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col">
       <Header />
       <Hero />
-      {/* <Button onClick={() => {
+      <Button onClick={() => {
         fetch('/api/scrape/twitter', {
           method: 'POST',
           body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
@@ -45,9 +45,12 @@ export default function HomePage() {
             // "aribk24",
             // "desmondhth",
             // "TheSlavant"
+            // "braedenhall_",
+            "adamlyttleapps",
+            // "remotemontes"
           ] }),
         })
-      }}>Scrape Twitter</Button> */}
+      }}>Scrape Twitter</Button>
       <CuratedResources />
       <Footer />
     </main>

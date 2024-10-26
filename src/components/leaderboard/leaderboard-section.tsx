@@ -284,6 +284,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex)
 
     return paginatedPlayers.map((player, index) => {
+      console.log(player)
       // @ts-ignore
       const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
       const playerRank = startIndex + index + 4

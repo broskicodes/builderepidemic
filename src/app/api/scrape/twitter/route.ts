@@ -31,6 +31,10 @@ function getSinceDate(scrapeType: TwitterScrapeType): string {
   return sinceDate.toISOString().replace('T', '_').replace(/\.\d{3}Z$/, '_UTC');
 }
 
+export const config = {
+  runtime: 'edge',
+};
+
 export async function POST(request: NextRequest) {
   try {
     const { scrapeType, handles } = await request.json();

@@ -51,8 +51,8 @@ const handler = NextAuth({
                 .values({
                   id: BigInt(user.id),
                   handle: profileData.username as string,
-                  url: profileData.url as string,
-                  pfp: profileData.image as string,
+                  url: `https://x.com/${profileData.username}`,
+                  pfp: profileData.profile_image_url as string,
                 })
                 .returning({ id: twitterHandles.id });
 

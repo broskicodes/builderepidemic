@@ -91,6 +91,9 @@ const handler = NextAuth({
             console.log("Initializing Twitter handle:", profileData.username);
             const jobResponse = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
               method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });
 

@@ -143,7 +143,7 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
 export function LeaderboardSection({ leaderboardData }: { leaderboardData: Record<string, LeaderboardData> }) {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState("monthly")
-  const [playerData, setPlayerData] = useState<{ user_id: string, handle: string, pfp: string, scoreData: ScoreData }[]>([])
+  const [playerData, setPlayerData] = useState<{ user_id: string, handle: string, pfp: string, scoreData: ScoreData | null }[]>([])
   const isMobile = useMediaQuery({ maxWidth: 640 })
   const itemsPerPage = isMobile ? 10 : 10
   const [currentPage, setCurrentPage] = useState(1)
@@ -240,7 +240,7 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
                   </a>
                   <div className="text-center">
                     <div className={`font-semibold ${textSize}`}>@{player.handle}</div>
-                    <div className={`font-bold text-primary ${textSize}`}>{player.scoreData.score.toLocaleString()}</div>
+                    <div className={`font-bold text-primary ${textSize}`}>{player.scoreData?.score.toLocaleString()}</div>
                   </div>
                   <div className={`w-20 sm:w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}>
                     <span className="text-primary-foreground font-bold text-xl sm:text-2xl">{index === 1 ? 1 : index === 0 ? 2 : 3}</span>
@@ -248,18 +248,18 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-auto">
-                {renderPlayerInfo(player.scoreData)}
-                {activeTab === "monthly" && renderScoreGraph(
+                {player.scoreData && renderPlayerInfo(player.scoreData)}
+                {activeTab === "monthly" && player.scoreData && renderScoreGraph(
                     player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
                     "score",
                     "Weeks"
                 )}
-                {activeTab === "weekly" && renderScoreGraph(
+                {activeTab === "weekly" && player.scoreData && renderScoreGraph(
                     player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
                     "score",
                     "Days"
                 )}
-                {activeTab === "daily" && renderScoreGraph(
+                {activeTab === "daily" && player.scoreData && renderScoreGraph(
                     player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
                     "score",
                     "Tweets"
@@ -306,26 +306,26 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
                 <div className="font-semibold">@{player.handle}</div>
               </div>
               <div className="hidden sm:block">
-                {renderPlayerInfo(player.scoreData)}
+                {player.scoreData && renderPlayerInfo(player.scoreData)}
               </div>
-              <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">{player.scoreData.score.toLocaleString()}</div>
+              <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">{player.scoreData?.score.toLocaleString()}</div>
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-auto">
             <div className="sm:hidden flex">
-              {renderPlayerInfo(player.scoreData)}
+              {player.scoreData && renderPlayerInfo(player.scoreData)}
             </div>
-            {activeTab === "monthly" && renderScoreGraph(
+            {activeTab === "monthly" && player.scoreData && renderScoreGraph(
               player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
               "score",
               "Weeks"
             )}
-            {activeTab === "weekly" && renderScoreGraph(
+            {activeTab === "weekly" && player.scoreData && renderScoreGraph(
               player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
               "score",
               "Days"
             )}
-            {activeTab === "daily" && renderScoreGraph(
+            {activeTab === "daily" && player.scoreData && renderScoreGraph(
               player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
               "score",
               "Tweets"

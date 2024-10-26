@@ -97,7 +97,7 @@ const handler = NextAuth({
               body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });
 
-            const jobId = await jobResponse.json();
+            const { jobId } = await jobResponse.json();
             console.log("Job ID:", jobId);
 
           } else {

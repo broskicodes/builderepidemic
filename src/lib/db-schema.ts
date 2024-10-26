@@ -83,7 +83,7 @@ export const twitterHandles = pgTable("twitter_handles", {
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   name: text("name").notNull(),
-  email: text("email").notNull().unique(),
+  email: text("email").notNull(),
   twitter_handle_id: bigint("twitter_handle_id", { mode: 'bigint' }).references(() => twitterHandles.id).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
@@ -104,4 +104,20 @@ export const tweets = pgTable("tweets", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),
+});
+
+export const jobStatus = pgEnum("job_status", [
+  "pending",
+  "running",
+  "completed",
+  "failed"
+]);
+
+export const jobs = pgTable('jobs', {
+  id: uuid('id').primaryKey().defaultRandom().notNull(),
+  status: jobStatus('status').notNull(),
+  type: text('type').notNull(),
+  params: text('params').notNull(),
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
 });

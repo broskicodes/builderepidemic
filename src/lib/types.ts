@@ -80,6 +80,3 @@ export interface LeaderboardData {
 // Events
 export const SIGNUP_EVENT = 'user-signed-up';
 export const SHOW_MAP_EVENT = 'show-map';
-
-// Constants
-export const APIFY_TWEET_SCRAPER_ACTOR = "61RPP7dywgiy0JPD0";

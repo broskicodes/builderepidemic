@@ -89,7 +89,7 @@ const handler = NextAuth({
             }
 
             console.log("Initializing Twitter handle:", profileData.username);
-            fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/scrape/twitter`, {
+            fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
               method: 'POST',
               body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });

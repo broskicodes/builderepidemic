@@ -13,9 +13,13 @@ export default function HomePage() {
       <Header />
       <Hero />
       {/* <Button onClick={() => {
-        fetch('/api/scrape/twitter', {
+        fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
           method: 'POST',
           body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
+            "Rayid_ashraf",
             // "_alexshaq",
             // "marc_louvion",
             // "DhravyaShah",
@@ -46,7 +50,7 @@ export default function HomePage() {
             // "desmondhth",
             // "TheSlavant"
             // "braedenhall_",
-            "adamlyttleapps",
+            // "adamlyttleapps",
             // "remotemontes"
           ] }),
         })

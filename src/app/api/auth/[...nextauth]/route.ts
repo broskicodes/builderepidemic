@@ -89,10 +89,13 @@ const handler = NextAuth({
             }
 
             console.log("Initializing Twitter handle:", profileData.username);
-            fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
+            const jobResponse = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
               method: 'POST',
               body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });
+
+            const jobId = await jobResponse.json();
+            console.log("Job ID:", jobId);
 
           } else {
             console.log("User already exists for this Twitter handle:", twitterHandleId);

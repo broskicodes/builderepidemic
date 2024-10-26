@@ -207,7 +207,12 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
   )
 
   const renderPodium = () => {
-    const topThree = playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(0, 3);
+    const topThree = playerData.sort((a, b) => {
+      if (!a.scoreData || !b.scoreData) {
+        return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
+      }
+      return b.scoreData.score - a.scoreData.score;
+    }).slice(0, 3);
 
     const [first, second, third] = topThree;
 
@@ -268,7 +273,12 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
   };
 
   const renderLeaderboard = () => {
-    const sortedPlayers = playerData.sort((a, b) => b.scoreData.score - a.scoreData.score).slice(3)
+    const sortedPlayers = playerData.sort((a, b) => {
+      if (!a.scoreData || !b.scoreData) {
+        return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
+      }
+      return b.scoreData.score - a.scoreData.score;
+    }).slice(3)
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
     const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex)

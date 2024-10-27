@@ -84,7 +84,7 @@ export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom().notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  twitter_handle_id: bigint("twitter_handle_id", { mode: 'bigint' }).references(() => twitterHandles.id).notNull(),
+  twitter_handle_id: bigint("twitter_handle_id", { mode: 'bigint' }).references(() => twitterHandles.id).notNull().unique(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),

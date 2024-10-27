@@ -12,7 +12,7 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col">
       <Header />
       <Hero />
-      <Button onClick={() => {
+      {/* <Button onClick={() => {
         fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
           headers: {
             'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export default function HomePage() {
             // "jackfriks"
           ] }),
         })
-      }}>Scrape Twitter</Button>
+      }}>Scrape Twitter</Button> */}
       <CuratedResources />
       <Footer />
     </main>

@@ -34,60 +34,49 @@ const handler = NextAuth({
 
       if (user && user.id && profileData) {
         try {
-          let twitterHandleId: bigint;
+          // Upsert the Twitter handle
+          const [upsertedHandle] = await db
+            .insert(twitterHandles)
+            .values({
+              id: BigInt(user.id),
+              handle: profileData.username as string,
+              url: `https://x.com/${profileData.username}`,
+              pfp: profileData.profile_image_url as string,
+            })
+            .onConflictDoUpdate({
+              target: twitterHandles.handle,
+              set: {
+                handle: profileData.username as string,
+                url: `https://x.com/${profileData.username}`,
+                updated_at: new Date(),
+              },
+            })
+            .returning({ id: twitterHandles.id });
 
-        // Check if the Twitter handle exists
-        const existingHandle = await db
-          .select()
-          .from(twitterHandles)
-          .where(eq(twitterHandles.handle, profileData.username as string))
-          .limit(1);
+          const twitterHandleId = upsertedHandle.id;
+          console.log(`Twitter handle ${profileData.username} upserted with ID:`, twitterHandleId);
 
-          if (existingHandle.length === 0) {
-            // Twitter handle doesn't exist, add it
-            try {
-              const [newHandle] = await db
-                .insert(twitterHandles)
-                .values({
-                  id: BigInt(user.id),
-                  handle: profileData.username as string,
-                  url: `https://x.com/${profileData.username}`,
-                  pfp: profileData.profile_image_url as string,
-                })
-                .returning({ id: twitterHandles.id });
-
-              twitterHandleId = newHandle.id;
-              console.log("New Twitter handle added:", profileData.username);
-            } catch (error) {
-              console.error("Error adding new Twitter handle:", error);
-              return false; // Prevent sign in if we can't add the Twitter handle
-            }
-          } else {
-            twitterHandleId = existingHandle[0].id;
-            console.log("Existing Twitter handle found:", profileData.username);
-          }
-
-          // Check if there's a user associated with this Twitter handle
-          const existingUser = await db
-            .select()
-            .from(users)
-            .where(eq(users.twitter_handle_id, twitterHandleId))
-            .limit(1);
-
-          if (existingUser.length === 0) {
-            // No user associated with this Twitter handle, add them to the database
-            try {
-              await db.insert(users).values({
+          // Upsert the user
+          const [{ id: upsertedUserId, created_at: createdAt }] = await db
+            .insert(users)
+            .values({
+              name: user.name || '',
+              email: user.email || '',
+              twitter_handle_id: twitterHandleId,
+            })
+            .onConflictDoUpdate({
+              target: users.twitter_handle_id,
+              set: {
                 name: user.name || '',
-                email: user.email || '',
-                twitter_handle_id: twitterHandleId,
-              });
-              console.log("New user added to the database:", user.id);
-            } catch (error) {
-              console.error("Error adding new user:", error);
-              return false; // Prevent sign in if we can't add the user
-            }
+                updated_at: new Date(),
+              },
+            })
+            .returning({ id: users.id, created_at: users.created_at });
 
+          console.log(`User upserted with ID:`, upsertedUserId);
+
+          // Check if this is a new user
+          if (createdAt && new Date().getTime() - createdAt.getTime() <= 30000) {
             console.log("Initializing Twitter handle:", profileData.username);
             const jobResponse = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
               method: 'POST',
@@ -97,11 +86,10 @@ const handler = NextAuth({
               body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
             });
 
-            const { jobId } = await jobResponse.json();
-            console.log("Job ID:", jobId);
-
+            // const { jobId } = await jobResponse.json();
+            // console.log("Job ID:", jobId);
           } else {
-            console.log("User already exists for this Twitter handle:", twitterHandleId);
+            console.log("Existing user updated:", upsertedUserId);
           }
 
           return true; // Sign in successful

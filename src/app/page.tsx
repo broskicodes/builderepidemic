@@ -12,49 +12,18 @@ export default function HomePage() {
     <main className="min-h-screen flex flex-col">
       <Header />
       <Hero />
-      {/* <Button onClick={() => {
+      <Button onClick={() => {
         fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
           headers: {
             'Content-Type': 'application/json',
           },
           method: 'POST',
           body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
-            "Rayid_ashraf",
-            // "_alexshaq",
-            // "marc_louvion",
-            // "DhravyaShah",
-            // "avansteenweghen",
-            // "mrmagan_",
-            // "thiteanish",
-            // "mattrothenberg",
-            // "adamchenchew",
-            // "hypercosmac",
-            // "jean__gatt",
-            // "_baretto",
-            // "jakezward",
-            // "mckaywrigley",
-            // "hardeep_gambhir",
-            // "arvidkahl",
-            // "yongfook",
-            // "tdinh_me",
-            // "tibo_maker",
-            // "csallen",
-            // "czue",
-            // "TheRaymondYeh",
-            // "qayyumrajan",
-            // "DannyPostmaa",
-            // "JosephKChoi",
-            // "itsandrewgao",
-            // "mountain_mal",
-            // "aribk24",
-            // "desmondhth",
-            // "TheSlavant"
-            // "braedenhall_",
-            // "adamlyttleapps",
-            // "remotemontes"
+            "JiteshGhanchi",
+            // "jackfriks"
           ] }),
         })
-      }}>Scrape Twitter</Button> */}
+      }}>Scrape Twitter</Button>
       <CuratedResources />
       <Footer />
     </main>

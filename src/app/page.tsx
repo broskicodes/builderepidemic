@@ -13,15 +13,18 @@ export default function HomePage() {
       <Header />
       <Hero />
       {/* <Button onClick={() => {
-        fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter/run-all`, {
+          // headers: {
+          //   'Content-Type': 'application/json',
+          // },
           method: 'POST',
-          body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
-            "JiteshGhanchi",
-            // "jackfriks"
-          ] }),
+          // body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [
+          //   // "shivam_chauhan0",
+          //   // "fresh_man_cyrus",
+          //   // "sabacha26488",
+          //   // "hector6872",
+          //   // "josuetoz"
+          // ] }),
         })
       }}>Scrape Twitter</Button> */}
       <CuratedResources />

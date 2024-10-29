@@ -6,11 +6,11 @@ import { BlogPost as BlogPostType } from "@/lib/types";
 async function getBlogPost(slug: string): Promise<BlogPostType> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/blogposts/${slug}`, {
     method: "GET",
-    cache: 'no-store'
+    cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch blog post');
+    throw new Error("Failed to fetch blog post");
   }
 
   const data = await response.json();

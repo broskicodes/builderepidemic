@@ -18,7 +18,7 @@ export const BlogPost = ({ post }: { post: BlogPostType }) => {
 
   const tiptapEditorRef = useRef<TiptapContentRef>(null);
   const [canEdit] = useState(
-    typeof window !== 'undefined' && window.location.hostname === 'localhost'
+    typeof window !== "undefined" && window.location.hostname === "localhost",
   );
 
   const savePost = useCallback(async () => {

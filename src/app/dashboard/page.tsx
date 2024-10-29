@@ -1,6 +1,6 @@
-import { Header } from "@/components/layout/header"
-import Footer from "@/components/layout/footer"
-import { TweetAnalyticsDashboardComponent } from "@/components/dashboard/tweet-analytics-dashboard"
+import { Header } from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
+import { TweetAnalyticsDashboardComponent } from "@/components/dashboard/tweet-analytics-dashboard";
 
 export default function DashboardPage() {
   return (
@@ -11,6 +11,5 @@ export default function DashboardPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
-

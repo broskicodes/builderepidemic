@@ -3,26 +3,22 @@ import { signups } from "@/lib/db-schema";
 import { db } from "@/lib/drizzle";
 
 export async function POST(request: Request) {
-  const {
-    name,
-    twitter,
-    email,
-    buildingStatus,
-    projectLink,
-    projectDescription,
-    idea
-  } = await request.json();
+  const { name, twitter, email, buildingStatus, projectLink, projectDescription, idea } =
+    await request.json();
 
   try {
-    const newSignup = await db.insert(signups).values({
-      name,
-      twitter,
-      email,
-      buildingStatus,
-      projectLink,
-      projectDescription,
-      idea
-    }).returning();
+    const newSignup = await db
+      .insert(signups)
+      .values({
+        name,
+        twitter,
+        email,
+        buildingStatus,
+        projectLink,
+        projectDescription,
+        idea,
+      })
+      .returning();
 
     return NextResponse.json(newSignup[0], { status: 201 });
   } catch (error) {

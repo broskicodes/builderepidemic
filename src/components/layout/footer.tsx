@@ -52,7 +52,9 @@ export default function Footer() {
       <div className="flex flex-row justify-between sm:flex-col gap-y-4">
         <div className="flex sm:items-center gap-x-1">
           <Logo scale={0.7} />
-          <h2 className="whitespace-nowrap text-lg font-bold text-neutral-900 dark:text-white mt-1">Builder Epidemic</h2>
+          <h2 className="whitespace-nowrap text-lg font-bold text-neutral-900 dark:text-white mt-1">
+            Builder Epidemic
+          </h2>
         </div>
         <div className="flex flex-col sm:flex-row justify-between items-end sm:items-center gap-y-2">
           <div className="flex gap-x-2 sm:ml-2 mt-2 sm:mt-0">

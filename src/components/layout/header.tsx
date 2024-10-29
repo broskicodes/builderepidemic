@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { MobileNavbar } from "@/components/layout/mobile-navbar";
 import posthog from "posthog-js";
 import { Logo } from "./logo";
-import { SIGNUP_EVENT } from '@/lib/types';
+import { SIGNUP_EVENT } from "@/lib/types";
 
 const links = [
   {
@@ -59,13 +59,9 @@ export function Header() {
         </nav>
         <div className="hidden items-center gap-2 md:flex">
           {status === "authenticated" ? (
-            <Button onClick={handleSignOut}>
-              Sign Out
-            </Button>
+            <Button onClick={handleSignOut}>Sign Out</Button>
           ) : (
-            <Button onClick={handleJoinEpidemic}>
-              Join the Epidemic
-            </Button>
+            <Button onClick={handleJoinEpidemic}>Join the Epidemic</Button>
           )}
         </div>
       </div>
@@ -83,19 +79,11 @@ export function Header() {
             ))}
 
             {status === "authenticated" ? (
-              <Button 
-                onClick={handleSignOut} 
-                size="lg" 
-                className="mt-2 w-full"
-              >
+              <Button onClick={handleSignOut} size="lg" className="mt-2 w-full">
                 Sign Out
               </Button>
             ) : (
-              <Button 
-                onClick={handleJoinEpidemic} 
-                size="lg" 
-                className="mt-2 w-full"
-              >
+              <Button onClick={handleJoinEpidemic} size="lg" className="mt-2 w-full">
                 Join the Epidemic
               </Button>
             )}

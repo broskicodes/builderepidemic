@@ -6,7 +6,7 @@ import { Markdown } from "tiptap-markdown";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Image from "@tiptap/extension-image";
 import Typography from "@tiptap/extension-typography";
-import  Link  from "./custom-link";
+import Link from "./custom-link";
 import { all, createLowlight } from "lowlight";
 
 import "@/components/tiptap/styles.css";
@@ -23,7 +23,6 @@ export interface TiptapContentRef {
 
 const lowlight = createLowlight(all);
 
-
 const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, editable }, ref) => {
   const editor = useEditor({
     extensions: [
@@ -35,7 +34,7 @@ const TiptapContent = forwardRef<TiptapContentRef, TiptapProps>(({ content, edit
       CodeBlockLowlight.configure({
         lowlight,
         HTMLAttributes: {
-          class: 'code-block',
+          class: "code-block",
         },
       }),
       Markdown.configure({

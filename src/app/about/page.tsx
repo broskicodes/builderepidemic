@@ -25,21 +25,21 @@ export default function AboutPage() {
           </h1>
           <p className="text-base sm:text-xl text-muted-foreground">
             The world is plagued by millions of issues. Climate change, world hunger, education
-            reform, digital privacy, homelessness, governments, drug addiction, social media addiction
-            etc. Existing systems are not working to fix them. We need innovation. We need creative
-            entrepreneurs and builders working on solutions to these problems.{" "}
+            reform, digital privacy, homelessness, governments, drug addiction, social media
+            addiction etc. Existing systems are not working to fix them. We need innovation. We need
+            creative entrepreneurs and builders working on solutions to these problems.{" "}
           </p>
           <p className="text-base sm:text-xl text-muted-foreground">
-            Everybody has it in them to become a builder, but there just aren&apos;t enough resources
-            to help them learn. That&apos;s where we come in. Our goal is to spread information like a
-            virus. To infect as many people as possible with the &quot;builders bug&quot; and get them
-            working on solutions to real problems. We have a long way to go, but every epidemic starts
-            with patient 0. Will it be you?
+            Everybody has it in them to become a builder, but there just aren&apos;t enough
+            resources to help them learn. That&apos;s where we come in. Our goal is to spread
+            information like a virus. To infect as many people as possible with the &quot;builders
+            bug&quot; and get them working on solutions to real problems. We have a long way to go,
+            but every epidemic starts with patient 0. Will it be you?
           </p>
           <div className="flex justify-center">
-            <Button 
-              onClick={handleJoinEpidemic} 
-              className="font-semibold" 
+            <Button
+              onClick={handleJoinEpidemic}
+              className="font-semibold"
               disabled={status === "authenticated"}
             >
               {status === "authenticated" ? "Already Joined" : "Join the Epidemic"}

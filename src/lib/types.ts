@@ -1,15 +1,15 @@
-import "next-auth"
+import "next-auth";
 
 declare module "next-auth" {
   interface Session {
     user: {
-      id: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-    }
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    };
   }
-} 
+}
 export interface BlogPost {
   author: string;
   title: string;
@@ -36,7 +36,7 @@ export const NodeColorMap = {
   [NodeType.Hackathon]: "65334D",
   [NodeType.IncubatorOrAccelerator]: "000000",
   [NodeType.Other]: "000000",
-}
+};
 
 export interface Link {
   name: string;
@@ -59,7 +59,7 @@ export enum TwitterScrapeType {
   Initialize = "initialize",
   Monthly = "monthly",
   Weekly = "weekly",
-  Daily = "daily"
+  Daily = "daily",
 }
 
 export interface TwitterAuthor {
@@ -90,12 +90,18 @@ export interface LeaderboardData {
   user_id: string;
   url: string;
   pfp: string | null;
-  tweets: Omit<Tweet, 'author'>[];
+  tweets: Omit<Tweet, "author">[];
 }
 
-export type Metric = "impressions" | "comments" | "likes" | "retweets" | "bookmarks" | "engagement_rate"
-export type StatType = "total" | "average"
+export type Metric =
+  | "impressions"
+  | "comments"
+  | "likes"
+  | "retweets"
+  | "bookmarks"
+  | "engagement_rate";
+export type StatType = "total" | "average";
 
 // Events
-export const SIGNUP_EVENT = 'user-signed-up';
-export const SHOW_MAP_EVENT = 'show-map';
+export const SIGNUP_EVENT = "user-signed-up";
+export const SHOW_MAP_EVENT = "show-map";

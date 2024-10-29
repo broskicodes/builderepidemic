@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import { useEffect, useMemo, useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Eye, ThumbsUp, Bookmark, MessageCircle } from "lucide-react"
-import { LeaderboardData, Tweet } from "@/lib/types"
-import { useSession } from "next-auth/react"
-import { useMediaQuery } from "react-responsive"
-import { Pagination } from "@/components/ui/pagination"
+import { useEffect, useMemo, useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Bar, BarChart, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Eye, ThumbsUp, Bookmark, MessageCircle } from "lucide-react";
+import { LeaderboardData, Tweet } from "@/lib/types";
+import { useSession } from "next-auth/react";
+import { useMediaQuery } from "react-responsive";
+import { Pagination } from "@/components/ui/pagination";
 
 // Define interfaces and types
 interface Score {
@@ -39,20 +39,31 @@ interface ProcessedLeaderboardData {
 }
 
 // Add this function to process leaderboard data
-function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>): ProcessedLeaderboardData[] {
+function processLeaderboardData(
+  leaderboardData: Record<string, LeaderboardData>,
+): ProcessedLeaderboardData[] {
   const processedData: ProcessedLeaderboardData[] = [];
 
-  Object.keys(leaderboardData).forEach(handle => {
+  Object.keys(leaderboardData).forEach((handle) => {
     const player = leaderboardData[handle];
 
     // Group tweets by day
     const dailyScoresMap: Record<string, ScoreData> = {};
-    player.tweets.forEach(tweet => {
+    player.tweets.forEach((tweet) => {
       const date = new Date(tweet.date).toLocaleDateString();
-      const tweetScore = tweet.view_count + tweet.like_count + tweet.bookmark_count + tweet.reply_count;
+      const tweetScore =
+        tweet.view_count + tweet.like_count + tweet.bookmark_count + tweet.reply_count;
 
       if (!dailyScoresMap[date]) {
-        dailyScoresMap[date] = { label: date, score: 0, views: 0, likes: 0, bookmarks: 0, replies: 0, scores: [] };
+        dailyScoresMap[date] = {
+          label: date,
+          score: 0,
+          views: 0,
+          likes: 0,
+          bookmarks: 0,
+          replies: 0,
+          scores: [],
+        };
       }
       dailyScoresMap[date].score += tweetScore;
       dailyScoresMap[date].views += tweet.view_count;
@@ -63,21 +74,43 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
     });
 
     // Fill in missing days with a score of 0
-    const startDate = new Date(Math.min(...player.tweets.map(tweet => new Date(tweet.date).getTime())));
-    const endDate = new Date(Math.max(...player.tweets.map(tweet => new Date(tweet.date).getTime())));
+    const startDate = new Date(
+      Math.min(...player.tweets.map((tweet) => new Date(tweet.date).getTime())),
+    );
+    const endDate = new Date(
+      Math.max(...player.tweets.map((tweet) => new Date(tweet.date).getTime())),
+    );
     for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toLocaleDateString();
       if (!dailyScoresMap[dateStr]) {
-        dailyScoresMap[dateStr] = { label: dateStr, score: 0, views: 0, likes: 0, bookmarks: 0, replies: 0, scores: [] };
+        dailyScoresMap[dateStr] = {
+          label: dateStr,
+          score: 0,
+          views: 0,
+          likes: 0,
+          bookmarks: 0,
+          replies: 0,
+          scores: [],
+        };
       }
     }
 
-    const dailyScores = Object.values(dailyScoresMap).sort((a, b) => new Date(a.label).getTime() - new Date(b.label).getTime());
+    const dailyScores = Object.values(dailyScoresMap).sort(
+      (a, b) => new Date(a.label).getTime() - new Date(b.label).getTime(),
+    );
 
     // Compute weekly scores
     const weeklyScoresMap: Record<string, ScoreData> = {};
     let currentWeekStart: Date | null = null;
-    let currentWeekScore: ScoreData = { label: "", score: 0, views: 0, likes: 0, bookmarks: 0, replies: 0, scores: [] };
+    let currentWeekScore: ScoreData = {
+      label: "",
+      score: 0,
+      views: 0,
+      likes: 0,
+      bookmarks: 0,
+      replies: 0,
+      scores: [],
+    };
 
     dailyScores.forEach(({ label, score, views, likes, bookmarks, replies }) => {
       const currentDate = new Date(label);
@@ -87,7 +120,15 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
         // Start a new week on Monday or if it's the first week and not starting on Sunday
         if (currentWeekScore.scores.length > 0) {
           weeklyScoresMap[currentWeekScore.label] = currentWeekScore;
-          currentWeekScore = { label: "", score: 0, views: 0, likes: 0, bookmarks: 0, replies: 0, scores: [] };
+          currentWeekScore = {
+            label: "",
+            score: 0,
+            views: 0,
+            likes: 0,
+            bookmarks: 0,
+            replies: 0,
+            scores: [],
+          };
         }
         currentWeekStart = currentDate;
         currentWeekScore.label = currentWeekStart.toLocaleDateString();
@@ -111,9 +152,17 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
     // Compute monthly scores
     const monthlyScoresMap: Record<string, ScoreData> = {};
     weeklyScores.forEach(({ label, score, views, likes, bookmarks, replies }) => {
-      const month = new Date(label).toLocaleString('default', { month: 'long' });
+      const month = new Date(label).toLocaleString("default", { month: "long" });
       if (!monthlyScoresMap[month]) {
-        monthlyScoresMap[month] = { label: month, score: 0, views: 0, likes: 0, bookmarks: 0, replies: 0, scores: [] };
+        monthlyScoresMap[month] = {
+          label: month,
+          score: 0,
+          views: 0,
+          likes: 0,
+          bookmarks: 0,
+          replies: 0,
+          scores: [],
+        };
       }
       monthlyScoresMap[month].score += score;
       monthlyScoresMap[month].views += views;
@@ -131,7 +180,7 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
       pfp: `https://unavatar.io/x/${handle}`,
       dailyScores,
       weeklyScores,
-      monthlyScores
+      monthlyScores,
     });
   });
 
@@ -140,15 +189,20 @@ function processLeaderboardData(leaderboardData: Record<string, LeaderboardData>
   return processedData;
 }
 
-export function LeaderboardSection({ leaderboardData }: { leaderboardData: Record<string, LeaderboardData> }) {
+export function LeaderboardSection({
+  leaderboardData,
+}: {
+  leaderboardData: Record<string, LeaderboardData>;
+}) {
   const { data: session } = useSession();
-  const [activeTab, setActiveTab] = useState("monthly")
-  const [playerData, setPlayerData] = useState<{ user_id: string, handle: string, pfp: string, scoreData: ScoreData | null }[]>([])
-  const isMobile = useMediaQuery({ maxWidth: 640 })
-  const itemsPerPage = isMobile ? 10 : 10
-  const [currentPage, setCurrentPage] = useState(1)
+  const [activeTab, setActiveTab] = useState("monthly");
+  const [playerData, setPlayerData] = useState<
+    { user_id: string; handle: string; pfp: string; scoreData: ScoreData | null }[]
+  >([]);
+  const isMobile = useMediaQuery({ maxWidth: 640 });
+  const itemsPerPage = isMobile ? 10 : 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
-  
   // Process the leaderboard data
   const processedData = useMemo(() => processLeaderboardData(leaderboardData), [leaderboardData]);
 
@@ -156,13 +210,34 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     if (processedData.length === 0) return;
 
     if (activeTab === "monthly") {
-      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.monthlyScores.at(-1)! })));
+      setPlayerData(
+        processedData.map((player) => ({
+          user_id: player.user_id,
+          handle: player.handle,
+          pfp: player.pfp,
+          scoreData: player.monthlyScores.at(-1)!,
+        })),
+      );
     } else if (activeTab === "weekly") {
-      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.weeklyScores.at(-1)! })));
+      setPlayerData(
+        processedData.map((player) => ({
+          user_id: player.user_id,
+          handle: player.handle,
+          pfp: player.pfp,
+          scoreData: player.weeklyScores.at(-1)!,
+        })),
+      );
     } else {
-      setPlayerData(processedData.map(player => ({ user_id: player.user_id, handle: player.handle, pfp: player.pfp, scoreData: player.dailyScores.at(-1)! })));
+      setPlayerData(
+        processedData.map((player) => ({
+          user_id: player.user_id,
+          handle: player.handle,
+          pfp: player.pfp,
+          scoreData: player.dailyScores.at(-1)!,
+        })),
+      );
     }
-  }, [activeTab, processedData])
+  }, [activeTab, processedData]);
 
   const renderScoreGraph = (data: any[], dataKey: string, xAxisLabel: string) => (
     <ChartContainer
@@ -176,14 +251,14 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     >
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <XAxis dataKey="name" label={{ value: xAxisLabel, position: 'bottom', offset: -5 }} />
+          <XAxis dataKey="name" label={{ value: xAxisLabel, position: "bottom", offset: -5 }} />
           <YAxis />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Bar dataKey={dataKey} fill="var(--color-score)" />
         </BarChart>
       </ResponsiveContainer>
     </ChartContainer>
-  )
+  );
 
   const renderPlayerInfo = (scoreData: ScoreData) => (
     <div className="flex items-center space-x-4">
@@ -204,102 +279,156 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
         <span>{scoreData.replies.toLocaleString()}</span>
       </div>
     </div>
-  )
+  );
 
   const renderPodium = () => {
-    const topThree = playerData.sort((a, b) => {
-      if (!a.scoreData || !b.scoreData) {
-        return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
-      }
-      return b.scoreData.score - a.scoreData.score;
-    }).slice(0, 3);
+    const topThree = playerData
+      .sort((a, b) => {
+        if (!a.scoreData || !b.scoreData) {
+          return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
+        }
+        return b.scoreData.score - a.scoreData.score;
+      })
+      .slice(0, 3);
 
     const [first, second, third] = topThree;
 
     return (
       <div className="flex justify-center items-end mb-12 mt-8">
-        {first && second && third && [second, first, third].map((player, index) => {
-          const isFirst = index === 1;
-          const avatarSize = isFirst ? 'w-20 h-20 sm:w-24 sm:h-24' : index === 0 ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16';
-          const podiumHeight = isFirst ? 'h-24 sm:h-32' : index === 0 ? 'h-20 sm:h-24' : 'h-12 sm:h-16';
-          const textSize = isFirst ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
-          const marginTop = isFirst ? 'mt-0' : 'mt-4 sm:mt-8';
-          // Update highlight class to use primary/40
-          // @ts-ignore
-          const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
+        {first &&
+          second &&
+          third &&
+          [second, first, third].map((player, index) => {
+            const isFirst = index === 1;
+            const avatarSize = isFirst
+              ? "w-20 h-20 sm:w-24 sm:h-24"
+              : index === 0
+                ? "w-16 h-16 sm:w-20 sm:h-20"
+                : "w-12 h-12 sm:w-16 sm:h-16";
+            const podiumHeight = isFirst
+              ? "h-24 sm:h-32"
+              : index === 0
+                ? "h-20 sm:h-24"
+                : "h-12 sm:h-16";
+            const textSize = isFirst ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
+            const marginTop = isFirst ? "mt-0" : "mt-4 sm:mt-8";
+            // Update highlight class to use primary/40
+            // @ts-ignore
+            const highlightClass = session?.user?.id === player.user_id ? "bg-primary/20" : "";
 
-          return (
-            <Popover key={player.handle}>
-              <PopoverTrigger asChild>
-                <div className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32 ${highlightClass} rounded-lg p-2`}>
-                  <a href={`https://x.com/${player.handle}`} target="_blank" rel="noopener noreferrer">
-                  <Avatar className={`${avatarSize} mb-2`}>
-                    <AvatarImage src={player.pfp} alt={player.handle} />
-                    <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  </a>
-                  <div className="text-center">
-                    <div className={`font-semibold ${textSize}`}>@{player.handle}</div>
-                    <div className={`font-bold text-primary ${textSize}`}>{player.scoreData?.score.toLocaleString()}</div>
+            return (
+              <Popover key={player.handle}>
+                <PopoverTrigger asChild>
+                  <div
+                    className={`flex flex-col items-center mx-2 sm:mx-4 cursor-pointer ${marginTop} w-32 ${highlightClass} rounded-lg p-2`}
+                  >
+                    <a
+                      href={`https://x.com/${player.handle}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Avatar className={`${avatarSize} mb-2`}>
+                        <AvatarImage src={player.pfp} alt={player.handle} />
+                        <AvatarFallback>
+                          {player.handle
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                    </a>
+                    <div className="text-center">
+                      <div className={`font-semibold ${textSize}`}>@{player.handle}</div>
+                      <div className={`font-bold text-primary ${textSize}`}>
+                        {player.scoreData?.score.toLocaleString()}
+                      </div>
+                    </div>
+                    <div
+                      className={`w-20 sm:w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}
+                    >
+                      <span className="text-primary-foreground font-bold text-xl sm:text-2xl">
+                        {index === 1 ? 1 : index === 0 ? 2 : 3}
+                      </span>
+                    </div>
                   </div>
-                  <div className={`w-20 sm:w-24 ${podiumHeight} bg-primary mt-2 flex items-center justify-center rounded-t-lg`}>
-                    <span className="text-primary-foreground font-bold text-xl sm:text-2xl">{index === 1 ? 1 : index === 0 ? 2 : 3}</span>
-                  </div>
-                </div>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto">
-                {player.scoreData && renderPlayerInfo(player.scoreData)}
-                {activeTab === "monthly" && player.scoreData && renderScoreGraph(
-                    player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-                    "score",
-                    "Weeks"
-                )}
-                {activeTab === "weekly" && player.scoreData && renderScoreGraph(
-                    player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-                    "score",
-                    "Days"
-                )}
-                {activeTab === "daily" && player.scoreData && renderScoreGraph(
-                    player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
-                    "score",
-                    "Tweets"
-                )}
-              </PopoverContent>
-            </Popover>
-          );
-        })}
+                </PopoverTrigger>
+                <PopoverContent className="w-auto">
+                  {player.scoreData && renderPlayerInfo(player.scoreData)}
+                  {activeTab === "monthly" &&
+                    player.scoreData &&
+                    renderScoreGraph(
+                      player.scoreData.scores.map((score) => ({
+                        name: score.label,
+                        score: score.score,
+                      })),
+                      "score",
+                      "Weeks",
+                    )}
+                  {activeTab === "weekly" &&
+                    player.scoreData &&
+                    renderScoreGraph(
+                      player.scoreData.scores.map((score) => ({
+                        name: score.label,
+                        score: score.score,
+                      })),
+                      "score",
+                      "Days",
+                    )}
+                  {activeTab === "daily" &&
+                    player.scoreData &&
+                    renderScoreGraph(
+                      player.scoreData.scores.map((score, i) => ({
+                        name: `Tweet ${i + 1}`,
+                        score: score.score,
+                      })),
+                      "score",
+                      "Tweets",
+                    )}
+                </PopoverContent>
+              </Popover>
+            );
+          })}
       </div>
     );
   };
 
   const renderLeaderboard = () => {
-    const sortedPlayers = playerData.sort((a, b) => {
-      if (!a.scoreData || !b.scoreData) {
-        return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
-      }
-      return b.scoreData.score - a.scoreData.score;
-    }).slice(3)
-    const startIndex = (currentPage - 1) * itemsPerPage
-    const endIndex = startIndex + itemsPerPage
-    const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex)
+    const sortedPlayers = playerData
+      .sort((a, b) => {
+        if (!a.scoreData || !b.scoreData) {
+          return !a.scoreData && !b.scoreData ? 0 : !a.scoreData ? 1 : -1;
+        }
+        return b.scoreData.score - a.scoreData.score;
+      })
+      .slice(3);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedPlayers = sortedPlayers.slice(startIndex, endIndex);
 
     return paginatedPlayers.map((player, index) => {
       // @ts-ignore
-      const highlightClass = session?.user?.id === player.user_id ? 'bg-primary/20' : '';
-      const playerRank = startIndex + index + 4
+      const highlightClass = session?.user?.id === player.user_id ? "bg-primary/20" : "";
+      const playerRank = startIndex + index + 4;
 
       return (
         <Popover key={player.handle}>
           <PopoverTrigger asChild>
-            <div className={`flex items-center space-x-4 mb-4 cursor-pointer hover:bg-muted p-2 rounded-md ${highlightClass}`}>
+            <div
+              className={`flex items-center space-x-4 mb-4 cursor-pointer hover:bg-muted p-2 rounded-md ${highlightClass}`}
+            >
               <div className="w-8 text-center font-bold flex justify-center items-center">
                 {playerRank}
               </div>
               <a href={`https://x.com/${player.handle}`} target="_blank" rel="noopener noreferrer">
-              <Avatar>
-                <AvatarImage src={player.pfp} alt={player.handle} />
-                <AvatarFallback>{player.handle.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-              </Avatar>
+                <Avatar>
+                  <AvatarImage src={player.pfp} alt={player.handle} />
+                  <AvatarFallback>
+                    {player.handle
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
               </a>
               <div className="flex-1">
                 <div className="font-semibold">@{player.handle}</div>
@@ -307,28 +436,39 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
               <div className="hidden sm:block">
                 {player.scoreData && renderPlayerInfo(player.scoreData)}
               </div>
-              <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">{player.scoreData?.score.toLocaleString()}</div>
+              <div className="font-bold text-lg text-primary ml-4 min-w-[80px] text-right">
+                {player.scoreData?.score.toLocaleString()}
+              </div>
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-auto">
             <div className="sm:hidden flex">
               {player.scoreData && renderPlayerInfo(player.scoreData)}
             </div>
-            {activeTab === "monthly" && player.scoreData && renderScoreGraph(
-              player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-              "score",
-              "Weeks"
-            )}
-            {activeTab === "weekly" && player.scoreData && renderScoreGraph(
-              player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
-              "score",
-              "Days"
-            )}
-            {activeTab === "daily" && player.scoreData && renderScoreGraph(
-              player.scoreData.scores.map((score, i) => ({ name: `Tweet ${i+1}`, score: score.score })),
-              "score",
-              "Tweets"
-            )}
+            {activeTab === "monthly" &&
+              player.scoreData &&
+              renderScoreGraph(
+                player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
+                "score",
+                "Weeks",
+              )}
+            {activeTab === "weekly" &&
+              player.scoreData &&
+              renderScoreGraph(
+                player.scoreData.scores.map((score) => ({ name: score.label, score: score.score })),
+                "score",
+                "Days",
+              )}
+            {activeTab === "daily" &&
+              player.scoreData &&
+              renderScoreGraph(
+                player.scoreData.scores.map((score, i) => ({
+                  name: `Tweet ${i + 1}`,
+                  score: score.score,
+                })),
+                "score",
+                "Tweets",
+              )}
           </PopoverContent>
         </Popover>
       );
@@ -339,7 +479,9 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
     <Card className="w-full max-w-5xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">Leaderboard</CardTitle>
-        <CardDescription className="text-center">The best Twitter shippers of our generation</CardDescription>
+        <CardDescription className="text-center">
+          The best Twitter shippers of our generation
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -384,5 +526,5 @@ export function LeaderboardSection({ leaderboardData }: { leaderboardData: Recor
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }

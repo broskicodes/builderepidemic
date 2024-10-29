@@ -28,12 +28,7 @@ const Pagination = ({ currentPage, totalItems, itemsPerPage, onPageChange }: Pag
 
   return (
     <div className="flex items-center justify-between mt-4">
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handlePrevious}
-        disabled={currentPage === 1}
-      >
+      <Button variant="outline" size="sm" onClick={handlePrevious} disabled={currentPage === 1}>
         <ChevronLeft className="h-4 w-4 mr-2" />
         Previous
       </Button>

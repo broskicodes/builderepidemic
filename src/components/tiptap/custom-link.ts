@@ -1,7 +1,7 @@
-import { InputRule, markInputRule, markPasteRule, PasteRule } from '@tiptap/core'
-import { Link as TiptapLink } from '@tiptap/extension-link'
+import { InputRule, markInputRule, markPasteRule, PasteRule } from "@tiptap/core";
+import { Link as TiptapLink } from "@tiptap/extension-link";
 
-import type { LinkOptions } from '@tiptap/extension-link'
+import type { LinkOptions } from "@tiptap/extension-link";
 
 /**
  * The input regex for Markdown links with title support, and multiple quotation marks (required
@@ -9,7 +9,7 @@ import type { LinkOptions } from '@tiptap/extension-link'
  *
  * @see https://stephenweiss.dev/regex-markdown-link
  */
-const inputRegex = /(?:^|\s)\[([^\]]*)?\]\(([^)]+)(?:[""](.+)[""])?\)$/
+const inputRegex = /(?:^|\s)\[([^\]]*)?\]\(([^)]+)(?:[""](.+)[""])?\)$/;
 
 /**
  * The paste regex for Markdown links with title support, and multiple quotation marks (required
@@ -17,7 +17,7 @@ const inputRegex = /(?:^|\s)\[([^\]]*)?\]\(([^)]+)(?:[""](.+)[""])?\)$/
  *
  * @see https://stephenweiss.dev/regex-markdown-link
  */
-const pasteRegex = /(?:^|\s)\[([^\]]*)?\]\(([A-Za-z0-9:/. ]+)(?:["“](.+)["”])?\)/g
+const pasteRegex = /(?:^|\s)\[([^\]]*)?\]\(([A-Za-z0-9:/. ]+)(?:["“](.+)["”])?\)/g;
 
 /**
  * Input rule built specifically for the `Link` extension, which ignores the auto-linked URL in
@@ -26,17 +26,17 @@ const pasteRegex = /(?:^|\s)\[([^\]]*)?\]\(([A-Za-z0-9:/. ]+)(?:["“](.+)["”]
  * @see https://github.com/ueberdosis/tiptap/discussions/1865
  */
 function linkInputRule(config: Parameters<typeof markInputRule>[0]) {
-    const defaultMarkInputRule = markInputRule(config)
+  const defaultMarkInputRule = markInputRule(config);
 
-    return new InputRule({
-        find: config.find,
-        handler: (props) => {
-            const { tr } = props.state
+  return new InputRule({
+    find: config.find,
+    handler: (props) => {
+      const { tr } = props.state;
 
-            defaultMarkInputRule.handler(props)
-            tr.setMeta('preventAutolink', true)
-        },
-    })
+      defaultMarkInputRule.handler(props);
+      tr.setMeta("preventAutolink", true);
+    },
+  });
 }
 
 /**
@@ -46,17 +46,17 @@ function linkInputRule(config: Parameters<typeof markInputRule>[0]) {
  * @see https://github.com/ueberdosis/tiptap/discussions/1865
  */
 function linkPasteRule(config: Parameters<typeof markPasteRule>[0]) {
-    const defaultMarkInputRule = markPasteRule(config)
+  const defaultMarkInputRule = markPasteRule(config);
 
-    return new PasteRule({
-        find: config.find,
-        handler: (props) => {
-            const { tr } = props.state
+  return new PasteRule({
+    find: config.find,
+    handler: (props) => {
+      const { tr } = props.state;
 
-            defaultMarkInputRule.handler(props)
-            tr.setMeta('preventAutolink', true)
-        },
-    })
+      defaultMarkInputRule.handler(props);
+      tr.setMeta("preventAutolink", true);
+    },
+  });
 }
 
 /**
@@ -65,52 +65,52 @@ function linkPasteRule(config: Parameters<typeof markPasteRule>[0]) {
  * extension also adds support for the `title` attribute.
  */
 const Link = TiptapLink.extend({
-    addAttributes() {
-        return {
-            ...this.parent?.(),
-            title: {
-                default: null,
-            },
-        }
-    },
-    addInputRules() {
-        return [
-            linkInputRule({
-                find: inputRegex,
-                type: this.type,
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      title: {
+        default: null,
+      },
+    };
+  },
+  addInputRules() {
+    return [
+      linkInputRule({
+        find: inputRegex,
+        type: this.type,
 
-                // We need to use `pop()` to remove the last capture groups from the match to
-                // satisfy Tiptap's `markPasteRule` expectation of having the content as the last
-                // capture group in the match (this makes the attribute order important)
-                getAttributes(match) {
-                    return {
-                        title: match.pop()?.trim(),
-                        href: match.pop()?.trim(),
-                    }
-                },
-            }),
-        ]
-    },
-    addPasteRules() {
-        return [
-            linkPasteRule({
-                find: pasteRegex,
-                type: this.type,
+        // We need to use `pop()` to remove the last capture groups from the match to
+        // satisfy Tiptap's `markPasteRule` expectation of having the content as the last
+        // capture group in the match (this makes the attribute order important)
+        getAttributes(match) {
+          return {
+            title: match.pop()?.trim(),
+            href: match.pop()?.trim(),
+          };
+        },
+      }),
+    ];
+  },
+  addPasteRules() {
+    return [
+      linkPasteRule({
+        find: pasteRegex,
+        type: this.type,
 
-                // We need to use `pop()` to remove the last capture groups from the match to
-                // satisfy Tiptap's `markInputRule` expectation of having the content as the last
-                // capture group in the match (this makes the attribute order important)
-                getAttributes(match) {
-                    return {
-                        title: match.pop()?.trim(),
-                        href: match.pop()?.trim(),
-                    }
-                },
-            }),
-        ]
-    },
-})
+        // We need to use `pop()` to remove the last capture groups from the match to
+        // satisfy Tiptap's `markInputRule` expectation of having the content as the last
+        // capture group in the match (this makes the attribute order important)
+        getAttributes(match) {
+          return {
+            title: match.pop()?.trim(),
+            href: match.pop()?.trim(),
+          };
+        },
+      }),
+    ];
+  },
+});
 
-export default Link 
+export default Link;
 
-export type { LinkOptions }
+export type { LinkOptions };

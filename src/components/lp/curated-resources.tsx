@@ -29,7 +29,6 @@ export function CuratedResources() {
       link: "https://crystalline-athlete-cc7.notion.site/recommended-reading-11dedcf0f3ba80428dcec83619e3279b?pvs=4",
       newTab: true,
     },
-    
   ];
 
   return (

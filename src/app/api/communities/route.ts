@@ -12,11 +12,14 @@ export async function GET() {
 export async function POST(request: Request) {
   const { name, description, link } = await request.json();
 
-  const newCommunity = await db.insert(communities).values({
-    name,
-    description,
-    link,
-  }).returning();
+  const newCommunity = await db
+    .insert(communities)
+    .values({
+      name,
+      description,
+      link,
+    })
+    .returning();
 
   return NextResponse.json(newCommunity[0]);
 }

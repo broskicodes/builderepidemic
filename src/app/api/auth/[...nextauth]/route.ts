@@ -60,14 +60,14 @@ const handler = NextAuth({
           const [{ id: upsertedUserId, created_at: createdAt }] = await db
             .insert(users)
             .values({
-              name: user.name || '',
-              email: user.email || '',
+              name: user.name || "",
+              email: user.email || "",
               twitter_handle_id: twitterHandleId,
             })
             .onConflictDoUpdate({
               target: users.twitter_handle_id,
               set: {
-                name: user.name || '',
+                name: user.name || "",
                 updated_at: new Date(),
               },
             })
@@ -78,13 +78,19 @@ const handler = NextAuth({
           // Check if this is a new user
           if (createdAt && new Date().getTime() - createdAt.getTime() <= 30000) {
             console.log("Initializing Twitter handle:", profileData.username);
-            const jobResponse = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
+            const jobResponse = await fetch(
+              `${process.env.NEXT_PUBLIC_SCRAPER_URL}/scrape/twitter`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  scrapeType: TwitterScrapeType.Initialize,
+                  handles: [profileData.username],
+                }),
               },
-              body: JSON.stringify({ scrapeType: TwitterScrapeType.Initialize, handles: [profileData.username] }),
-            });
+            );
 
             // const { jobId } = await jobResponse.json();
             // console.log("Job ID:", jobId);

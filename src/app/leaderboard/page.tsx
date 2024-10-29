@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { LeaderboardSection } from "@/components/leaderboard/leaderboard-section";
 import Footer from "@/components/layout/footer";
@@ -19,17 +19,17 @@ import {
 async function getLeaderboardData(): Promise<Record<string, LeaderboardData>> {
   const response = await fetch(`${process.env.NEXT_PUBLIC_ENV_URL}/api/tweets`, {
     method: "GET",
-    cache: 'no-store'
+    cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch leaderboard data');
+    throw new Error("Failed to fetch leaderboard data");
   }
 
   const leaderboardData = await response.json();
 
   return leaderboardData;
-};
+}
 
 export default function Leaderboard() {
   const { data: session } = useSession();
@@ -51,8 +51,8 @@ export default function Leaderboard() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [session, showModal, popUpShown]);
 
   return (

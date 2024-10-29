@@ -17,7 +17,9 @@ export const BlogPost = ({ post }: { post: BlogPostType }) => {
   const router = useRouter();
 
   const tiptapEditorRef = useRef<TiptapContentRef>(null);
-  const [canEdit] = useState(false);
+  const [canEdit] = useState(
+    typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  );
 
   const savePost = useCallback(async () => {
     const editor = tiptapEditorRef.current?.getEditor();

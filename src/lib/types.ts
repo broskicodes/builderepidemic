@@ -1,3 +1,15 @@
+import "next-auth"
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+    }
+  }
+} 
 export interface BlogPost {
   author: string;
   title: string;
@@ -68,6 +80,10 @@ export interface Tweet {
   like_count: number;
   quote_count: number;
   view_count: number;
+  language: string;
+  is_reply: boolean;
+  is_retweet: boolean;
+  is_quote: boolean;
 }
 
 export interface LeaderboardData {
@@ -76,6 +92,9 @@ export interface LeaderboardData {
   pfp: string | null;
   tweets: Omit<Tweet, 'author'>[];
 }
+
+export type Metric = "impressions" | "comments" | "likes" | "retweets" | "bookmarks" | "engagement_rate"
+export type StatType = "total" | "average"
 
 // Events
 export const SIGNUP_EVENT = 'user-signed-up';

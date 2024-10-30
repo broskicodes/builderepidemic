@@ -192,7 +192,7 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
         }
       >,
     );
-  }, [tweets, prevPeriodTweets]);
+  }, [tweets, prevPeriodTweets, metricLabels]);
 
   return (
     <div>

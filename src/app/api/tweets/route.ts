@@ -31,6 +31,10 @@ export async function GET(request: Request) {
           like_count: tweets.like_count,
           quote_count: tweets.quote_count,
           view_count: tweets.view_count,
+          language: tweets.language,
+          is_reply: tweets.is_reply,
+          is_retweet: tweets.is_retweet,
+          is_quote: tweets.is_quote,
         })
         .from(tweets)
         .innerJoin(twitterHandles, eq(tweets.handle_id, twitterHandles.id))

@@ -65,7 +65,7 @@ export function TweetDashboard() {
     };
 
     fetchTweets();
-  }, [session?.user?.id]);
+  }, [session?.user]);
 
   useEffect(() => {
     if (!tweetData.length) return;

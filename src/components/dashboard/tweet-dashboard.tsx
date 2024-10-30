@@ -165,37 +165,37 @@ export function TweetDashboard() {
           <h1 className="text-2xl font-bold">Tweet Analytics for @{handle}</h1>
         </div>
         <div className="w-fit ml-auto flex space-x-2 items-center">
-          <label 
-            htmlFor="date-range" 
+          <label
+            htmlFor="date-range"
             className="whitespace-nowrap text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
             Select Date Range:
           </label>
           <div className="w-64">
-          <Select value={selectedRange} onValueChange={setSelectedRange}>
-            <SelectTrigger id="date-range">
-              <SelectValue placeholder="Select date range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Available Ranges</SelectLabel>
-                {dateRanges.map((range) => (
-                  <SelectItem key={range.value} value={range.value}>
-                    {range.label}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            <Select value={selectedRange} onValueChange={setSelectedRange}>
+              <SelectTrigger id="date-range">
+                <SelectValue placeholder="Select date range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Available Ranges</SelectLabel>
+                  {dateRanges.map((range) => (
+                    <SelectItem key={range.value} value={range.value}>
+                      {range.label}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
       <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
         <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
-        <Metrics 
-          tweets={filteredTweets} 
+        <Metrics
+          tweets={filteredTweets}
           prevPeriodTweets={prevPeriodTweets}
-          metricLabels={metricLabels} 
+          metricLabels={metricLabels}
         />
       </main>
     </div>

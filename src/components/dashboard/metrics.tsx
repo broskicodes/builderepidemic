@@ -75,7 +75,7 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
         const getValue = metricToDataKey[metric as Metric];
         const currentValues = tweets.map((tweet) => getValue(tweet));
         const hasPrevPeriod = prevPeriodTweets.length > 0;
-        const prevValues = prevPeriodTweets.map(tweet => getValue(tweet));
+        const prevValues = prevPeriodTweets.map((tweet) => getValue(tweet));
 
         if (metric === "engagement_rate") {
           const totalEngagement = tweets.reduce(
@@ -100,47 +100,59 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
               tweet.quote_count;
             return tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0;
           });
-          const averageRate = tweetRates.length > 0 
-            ? tweetRates.reduce((sum, rate) => sum + rate, 0) / tweetRates.length 
-            : 0;
+          const averageRate =
+            tweetRates.length > 0
+              ? tweetRates.reduce((sum, rate) => sum + rate, 0) / tweetRates.length
+              : 0;
 
           // Calculate previous period stats
-          const prevTotalRate = hasPrevPeriod ? (() => {
-            const prevTotalEngagement = prevPeriodTweets.reduce(
-              (sum, tweet) =>
-                sum +
-                tweet.like_count +
-                tweet.reply_count +
-                tweet.bookmark_count +
-                tweet.retweet_count +
-                tweet.quote_count,
-              0,
-            );
-            const prevTotalImpressions = prevPeriodTweets.reduce((sum, tweet) => sum + tweet.view_count, 0);
-            return prevTotalImpressions > 0 ? (prevTotalEngagement / prevTotalImpressions) * 100 : 0;
-          })() : 0;
+          const prevTotalRate = hasPrevPeriod
+            ? (() => {
+                const prevTotalEngagement = prevPeriodTweets.reduce(
+                  (sum, tweet) =>
+                    sum +
+                    tweet.like_count +
+                    tweet.reply_count +
+                    tweet.bookmark_count +
+                    tweet.retweet_count +
+                    tweet.quote_count,
+                  0,
+                );
+                const prevTotalImpressions = prevPeriodTweets.reduce(
+                  (sum, tweet) => sum + tweet.view_count,
+                  0,
+                );
+                return prevTotalImpressions > 0
+                  ? (prevTotalEngagement / prevTotalImpressions) * 100
+                  : 0;
+              })()
+            : 0;
 
-          const prevAverageRate = hasPrevPeriod ? (() => {
-            const prevTweetRates = prevPeriodTweets.map((tweet) => {
-              const engagement =
-                tweet.like_count +
-                tweet.reply_count +
-                tweet.bookmark_count +
-                tweet.retweet_count +
-                tweet.quote_count;
-              return tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0;
-            });
-            return prevTweetRates.length > 0 
-              ? prevTweetRates.reduce((sum, rate) => sum + rate, 0) / prevTweetRates.length 
-              : 0;
-          })() : 0;
+          const prevAverageRate = hasPrevPeriod
+            ? (() => {
+                const prevTweetRates = prevPeriodTweets.map((tweet) => {
+                  const engagement =
+                    tweet.like_count +
+                    tweet.reply_count +
+                    tweet.bookmark_count +
+                    tweet.retweet_count +
+                    tweet.quote_count;
+                  return tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0;
+                });
+                return prevTweetRates.length > 0
+                  ? prevTweetRates.reduce((sum, rate) => sum + rate, 0) / prevTweetRates.length
+                  : 0;
+              })()
+            : 0;
 
-          const totalChange = hasPrevPeriod && prevTotalRate > 0 
-            ? ((totalRate - prevTotalRate) / prevTotalRate) * 100 
-            : null;
-          const avgChange = hasPrevPeriod && prevAverageRate > 0 
-            ? ((averageRate - prevAverageRate) / prevAverageRate) * 100 
-            : null;
+          const totalChange =
+            hasPrevPeriod && prevTotalRate > 0
+              ? ((totalRate - prevTotalRate) / prevTotalRate) * 100
+              : null;
+          const avgChange =
+            hasPrevPeriod && prevAverageRate > 0
+              ? ((averageRate - prevAverageRate) / prevAverageRate) * 100
+              : null;
 
           acc[metric] = {
             total: totalRate,
@@ -150,23 +162,16 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
           };
         } else {
           const currentTotal = currentValues.reduce((sum, value) => sum + value, 0);
-          const currentAvg = currentValues.length > 0 
-            ? currentTotal / currentValues.length 
-            : 0;
+          const currentAvg = currentValues.length > 0 ? currentTotal / currentValues.length : 0;
 
-          const prevTotal = hasPrevPeriod 
-            ? prevValues.reduce((sum, value) => sum + value, 0) 
-            : 0;
-          const prevAvg = hasPrevPeriod && prevValues.length > 0 
-            ? prevTotal / prevValues.length 
-            : 0;
+          const prevTotal = hasPrevPeriod ? prevValues.reduce((sum, value) => sum + value, 0) : 0;
+          const prevAvg =
+            hasPrevPeriod && prevValues.length > 0 ? prevTotal / prevValues.length : 0;
 
-          const totalChange = hasPrevPeriod && prevTotal > 0 
-            ? ((currentTotal - prevTotal) / prevTotal) * 100 
-            : null;
-          const avgChange = hasPrevPeriod && prevAvg > 0 
-            ? ((currentAvg - prevAvg) / prevAvg) * 100 
-            : null;
+          const totalChange =
+            hasPrevPeriod && prevTotal > 0 ? ((currentTotal - prevTotal) / prevTotal) * 100 : null;
+          const avgChange =
+            hasPrevPeriod && prevAvg > 0 ? ((currentAvg - prevAvg) / prevAvg) * 100 : null;
 
           acc[metric as Metric] = {
             total: currentTotal,
@@ -179,11 +184,11 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
       },
       {} as Record<
         Metric,
-        { 
-          total: number; 
-          average: number; 
-          totalChange: string | null; 
-          averageChange: string | null 
+        {
+          total: number;
+          average: number;
+          totalChange: string | null;
+          averageChange: string | null;
         }
       >,
     );
@@ -236,14 +241,16 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
                     {statType === "total" ? "Total" : "Average"}
                   </p>
                   <div className="flex items-center pt-1">
-                    {(statType === "total" ? stats[metric].totalChange : stats[metric].averageChange) === null ? (
+                    {(statType === "total"
+                      ? stats[metric].totalChange
+                      : stats[metric].averageChange) === null ? (
                       <span className="text-xs text-muted-foreground">--</span>
                     ) : (
                       <>
                         {parseFloat(
                           statType === "total"
                             ? stats[metric].totalChange!
-                            : stats[metric].averageChange!
+                            : stats[metric].averageChange!,
                         ) > 0 ? (
                           <ArrowUpIcon className="h-4 w-4 text-green-500" />
                         ) : (
@@ -254,7 +261,7 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
                             parseFloat(
                               statType === "total"
                                 ? stats[metric].totalChange!
-                                : stats[metric].averageChange!
+                                : stats[metric].averageChange!,
                             ) > 0
                               ? "text-green-500"
                               : "text-red-500"

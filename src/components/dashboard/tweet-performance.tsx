@@ -32,25 +32,27 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
   };
 
   // Transform tweet data for the chart
-  const chartData = tweets.map((tweet) => {
-    const engagement =
-      tweet.like_count +
-      tweet.reply_count +
-      tweet.bookmark_count +
-      tweet.retweet_count +
-      tweet.quote_count;
-    return {
-      id: tweet.tweet_id,
-      date: new Date(tweet.date),
-      url: `https://twitter.com/user/status/${tweet.tweet_id}`,
-      impressions: tweet.view_count,
-      comments: tweet.reply_count,
-      likes: tweet.like_count,
-      bookmarks: tweet.bookmark_count,
-      retweets: tweet.retweet_count + tweet.quote_count,
-      engagement_rate: tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0,
-    };
-  }).sort((a, b) => a.date.getTime() - b.date.getTime()); // Sort by date
+  const chartData = tweets
+    .map((tweet) => {
+      const engagement =
+        tweet.like_count +
+        tweet.reply_count +
+        tweet.bookmark_count +
+        tweet.retweet_count +
+        tweet.quote_count;
+      return {
+        id: tweet.tweet_id,
+        date: new Date(tweet.date),
+        url: `https://twitter.com/user/status/${tweet.tweet_id}`,
+        impressions: tweet.view_count,
+        comments: tweet.reply_count,
+        likes: tweet.like_count,
+        bookmarks: tweet.bookmark_count,
+        retweets: tweet.retweet_count + tweet.quote_count,
+        engagement_rate: tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0,
+      };
+    })
+    .sort((a, b) => a.date.getTime() - b.date.getTime()); // Sort by date
 
   // Add click handler
   const handleBarClick = useCallback((data: any) => {
@@ -89,37 +91,34 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
                 selectedMetric.slice(1).replaceAll("_", " ")}
             </div>
           </div>
-            <ToggleGroup
-              type="single"
-              value={selectedMetric}
-              onValueChange={handleMetricChange}
-              className="justify-start"
-            >
-              {(Object.keys(metricLabels) as Metric[]).map((key) => (
-                    <ToggleGroupItem
-                      value={key}
-                      aria-label={`Show ${metricLabels[key]}`}
-                      className="flex items-center gap-2"
-                    >
-                      {metricIcons[key as keyof typeof metricIcons]}
-                    </ToggleGroupItem>
-              ))}
-            </ToggleGroup>
+          <ToggleGroup
+            type="single"
+            value={selectedMetric}
+            onValueChange={handleMetricChange}
+            className="justify-start"
+          >
+            {(Object.keys(metricLabels) as Metric[]).map((key) => (
+              <ToggleGroupItem
+                value={key}
+                aria-label={`Show ${metricLabels[key]}`}
+                className="flex items-center gap-2"
+              >
+                {metricIcons[key as keyof typeof metricIcons]}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
         </div>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <XAxis 
-                dataKey="date" 
-                tickFormatter={(value) => format(new Date(value), 'MMM d')}
-              />
+              <XAxis dataKey="date" tickFormatter={(value) => format(new Date(value), "MMM d")} />
               <YAxis />
               <Tooltip
                 formatter={(value: number, name: string) => [
                   name === "engagement_rate" ? `${value.toFixed(1)}%` : value,
                   metricLabels[name as Metric] || name,
                 ]}
-                labelFormatter={(value: string) => format(new Date(value), 'MMM d, yyyy')}
+                labelFormatter={(value: string) => format(new Date(value), "MMM d, yyyy")}
               />
               <Legend />
               <Bar

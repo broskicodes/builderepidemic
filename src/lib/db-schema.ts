@@ -137,3 +137,18 @@ export const jobs = pgTable("jobs", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const subscriptionType = pgEnum("subscription_type", ["lifetime"]);
+
+export const subscriptions = pgTable("subscriptions", {
+  id: text("id").primaryKey().notNull(),
+  user_id: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  price_id: text("price_id").notNull(),
+  type: subscriptionType("type").notNull(),
+  active: boolean("active").notNull(),
+  customer_id: text("customer_id"),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});

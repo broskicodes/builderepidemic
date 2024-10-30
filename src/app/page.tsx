@@ -3,7 +3,7 @@
 import { Header } from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import { CuratedResources } from "@/components/lp/curated-resources";
-import Hero from "@/components/lp/hero-1";
+import Hero from "@/components/lp/hero-lp";
 import { TwitterScrapeType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 

@@ -39,7 +39,6 @@ export function TweetDashboard() {
   const [prevPeriodTweets, setPrevPeriodTweets] = useState<Tweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [handle, setHandle] = useState<string | null>(null);
   const [selectedRange, setSelectedRange] = useState<string>("all");
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
 
@@ -48,7 +47,7 @@ export function TweetDashboard() {
       if (!session?.user?.id) return;
 
       try {
-        const response = await fetch(`/api/tweets/${session.user.id}`);
+        const response = await fetch(`/api/tweets/${session.user.handle}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch tweets");
@@ -57,7 +56,6 @@ export function TweetDashboard() {
         const data: Tweet[] = await response.json();
         setTweetData(data);
         setFilteredTweets(data);
-        setHandle(data[0]?.author.handle);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
         console.error("Error fetching tweets:", err);
@@ -162,7 +160,7 @@ export function TweetDashboard() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-4 border-b">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Tweet Analytics for @{handle}</h1>
+          <h1 className="text-2xl font-bold">Tweet Analytics for @{session.user.handle}</h1>
         </div>
         <div className="w-fit ml-auto flex space-x-2 items-center">
           <label

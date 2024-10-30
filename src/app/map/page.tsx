@@ -15,7 +15,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useCallback, useState, useEffect } from "react";
-import { Hero } from "@/components/lp/hero-2";
+import { Hero } from "@/components/lp/hero-map";
 import dynamic from "next/dynamic";
 import { Node, NodeType } from "@/lib/types";
 import { SHOW_MAP_EVENT } from "@/lib/types";

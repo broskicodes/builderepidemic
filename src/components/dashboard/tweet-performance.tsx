@@ -99,6 +99,7 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
           >
             {(Object.keys(metricLabels) as Metric[]).map((key) => (
               <ToggleGroupItem
+                key={key}
                 value={key}
                 aria-label={`Show ${metricLabels[key]}`}
                 className="flex items-center gap-2"

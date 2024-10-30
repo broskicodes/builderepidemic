@@ -4,8 +4,8 @@ import { tweets, twitterHandles } from "@/lib/db-schema";
 import { eq } from "drizzle-orm";
 import { Tweet } from "@/lib/types";
 
-export async function GET(request: Request, { params }: { params: { handle_id: string } }) {
-  const handle_id = params.handle_id;
+export async function GET(request: Request, { params }: { params: { handle: string } }) {
+  const handle = params.handle;
 
   try {
     // Fetch handle data
@@ -17,7 +17,7 @@ export async function GET(request: Request, { params }: { params: { handle_id: s
         pfp: twitterHandles.pfp,
       })
       .from(twitterHandles)
-      .where(eq(twitterHandles.id, BigInt(handle_id)))
+      .where(eq(twitterHandles.handle, handle))
       .limit(1);
 
     if (handleData.length === 0) {
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: { handle_id: s
       .select()
       .from(tweets)
       .innerJoin(twitterHandles, eq(tweets.handle_id, twitterHandles.id))
-      .where(eq(twitterHandles.id, BigInt(handle_id)))
+      .where(eq(twitterHandles.handle, handle))
       .orderBy(tweets.date);
 
     const response: Tweet[] = tweetData.map((tweet) => ({

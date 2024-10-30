@@ -17,18 +17,6 @@ export async function POST(request: Request) {
 
   console.log("Received user data:", user);
 
-  // Get the user UUID from the database using twitter_handle_id
-  const userResult = await db.select()
-    .from(users)
-    .where(eq(users.twitter_handle_id, BigInt(user.id)))
-    .limit(1);
-
-  if (!userResult.length) {
-    return Response.json({ error: "User not found" }, { status: 404 });
-  }
-
-  const userUuid = userResult[0].id;
-
   const session = await stripe.checkout.sessions.create({
     success_url: `${process.env.NEXT_PUBLIC_ENV_URL}/dashboard`,
     cancel_url: `${process.env.NEXT_PUBLIC_ENV_URL}/dashboard`,
@@ -40,7 +28,7 @@ export async function POST(request: Request) {
     ],
     mode: "payment",
     metadata: {
-      user_id: userUuid,
+      user_id: user.id,
     },
     // allow_promotion_codes: true,
   });

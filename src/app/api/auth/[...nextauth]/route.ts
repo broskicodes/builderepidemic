@@ -1,7 +1,7 @@
-import { users, twitterHandles } from "@/lib/db-schema";
+import { users, twitterHandles, subscriptions } from "@/lib/db-schema";
 import { db } from "@/lib/drizzle";
 import { TwitterScrapeType } from "@/lib/types";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import NextAuth from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
 
@@ -14,17 +14,55 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (session.user) {
-        // @ts-ignore
-        session.user.id = token.userId;
+        const userId = token.userId as string;
+
+        const [twitterHandle] = await db
+          .select({
+            handle: twitterHandles.handle,
+          })
+          .from(twitterHandles)
+          .where(eq(twitterHandles.id, BigInt(userId)))
+          .limit(1);
+
+        // Find the user by their Twitter handle ID
+        const [dbUser] = await db
+          .select({
+            id: users.id,
+            twitter_handle_id: users.twitter_handle_id,
+          })
+          .from(users)
+          .where(eq(users.twitter_handle_id, BigInt(userId)))
+          .limit(1);
+
+        if (dbUser) {
+          // Check for active subscription
+          const [userSubscription] = await db
+            .select({
+              id: subscriptions.id,
+              type: subscriptions.type,
+              active: subscriptions.active,
+            })
+            .from(subscriptions)
+            .where(and(eq(subscriptions.user_id, dbUser.id), eq(subscriptions.active, true)))
+            .limit(1);
+
+          // @ts-ignore
+          session.user.id = dbUser.id;
+          // @ts-ignore
+          session.user.handle = twitterHandle.handle;
+          // @ts-ignore
+          session.user.subscribed = userSubscription?.active || false;
+        }
       }
       return session;
     },
-    async jwt({ token, user, account, profile, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.userId = user.id;
       }
+
       return token;
     },
     async signIn({ user, account, profile }) {

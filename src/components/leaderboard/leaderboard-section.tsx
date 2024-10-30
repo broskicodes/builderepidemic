@@ -314,7 +314,7 @@ export function LeaderboardSection({
             const marginTop = isFirst ? "mt-0" : "mt-4 sm:mt-8";
             // Update highlight class to use primary/40
             // @ts-ignore
-            const highlightClass = session?.user?.id === player.user_id ? "bg-primary/20" : "";
+            const highlightClass = session?.user?.handle === player.handle ? "bg-primary/20" : "";
 
             return (
               <Popover key={player.handle}>
@@ -407,7 +407,7 @@ export function LeaderboardSection({
 
     return paginatedPlayers.map((player, index) => {
       // @ts-ignore
-      const highlightClass = session?.user?.id === player.user_id ? "bg-primary/20" : "";
+      const highlightClass = session?.user?.handle === player.handle ? "bg-primary/20" : "";
       const playerRank = startIndex + index + 4;
 
       return (

@@ -53,12 +53,18 @@ export function PricingDash() {
           setProgressValue(subCount * 10);
           setRemainingPurchases(10 - subCount);
           setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_10);
-        } else {
+        } else if (subCount < 50) {
           setCurrentPrice(29);
           setNextPrice(49);
           setProgressValue(subCount * 2);
           setRemainingPurchases(50 - subCount);
           setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_30);
+        } else {
+          setCurrentPrice(49);
+          setNextPrice(0);
+          setProgressValue(0);
+          setRemainingPurchases(0);
+          setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_50);
         }
         setIsDataLoaded(true);
       });
@@ -102,7 +108,7 @@ export function PricingDash() {
           </h2>
         </div>
         <p className="text-lg text-muted-foreground text-balance max-w-lg text-center">
-          Pricing that fits your needs and helps you scale.
+          Pay once, use forever.
         </p>
       </div>
       <Card className="w-full max-w-sm mx-auto bg-white border-2 border-primary shadow-2xl hover:shadow-3xl transition-all duration-300">

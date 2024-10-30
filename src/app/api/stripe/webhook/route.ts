@@ -47,7 +47,8 @@ export async function POST(request: Request) {
 
       if (
         price_id === process.env.NEXT_PUBLIC_PRICE_ID_10 ||
-        price_id === process.env.NEXT_PUBLIC_PRICE_ID_30
+        price_id === process.env.NEXT_PUBLIC_PRICE_ID_30 ||
+        price_id === process.env.NEXT_PUBLIC_PRICE_ID_50
       ) {
         await db.insert(subscriptions).values({
           id: sessionWithLineItems.id,

@@ -11,6 +11,7 @@ import {
   Bookmark,
   MessageCircle,
   Repeat,
+  SquareSigmaIcon,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -207,7 +208,7 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
               size="sm"
             >
               <ToggleGroupItem value="average" aria-label="Show averages">
-                <BarChart3Icon className="h-4 w-4" />
+                <SquareSigmaIcon className="h-4 w-4" />
               </ToggleGroupItem>
               <ToggleGroupItem value="total" aria-label="Show totals">
                 <HashIcon className="h-4 w-4" />

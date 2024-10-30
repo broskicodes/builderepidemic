@@ -32,7 +32,7 @@ interface DateRange {
   value: string;
 }
 
-export function TweetAnalyticsDashboardComponent() {
+export function TweetDashboard() {
   const { data: session } = useSession();
   const [tweetData, setTweetData] = useState<Tweet[]>([]);
   const [filteredTweets, setFilteredTweets] = useState<Tweet[]>([]);
@@ -134,10 +134,6 @@ export function TweetAnalyticsDashboardComponent() {
     setPrevPeriodTweets(prevPeriod);
   }, [selectedRange, tweetData, dateRanges]);
 
-  useEffect(() => {
-    console.log(filteredTweets);
-  }, [filteredTweets]);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -194,7 +190,7 @@ export function TweetAnalyticsDashboardComponent() {
           </div>
         </div>
       </div>
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
         <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
         <Metrics 
           tweets={filteredTweets} 

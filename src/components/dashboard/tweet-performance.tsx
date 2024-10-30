@@ -4,14 +4,9 @@ import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } fro
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Eye, ThumbsUp, Bookmark, MessageCircle, Repeat, BarChart3Icon } from "lucide-react";
-import {
-  Tooltip as ShadcnTooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { Metric, Tweet } from "@/lib/types";
 import { useState, useCallback } from "react";
+import { format } from "date-fns";
 
 const metricIcons = {
   impressions: <Eye className="h-4 w-4" />,
@@ -46,6 +41,7 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
       tweet.quote_count;
     return {
       id: tweet.tweet_id,
+      date: new Date(tweet.date),
       url: `https://twitter.com/user/status/${tweet.tweet_id}`,
       impressions: tweet.view_count,
       comments: tweet.reply_count,
@@ -54,7 +50,7 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
       retweets: tweet.retweet_count + tweet.quote_count,
       engagement_rate: tweet.view_count > 0 ? (engagement / tweet.view_count) * 100 : 0,
     };
-  });
+  }).sort((a, b) => a.date.getTime() - b.date.getTime()); // Sort by date
 
   // Add click handler
   const handleBarClick = useCallback((data: any) => {
@@ -93,7 +89,6 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
                 selectedMetric.slice(1).replaceAll("_", " ")}
             </div>
           </div>
-          <TooltipProvider>
             <ToggleGroup
               type="single"
               value={selectedMetric}
@@ -101,8 +96,6 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
               className="justify-start"
             >
               {(Object.keys(metricLabels) as Metric[]).map((key) => (
-                <ShadcnTooltip key={key}>
-                  <TooltipTrigger asChild>
                     <ToggleGroupItem
                       value={key}
                       aria-label={`Show ${metricLabels[key]}`}
@@ -110,29 +103,23 @@ export function TweetPerformance({ tweets, metricLabels }: TweetPerformanceProps
                     >
                       {metricIcons[key as keyof typeof metricIcons]}
                     </ToggleGroupItem>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <span>{metricLabels[key]}</span>
-                  </TooltipContent>
-                </ShadcnTooltip>
               ))}
             </ToggleGroup>
-          </TooltipProvider>
         </div>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
-              <XAxis dataKey="id" tickFormatter={(value) => `Tweet ${value.slice(0, 4)}...`} />
+              <XAxis 
+                dataKey="date" 
+                tickFormatter={(value) => format(new Date(value), 'MMM d')}
+              />
               <YAxis />
               <Tooltip
                 formatter={(value: number, name: string) => [
                   name === "engagement_rate" ? `${value.toFixed(1)}%` : value,
                   metricLabels[name as Metric] || name,
                 ]}
-                labelFormatter={(label: string) => {
-                  const tweet = chartData.find((t) => t.id === label);
-                  return `Tweet ${label.slice(0, 4)}...`;
-                }}
+                labelFormatter={(value: string) => format(new Date(value), 'MMM d, yyyy')}
               />
               <Legend />
               <Bar

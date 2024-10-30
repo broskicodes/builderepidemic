@@ -10,6 +10,10 @@ import { SIGNUP_EVENT } from "@/lib/types";
 
 const links = [
   {
+    title: "Dashboard",
+    link: "/dashboard",
+  },
+  {
     title: "Leaderboard",
     link: "/leaderboard",
   },
@@ -21,14 +25,14 @@ const links = [
     title: "Blog",
     link: "/blog",
   },
-  {
-    title: "About",
-    link: "/about",
-  },
+  // {
+  //   title: "About",
+  //   link: "/about",
+  // },
 ];
 
 export function Header() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const handleJoinEpidemic = () => {
     posthog.capture("cta-clicked");

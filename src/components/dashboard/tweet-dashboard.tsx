@@ -13,8 +13,10 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectSearch,
 } from "@/components/ui/select";
 import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const metricLabels: Record<Metric, string> = {
   impressions: "Impressions",
@@ -32,6 +34,12 @@ interface DateRange {
   value: string;
 }
 
+interface TwitterHandle {
+  handle: string;
+  pfp: string | null;
+  url: string;
+}
+
 export function TweetDashboard() {
   const { data: session } = useSession();
   const [tweetData, setTweetData] = useState<Tweet[]>([]);
@@ -41,13 +49,26 @@ export function TweetDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [selectedRange, setSelectedRange] = useState<string>("all");
   const [dateRanges, setDateRanges] = useState<DateRange[]>([]);
+  const [selectedHandle, setSelectedHandle] = useState<TwitterHandle | null>(null);
+  const [handles, setHandles] = useState<TwitterHandle[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (session?.user?.handle) {
+      setSelectedHandle({ 
+        handle: session.user.handle,
+        pfp: `https://unavatar.io/twitter/${session.user.handle}`,
+        url: `https://x.com/${session.user.handle}`,
+      });
+    }
+  }, [session?.user?.handle]);
 
   useEffect(() => {
     const fetchTweets = async () => {
-      if (!session?.user?.id) return;
+      if (!selectedHandle) return;
 
       try {
-        const response = await fetch(`/api/tweets/${session.user.handle}`);
+        const response = await fetch(`/api/tweets/${selectedHandle.handle}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch tweets");
@@ -65,7 +86,7 @@ export function TweetDashboard() {
     };
 
     fetchTweets();
-  }, [session?.user]);
+  }, [selectedHandle]);
 
   useEffect(() => {
     if (!tweetData.length) return;
@@ -132,6 +153,23 @@ export function TweetDashboard() {
     setPrevPeriodTweets(prevPeriod);
   }, [selectedRange, tweetData, dateRanges]);
 
+  useEffect(() => {
+    const fetchHandles = async () => {
+      try {
+        const response = await fetch(`/api/handles`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch handles");
+        }
+        const data: TwitterHandle[] = (await response.json())
+        setHandles(data);
+      } catch (err) {
+        console.error("Error fetching handles:", err);
+      }
+    };
+
+    fetchHandles();
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -160,7 +198,56 @@ export function TweetDashboard() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-4 border-b">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Tweet Analytics for @{session.user.handle}</h1>
+          <div className="flex items-center space-x-2">
+            <h1 className="text-2xl font-bold">Twitter Analytics for:</h1>
+            {selectedHandle && selectedHandle.pfp && (
+              <a href={selectedHandle.url} target="_blank" rel="noopener noreferrer">
+                <img 
+                  src={selectedHandle.pfp} 
+                  alt={`@${selectedHandle.handle}`} 
+                  className="w-10 h-10 rounded-full"
+                />
+              </a>
+            )}
+            <div className="w-48">
+              <Select value={selectedHandle?.handle} onValueChange={(value) => 
+                setSelectedHandle(handles.find(handle => handle.handle === value) || null)
+              }>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select handle" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectSearch
+                    placeholder="Search handles..."
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  <SelectGroup>
+                    <SelectLabel>Handles</SelectLabel>
+                    {/* Show current user's handle first */}
+                    {session?.user?.handle && (
+                      <SelectItem value={session.user.handle}>
+                        @{session.user.handle} (You)
+                      </SelectItem>
+                    )}
+                    {/* Show filtered handles */}
+                    {handles
+                      .filter(h => 
+                        h.handle.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                        h.handle !== session?.user?.handle
+                      )
+                      .map((handle) => (
+                        <SelectItem 
+                          key={handle.handle} 
+                          value={handle.handle}
+                        >
+                          @{handle.handle}
+                        </SelectItem>
+                      ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
         <div className="w-fit ml-auto flex space-x-2 items-center">
           <label

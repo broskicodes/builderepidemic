@@ -28,14 +28,11 @@ export default function SocialProofUsers() {
     <div className="items-center flex gap-3">
       <div className="flex">
         {testimonials.map((testimonial, index) => (
-          <Avatar 
+          <Avatar
             key={testimonial.alt}
             className={`border-2 border-white ${index !== 0 ? "-ml-4" : ""}`}
           >
-            <AvatarImage
-              alt={testimonial.alt}
-              src={testimonial.src}
-            />
+            <AvatarImage alt={testimonial.alt} src={testimonial.src} />
           </Avatar>
         ))}
       </div>

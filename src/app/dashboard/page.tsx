@@ -5,8 +5,8 @@ import Footer from "@/components/layout/footer";
 import { TweetDashboard } from "@/components/dashboard/tweet-dashboard";
 import { useSession } from "next-auth/react";
 import HeroDash from "@/components/lp/hero-dash";
-import { useEffect } from "react";
 import { PricingDash } from "@/components/lp/pricing-dash";
+import RoadmapDash from "@/components/lp/roadmap-dash";
 
 export default function DashboardPage() {
   const { data: session } = useSession();
@@ -20,6 +20,7 @@ export default function DashboardPage() {
         ) : (
           <>
             <HeroDash />
+            <RoadmapDash />
             <PricingDash />
           </>
         )}

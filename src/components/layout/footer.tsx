@@ -1,6 +1,4 @@
-import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
-import { buttonVariants } from "../ui/button";
 import { ChevronRightIcon } from "lucide-react";
 
 const footerNavs = [
@@ -19,7 +17,6 @@ const footerNavs = [
         href: "/map",
         name: "Map",
       },
-      
     ],
   },
   {
@@ -53,7 +50,7 @@ const footerNavs = [
     ],
   },
 ];
- 
+
 const footerSocials = [
   {
     name: "Twitter",
@@ -86,7 +83,7 @@ const footerSocials = [
     url: "https://www.tiktok.com/@braedenhall_",
   },
 ];
- 
+
 export default function Footer() {
   return (
     <footer className="border-t">
@@ -100,7 +97,9 @@ export default function Footer() {
               </span>
             </a>
             <div className="max-w-sm">
-              <span className="ml-2 text-sm font-medium text-neutral-500">Infecting the world, one builder at a time.</span>
+              <span className="ml-2 text-sm font-medium text-neutral-500">
+                Infecting the world, one builder at a time.
+              </span>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
@@ -126,7 +125,7 @@ export default function Footer() {
             ))}
           </div>
         </div>
- 
+
         <div className="flex flex-col gap-2 border-t py-4 sm:flex sm:flex-row sm:items-center sm:justify-between">
           <div className="flex space-x-5 sm:mt-0 sm:justify-center">
             {footerSocials.map((social) => (

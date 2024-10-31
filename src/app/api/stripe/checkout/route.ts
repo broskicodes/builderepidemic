@@ -34,7 +34,9 @@ export async function POST(request: Request) {
   });
 
   if (!session) {
-    return new Response(JSON.stringify({ error: "Failed to create checkout session" }), { status: 500 });
+    return new Response(JSON.stringify({ error: "Failed to create checkout session" }), {
+      status: 500,
+    });
   }
 
   return new Response(JSON.stringify({ url: session.url }), { status: 200 });

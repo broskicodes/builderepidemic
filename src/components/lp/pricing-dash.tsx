@@ -43,7 +43,11 @@ export function PricingDash() {
   };
 
   useEffect(() => {
-    fetch("/api/subscribers")
+    fetch("/api/subscribers", {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
         const subCount = data.length;

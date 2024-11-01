@@ -21,7 +21,7 @@ const completedTasks: Task[] = [
     dateRange: "2024-10-14 - 2024-10-17",
   },
   {
-    text: "Launched [the map](process.env.NEXT_PUBLIC_ENV_URL/map) and added first communities",
+    text: `Launched [the map](${process.env.NEXT_PUBLIC_ENV_URL}/map) and added first communities`,
     dateRange: "2024-10-18",
   },
   {
@@ -49,7 +49,7 @@ const completedTasks: Task[] = [
     dateRange: "2024-10-31"
   },
   {
-    text: "Add advanced Twitter search with filters to [the dashboard](https://builderepidemic.com/dashboard).",
+    text: `Add advanced Twitter search with filters to [the dashboard](${process.env.NEXT_PUBLIC_ENV_URL}/dashboard).`,
     dateRange: "2024-10-31"
   }
 ];

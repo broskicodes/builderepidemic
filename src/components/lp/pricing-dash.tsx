@@ -85,6 +85,7 @@ export function PricingDash() {
       features: [
         "Access to your analytics dashboard",
         "View analytics for any other user",
+        "Advanced Twitter search with filters",
         "Immediate access to new features",
       ],
     }),

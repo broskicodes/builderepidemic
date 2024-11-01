@@ -41,6 +41,7 @@ export async function GET(request: Request, { params }: { params: { handle: stri
       },
       tweet_id: tweet.tweets.tweet_id.toString(),
       url: tweet.tweets.url,
+      text: tweet.tweets.text,
       date: tweet.tweets.date.toISOString(),
       bookmark_count: tweet.tweets.bookmark_count,
       retweet_count: tweet.tweets.retweet_count,

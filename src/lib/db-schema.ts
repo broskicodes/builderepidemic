@@ -152,3 +152,15 @@ export const subscriptions = pgTable("subscriptions", {
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
+
+export const searches = pgTable("searches", {
+  id: uuid("id").primaryKey().defaultRandom().notNull(),
+  user_id: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  query: text("query").notNull(),
+  filters: jsonb("filters").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at"),
+});

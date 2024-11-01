@@ -66,15 +66,18 @@ export enum TwitterScrapeType {
 
 export interface TwitterAuthor {
   id: string;
+  name?: string;
   handle: string;
   pfp: string;
   url: string;
+  verified?: boolean;
 }
 
 export interface Tweet {
   tweet_id: string;
   author: TwitterAuthor;
   url: string;
+  text: string;
   date: string;
   bookmark_count: number;
   retweet_count: number;

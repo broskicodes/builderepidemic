@@ -24,6 +24,7 @@ export async function GET(request: Request) {
         .select({
           date: tweets.date,
           url: tweets.url,
+          text: tweets.text,
           tweet_id: tweets.tweet_id,
           bookmark_count: tweets.bookmark_count,
           retweet_count: tweets.retweet_count,

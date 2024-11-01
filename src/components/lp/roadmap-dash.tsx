@@ -47,6 +47,10 @@ const completedTasks: Task[] = [
   {
     text: "View analytics data for other users (your competitors?)",
     dateRange: "2024-10-31"
+  },
+  {
+    text: "Add advanced Twitter search with filters to [the dashboard](https://builderepidemic.com/dashboard).",
+    dateRange: "2024-10-31"
   }
 ];
 

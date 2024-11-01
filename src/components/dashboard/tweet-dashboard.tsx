@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
 import { cn } from "@/lib/utils";
+import { AdvancedSearch } from "./advanced-search";
 
 const metricLabels: Record<Metric, string> = {
   impressions: "Impressions",
@@ -276,7 +277,10 @@ export function TweetDashboard() {
         </div>
       </div>
       <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
-        <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
+          <AdvancedSearch />
+        </div>
         <Metrics
           tweets={filteredTweets}
           prevPeriodTweets={prevPeriodTweets}

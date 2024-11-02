@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Filter, Search, Heart, Bookmark, BarChart2, ExternalLink, MessageCircle, Calendar, Users, Image, Link as LinkIcon, Quote, RefreshCw, Repeat, BadgeCheck } from "lucide-react"
+import { Filter, Search, Heart, Bookmark, BarChart2, ExternalLink, MessageCircle, Calendar, Users, Image, Link as LinkIcon, Quote, Repeat, BadgeCheck, ScrollText } from "lucide-react"
 import Link from 'next/link'
 import { Tweet } from '@/lib/types'
 import { useSession } from 'next-auth/react'
@@ -23,6 +23,7 @@ interface SearchFilters {
   verified: boolean
   mediaOnly: boolean
   linksOnly: boolean
+  threadOnly: boolean
   quoteTweetsOnly: boolean
   minLikes: string
   minComments: string
@@ -39,6 +40,7 @@ export function AdvancedSearch() {
     verified: false,
     mediaOnly: false,
     linksOnly: false,
+    threadOnly: false,
     quoteTweetsOnly: false,
     minLikes: '',
     minComments: '',
@@ -187,6 +189,17 @@ export function AdvancedSearch() {
                             id="quoteTweetsOnly"
                             checked={filters.quoteTweetsOnly}
                             onCheckedChange={(checked) => setFilters({...filters, quoteTweetsOnly: checked})}
+                          />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="threadOnly" className="flex items-center space-x-2">
+                            <ScrollText className="h-4 w-4" />
+                            <span>Thread only</span>
+                          </Label>
+                          <Switch
+                            id="threadOnly"
+                            checked={filters.threadOnly}
+                            onCheckedChange={(checked) => setFilters({...filters, threadOnly: checked})}
                           />
                         </div>
                       </div>

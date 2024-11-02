@@ -11,7 +11,7 @@ export default function HeroDash() {
         Grow your Twitter audience
       </h1>
       <p className="max-w-lg text-center text-lg text-muted-foreground sm:text-xl">
-        Analytics to help you understand Twitter trends so you can grow consistently.
+        A tool to help you find and replicate the content that is working on Twitter.
       </p>
       <div>
         <Button asChild size="lg" className="cursor-pointer text-lg px-12 py-6">

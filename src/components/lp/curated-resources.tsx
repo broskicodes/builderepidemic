@@ -5,8 +5,8 @@ import { BentoGrid, BentoCard } from "@/components/magicui/bento-grid";
 export function CuratedResources() {
   const resources = [
     {
-      title: "Twitter Analytics Dashboard",
-      description: "A dashboard to help you understand your Twitter audience.",
+      title: "Twitter Resonator",
+      description: "A tool to help you find and replicate the content that is working on Twitter.",
       link: "/dashboard",
       newTab: false,
       Icon: LayoutDashboard,

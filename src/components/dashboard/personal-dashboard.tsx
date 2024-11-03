@@ -196,7 +196,7 @@ export function PersonalDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 pb-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <h1 className="text-2xl font-bold">Twitter Analytics for:</h1>

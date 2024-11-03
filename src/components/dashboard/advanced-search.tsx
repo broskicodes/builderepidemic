@@ -110,7 +110,7 @@ export function AdvancedSearch() {
             placeholder="Enter a search term and/or select filters"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="flex-grow"
+            className="grow"
           />
           <Popover>
             <PopoverTrigger asChild>
@@ -313,7 +313,7 @@ export function AdvancedSearch() {
             </Select>
           </div>
         </div>
-        <TweetList tweets={sortedResults} />
+        <TweetList tweets={sortedResults} maxHeight="400px" />
       </CardContent>
     </Card>
   )

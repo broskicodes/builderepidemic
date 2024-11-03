@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tweet } from '@/lib/types'
-import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react"
+import { Heart, BarChart2, MessageCircle, Bookmark, Repeat, Eye } from "lucide-react"
 import { Toggle } from "@/components/ui/toggle"
 import { 
   Tooltip,
@@ -25,14 +25,14 @@ interface BucketData {
   average: number
 }
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const DISPLAYED_HOURS = [...HOURS.filter(hour => hour % 4 === 0), 23]
 
 export function TweetHeatmap({ tweets }: TweetHeatmapProps) {
   const [metric, setMetric] = useState<MetricType>('impressions')
 
-  const getMetricValue = (tweet: Tweet): number => {
+  const getMetricValue = useCallback((tweet: Tweet): number => {
     switch (metric) {
       case 'impressions':
         return tweet.view_count
@@ -47,7 +47,7 @@ export function TweetHeatmap({ tweets }: TweetHeatmapProps) {
       default:
         return tweet.view_count
     }
-  }
+  }, [metric])
 
   const buckets = useMemo(() => {
     const bucketMap: Record<string, BucketData> = {}
@@ -83,15 +83,22 @@ export function TweetHeatmap({ tweets }: TweetHeatmapProps) {
     })
 
     return bucketMap
-  }, [tweets, metric])
+  }, [tweets, getMetricValue])
 
   // Find max value for color scaling
   const maxValue = Math.max(...Object.values(buckets).map(b => b.average))
 
   const getColor = (value: number): string => {
-    const intensity = maxValue > 0 ? (value / maxValue) : 0
-    // If there are tweets in this bucket (value > 0), use at least 20% opacity
-    const opacity = value > 0 ? Math.max(10, Math.round(intensity * 100)) : 0
+    if (value === 0) return 'transparent';
+    
+    // Use logarithmic scaling with faster decay
+    const logMax = Math.log(maxValue + 1);
+    const logValue = Math.log(value + 1);
+    
+    // Scale between 10% and 100% with faster decay
+    const intensity = Math.pow(logValue / logMax, 3); // Add exponential factor for faster decay
+    const opacity = Math.max(10, Math.round(intensity * 100));
+    
     return `hsl(var(--primary) / ${opacity}%)`
   }
 
@@ -119,14 +126,14 @@ export function TweetHeatmap({ tweets }: TweetHeatmapProps) {
         <div className="flex items-center justify-end mb-4">
           <div className="flex items-center space-x-2">
             <Label className="text-base">Metric:</Label>
-            <div className="flex items-center rounded-md border p-1 space-x-1">
+            <div className="flex items-center rounded-md p-1 space-x-1">
               <Toggle
                 variant="outline"
                 size="sm"
                 pressed={metric === 'impressions'}
                 onPressedChange={() => setMetric('impressions')}
               >
-                <BarChart2 className="h-4 w-4" />
+                <Eye className="h-4 w-4" />
               </Toggle>
               <Toggle
                 variant="outline"

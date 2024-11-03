@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { TweetList } from './tweet-list'
@@ -19,6 +19,15 @@ interface PopularTweetsProps {
 export function PopularTweets({ tweets }: PopularTweetsProps) {
   const [sortBy, setSortBy] = useState<SortMetric>('impressions')
   const [timeRange, setTimeRange] = useState<TimeRange>('24h')
+  const [listHeight, setListHeight] = useState<number | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const height = containerRef.current.offsetHeight
+      setListHeight(height)
+    }
+  }, [])
 
   const filteredTweets = tweets.filter(tweet => {
     if (timeRange === 'all') return true
@@ -57,18 +66,18 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
   })
 
   return (
-    <Card className="h-full">
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <div>
           <CardTitle>Popular Tweets</CardTitle>
           <CardDescription>Top performing tweets by engagement</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         <div className="flex items-center justify-between mb-4">
-          <div className="space-x-2">
+          <div className="space-y-2">
             <Label className="text-base">Time Range:</Label>
-            <div className="flex items-center rounded-md border p-1 space-x-1">
+            <div className="flex items-center rounded-md space-x-1">
               <Toggle
                 variant="outline"
                 size="sm"
@@ -144,7 +153,14 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
             </Select>
           </div>
         </div>
-        <TweetList tweets={sortedTweets} maxHeight={`${24 * 24 + (24 * 2) + 24}px`} />
+        <div ref={containerRef} className="flex-1">
+          {listHeight && (
+            <TweetList 
+              tweets={sortedTweets} 
+              maxHeight={`${listHeight}px`}
+            />
+          )}
+        </div>
       </CardContent>
     </Card>
   )

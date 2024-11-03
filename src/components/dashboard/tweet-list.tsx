@@ -10,9 +10,12 @@ interface TweetListProps {
   maxHeight?: string
 }
 
-export function TweetList({ tweets, maxHeight = "400px" }: TweetListProps) {
+export function TweetList({ tweets, maxHeight = "100%" }: TweetListProps) {
   return (
-    <ScrollArea className={`w-full rounded-md border p-4`} style={{ height: maxHeight }}>
+    <ScrollArea 
+      className="w-full rounded-md border p-4" 
+      style={{ height: maxHeight }}
+    >
       <div className="space-y-4">
         {tweets.map((tweet) => (
           <Card key={tweet.tweet_id}>

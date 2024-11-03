@@ -7,8 +7,10 @@ import { TweetList } from './tweet-list'
 import { Tweet } from '@/lib/types'
 import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react"
 import { Label } from '@/components/ui/label'
+import { Toggle } from "@/components/ui/toggle"
 
 type SortMetric = 'impressions' | 'likes' | 'comments' | 'bookmarks' | 'retweets'
+type TimeRange = '24h' | '7d' | '28d' | 'all'
 
 interface PopularTweetsProps {
   tweets: Tweet[]
@@ -16,8 +18,28 @@ interface PopularTweetsProps {
 
 export function PopularTweets({ tweets }: PopularTweetsProps) {
   const [sortBy, setSortBy] = useState<SortMetric>('impressions')
+  const [timeRange, setTimeRange] = useState<TimeRange>('24h')
 
-  const sortedTweets = [...tweets].sort((a, b) => {
+  const filteredTweets = tweets.filter(tweet => {
+    if (timeRange === 'all') return true
+    
+    const tweetDate = new Date(tweet.date)
+    const now = new Date()
+    const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60)
+    
+    switch (timeRange) {
+      case '24h':
+        return diffInHours <= 24
+      case '7d':
+        return diffInHours <= 24 * 7
+      case '28d':
+        return diffInHours <= 24 * 28
+      default:
+        return true
+    }
+  })
+
+  const sortedTweets = [...filteredTweets].sort((a, b) => {
     switch (sortBy) {
       case 'impressions':
         return b.view_count - a.view_count
@@ -37,13 +59,52 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
   return (
     <Card className="h-full">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Popular Tweets</CardTitle>
-            <CardDescription>Top performing tweets by engagement</CardDescription>
+        <div>
+          <CardTitle>Popular Tweets</CardTitle>
+          <CardDescription>Top performing tweets by engagement</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-center justify-between mb-4">
+          <div className="space-x-2">
+            <Label className="text-base">Time Range:</Label>
+            <div className="flex items-center rounded-md border p-1 space-x-1">
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={timeRange === '24h'}
+                onPressedChange={() => setTimeRange('24h')}
+              >
+                24h
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={timeRange === '7d'}
+                onPressedChange={() => setTimeRange('7d')}
+              >
+                7d
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={timeRange === '28d'}
+                onPressedChange={() => setTimeRange('28d')}
+              >
+                28d
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={timeRange === 'all'}
+                onPressedChange={() => setTimeRange('all')}
+              >
+                All
+              </Toggle>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Label>Sort by:</Label>
+          <div className="space-y-2">
+            <Label className="text-sm">Sort By</Label>
             <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortMetric)}>
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="Sort by" />
@@ -83,8 +144,6 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
             </Select>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
         <TweetList tweets={sortedTweets} maxHeight={`${24 * 24 + (24 * 2) + 24}px`} />
       </CardContent>
     </Card>

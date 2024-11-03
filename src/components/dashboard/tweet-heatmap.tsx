@@ -2,16 +2,16 @@
 
 import { useState, useMemo } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tweet } from '@/lib/types'
 import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react"
-import { Label } from '@/components/ui/label'
+import { Toggle } from "@/components/ui/toggle"
 import { 
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { Label } from "@/components/ui/label"
 
 type MetricType = 'impressions' | 'likes' | 'comments' | 'bookmarks' | 'retweets'
 
@@ -110,54 +110,59 @@ export function TweetHeatmap({ tweets }: TweetHeatmapProps) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Tweet Timing Analysis</CardTitle>
-            <CardDescription>Performance heatmap by day and hour</CardDescription>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Label>Metric:</Label>
-            <Select value={metric} onValueChange={(value) => setMetric(value as MetricType)}>
-              <SelectTrigger className="w-[160px]">
-                <SelectValue placeholder="Select metric" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="impressions">
-                  <div className="flex items-center">
-                    <BarChart2 className="w-4 h-4 mr-2" />
-                    Impressions
-                  </div>
-                </SelectItem>
-                <SelectItem value="likes">
-                  <div className="flex items-center">
-                    <Heart className="w-4 h-4 mr-2" />
-                    Likes
-                  </div>
-                </SelectItem>
-                <SelectItem value="comments">
-                  <div className="flex items-center">
-                    <MessageCircle className="w-4 h-4 mr-2" />
-                    Comments
-                  </div>
-                </SelectItem>
-                <SelectItem value="bookmarks">
-                  <div className="flex items-center">
-                    <Bookmark className="w-4 h-4 mr-2" />
-                    Bookmarks
-                  </div>
-                </SelectItem>
-                <SelectItem value="retweets">
-                  <div className="flex items-center">
-                    <Repeat className="w-4 h-4 mr-2" />
-                    Retweets
-                  </div>
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <div>
+          <CardTitle>Tweet Timing Analysis</CardTitle>
+          <CardDescription>Performance heatmap by day and hour</CardDescription>
         </div>
       </CardHeader>
       <CardContent>
+        <div className="flex items-center justify-end mb-4">
+          <div className="flex items-center space-x-2">
+            <Label className="text-base">Metric:</Label>
+            <div className="flex items-center rounded-md border p-1 space-x-1">
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={metric === 'impressions'}
+                onPressedChange={() => setMetric('impressions')}
+              >
+                <BarChart2 className="h-4 w-4" />
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={metric === 'likes'}
+                onPressedChange={() => setMetric('likes')}
+              >
+                <Heart className="h-4 w-4" />
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={metric === 'comments'}
+                onPressedChange={() => setMetric('comments')}
+              >
+                <MessageCircle className="h-4 w-4" />
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={metric === 'bookmarks'}
+                onPressedChange={() => setMetric('bookmarks')}
+              >
+                <Bookmark className="h-4 w-4" />
+              </Toggle>
+              <Toggle
+                variant="outline"
+                size="sm"
+                pressed={metric === 'retweets'}
+                onPressedChange={() => setMetric('retweets')}
+              >
+                <Repeat className="h-4 w-4" />
+              </Toggle>
+            </div>
+          </div>
+        </div>
         <div className="flex">
           <div className="flex-1 mr-4">
             <div className="grid grid-cols-7 gap-0.5 p-0.5 rounded-md">

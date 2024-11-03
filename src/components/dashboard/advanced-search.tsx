@@ -16,6 +16,7 @@ import Link from 'next/link'
 import { Tweet } from '@/lib/types'
 import { useSession } from 'next-auth/react'
 import posthog from 'posthog-js'
+import { TweetList } from './tweet-list'
 
 type SortBy = 'date' | 'impressions' | 'likes' | 'comments' | 'bookmarks' | 'retweets';
 
@@ -267,125 +268,52 @@ export function AdvancedSearch() {
           <h3 className="text-lg font-semibold">Results</h3>
           <div className="flex items-center space-x-2">
             <Label>Sort by:</Label>
-          <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortBy)}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="date">
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Date
-                </div>
-              </SelectItem>
-              <SelectItem value="impressions">
-                <div className="flex items-center">
-                  <BarChart2 className="w-4 h-4 mr-2" />
-                  Impressions
-                </div>
-              </SelectItem>
-              <SelectItem value="likes">
-                <div className="flex items-center">
-                  <Heart className="w-4 h-4 mr-2" />
-                  Likes
-                </div>
-              </SelectItem>
-              <SelectItem value="comments">
-                <div className="flex items-center">
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Comments
-                </div>
-              </SelectItem>
-              <SelectItem value="bookmarks">
-                <div className="flex items-center">
-                  <Bookmark className="w-4 h-4 mr-2" />
-                  Bookmarks
-                </div>
-              </SelectItem>
-              <SelectItem value="retweets">
-                <div className="flex items-center">
-                  <Repeat className="w-4 h-4 mr-2" />
-                  Retweets
-                </div>
-              </SelectItem>
-            </SelectContent>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortBy)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="date">
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Date
+                  </div>
+                </SelectItem>
+                <SelectItem value="impressions">
+                  <div className="flex items-center">
+                    <BarChart2 className="w-4 h-4 mr-2" />
+                    Impressions
+                  </div>
+                </SelectItem>
+                <SelectItem value="likes">
+                  <div className="flex items-center">
+                    <Heart className="w-4 h-4 mr-2" />
+                    Likes
+                  </div>
+                </SelectItem>
+                <SelectItem value="comments">
+                  <div className="flex items-center">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Comments
+                  </div>
+                </SelectItem>
+                <SelectItem value="bookmarks">
+                  <div className="flex items-center">
+                    <Bookmark className="w-4 h-4 mr-2" />
+                    Bookmarks
+                  </div>
+                </SelectItem>
+                <SelectItem value="retweets">
+                  <div className="flex items-center">
+                    <Repeat className="w-4 h-4 mr-2" />
+                    Retweets
+                  </div>
+                </SelectItem>
+              </SelectContent>
             </Select>
           </div>
         </div>
-        <ScrollArea className="h-[400px] w-full rounded-md border p-4">
-          <div className="space-y-4">
-            {sortedResults.map((result) => (
-              <Card key={result.tweet_id}>
-                <CardContent className="pt-4">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Link href={result.author.url} target="_blank" rel="noopener noreferrer">
-                      <Avatar>
-                        <AvatarImage 
-                          src={`https://unavatar.io/twitter/${result.author.handle}`}
-                          alt={result.author.name} 
-                        />
-                        <AvatarFallback>{result.author.name?.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                    </Link>
-                    <div>
-                      <p className="font-semibold flex items-center">
-                        <span>{result.author.name}</span>
-                        {result.author.verified && <BadgeCheck className="h-4 w-4 ml-1" />}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        @{result.author.handle}
-                      </p>
-                    </div>
-                  </div>
-                
-                  <p className="mb-4">{result.text.slice(0, 100)}{result.text.length > 100 ? '...' : ''}</p>
-                  <div className="flex space-x-2 mb-2">
-                    {/* {!result.is_reply && !result.is_retweet && !result.is_quote && (
-                      <span className="text-xs text-muted-foreground">Original Tweet</span>
-                    )} */}
-                    {result.is_reply && (
-                      <MessageCircle className="h-4 w-4 text-blue-500" />
-                    )}
-                    {result.is_retweet && (
-                      <Repeat className="h-4 w-4 text-blue-500" />
-                    )}
-                    {result.is_quote && (
-                      <Quote className="h-4 w-4 text-blue-500" />
-                    )}
-                  </div>
-                  <div className="flex justify-between items-end space-x-2">
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-2 gap-y-2">
-                      <span className="flex col-span-2 items-center text-sm text-muted-foreground">
-                        <BarChart2 className="h-4 w-4 mr-1" />
-                        {result.view_count.toLocaleString()}
-                      </span>
-                      <span className="flex items-center text-sm text-muted-foreground">
-                        <Heart className="h-4 w-4 mr-1" />
-                        {result.like_count.toLocaleString()}
-                      </span>
-                      <span className="flex items-center text-sm text-muted-foreground">
-                        <MessageCircle className="h-4 w-4 mr-1" />
-                        {result.reply_count.toLocaleString()}
-                      </span>
-                      <span className="flex items-center text-sm text-muted-foreground">
-                        <Bookmark className="h-4 w-4 mr-1" />
-                        {result.bookmark_count.toLocaleString()}
-                      </span>
-                      <span className="flex items-center text-sm text-muted-foreground">
-                        <Repeat className="h-4 w-4 mr-1" />
-                        {result.retweet_count.toLocaleString()}
-                      </span>
-                    </div>
-                    <Link href={result.url} target="_blank" rel="noopener noreferrer" className="flex items-center text-sm text-blue-500 hover:underline">
-                      View Tweet
-                      <ExternalLink className="h-4 w-4 ml-1" />
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
+        <TweetList tweets={sortedResults} />
       </CardContent>
     </Card>
   )

@@ -45,27 +45,25 @@ const completedTasks: Task[] = [
     dateRange: "2024-10-30",
   },
   {
-    text: "View analytics data for other users (your competitors?)",
+    text: "Add ability to view analytics data for other users.",
     dateRange: "2024-10-31",
   },
   {
-    text: `Add advanced Twitter search with filters to [the dashboard](${process.env.NEXT_PUBLIC_ENV_URL}/dashboard).`,
-    dateRange: "2024-10-31",
+    text: `Add advanced Twitter search with filters to the dashboard.`,
+    dateRange: "2024-11-01",
+  },
+  {
+    text: `Add [dashboard](${process.env.NEXT_PUBLIC_ENV_URL}/dashboard) for analyzing the latest viral tweets.`,
+    dateRange: "2024-11-03",
   },
 ];
 
 const comingSoon: Omit<Task, "dateRange">[] = [
   {
-    text: "See your most engaged followers.",
+    text: "Create a neural network to predict tweet performance.",
   },
   {
-    text: "Analyze patterns in your tweets.",
-  },
-  {
-    text: "Weekly competitions on the leaderboard.",
-  },
-  {
-    text: "Create and understand your audience profile.",
+    text: "Add audience profiles for users.",
   },
   {
     text: "Daily, weekly, and monthly twitter trend analysis.",
@@ -75,7 +73,11 @@ const comingSoon: Omit<Task, "dateRange">[] = [
 // Helper function to get the end date from a date range
 function getEndDate(dateRange: string): Date {
   const dates = dateRange.split(" - ");
-  return new Date(dates[dates.length - 1]);
+  // Parse the date string and handle timezone consistently
+  const date = new Date(dates[dates.length - 1] + "T00:00:00.000Z");
+  // Adjust for local timezone
+  const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000);
+  return localDate;
 }
 
 // Helper function to get week range label
@@ -95,13 +97,20 @@ function getWeekLabel(date: Date): string {
   return `${formatDate(sunday)} - ${formatDate(saturday)}`;
 }
 
+// Helper function to normalize date to start of day and ISO string
+function getWeekKey(date: Date): string {
+  const sunday = new Date(date);
+  // Ensure we're working with a clone of the date
+  sunday.setHours(0, 0, 0, 0);
+  sunday.setDate(date.getDate() - date.getDay());
+  return `week-${sunday.toISOString().split('T')[0]}`;  // Only use the date part
+}
+
 // Organize tasks by weeks
 const weeks = completedTasks.reduce(
   (acc: Record<string, { label: string; tasks: Task[] }>, task) => {
     const endDate = getEndDate(task.dateRange);
-    const weekStart = new Date(endDate);
-    weekStart.setDate(endDate.getDate() - endDate.getDay()); // Get Sunday
-    const weekKey = `week-${weekStart.toISOString()}`;
+    const weekKey = getWeekKey(endDate);
 
     if (!acc[weekKey]) {
       acc[weekKey] = {
@@ -131,10 +140,8 @@ export default function RoadmapDash() {
     }
   }, []);
 
-  // Get current week's start date for comparison
-  const currentWeekStart = new Date();
-  currentWeekStart.setDate(currentWeekStart.getDate() - currentWeekStart.getDay());
-  const currentWeekKey = `week-${currentWeekStart.toISOString()}`;
+  // Get current week's key
+  const currentWeekKey = getWeekKey(new Date());
 
   return (
     <section

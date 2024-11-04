@@ -84,8 +84,7 @@ export function PricingDash() {
       remainingPurchases: remainingPurchases,
       features: [
         "Access to your analytics dashboard",
-        "View analytics for any other user",
-        "Advanced Twitter search with filters",
+        "Discover and analyze viral tweets",
         "Immediate access to new features",
       ],
     }),

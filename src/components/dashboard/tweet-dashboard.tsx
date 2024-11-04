@@ -26,7 +26,7 @@ export function TweetDashboard() {
           "/api/tweets/popular?" +
             new URLSearchParams({
               minViews: "50000", // Minimum 50k views
-              minLikes: "100", // Minimum 10 likes
+              minLikes: "1", // Minimum 10 likes
               minComments: "1", // Minimum 1 comment
               minBookmarks: "1", // Minimum 1 bookmark
               minRetweets: "1", // Minimum 1 retweet

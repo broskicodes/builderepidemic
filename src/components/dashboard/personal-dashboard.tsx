@@ -16,16 +16,6 @@ import {
   SelectSearch,
 } from "@/components/ui/select";
 import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
-import { cn } from "@/lib/utils";
-
-const metricLabels: Record<Metric, string> = {
-  impressions: "Impressions",
-  engagement_rate: "Engagement Rate",
-  comments: "Comments",
-  likes: "Likes",
-  bookmarks: "Bookmarks",
-  retweets: "Retweets",
-};
 
 interface DateRange {
   start: Date;
@@ -277,11 +267,10 @@ export function PersonalDashboard() {
         </div>
       </div>
       <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
-        <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
+        <TweetPerformance tweets={filteredTweets} />
         <Metrics
           tweets={filteredTweets}
           prevPeriodTweets={prevPeriodTweets}
-          metricLabels={metricLabels}
         />
       </main>
     </div>

@@ -1,10 +1,10 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Eye, ThumbsUp, Bookmark, MessageCircle, Repeat, BarChart3Icon } from "lucide-react";
-import { Metric, Tweet } from "@/lib/types";
+import { Metric, metricLabels, Tweet } from "@/lib/types";
 import { useState, useCallback } from "react";
 import { format } from "date-fns";
 import { Toggle } from "@/components/ui/toggle";
@@ -23,13 +23,116 @@ type TimeRange = "24h" | "7d" | "28d" | "all";
 
 interface TweetPerformanceProps {
   tweets: Tweet[];
-  metricLabels: Record<string, string>;
   showTimeRange?: boolean;
 }
 
+const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
+  if (!active || !payload || !payload.length) return null;
+
+  const tweet = payload[0].payload;
+
+  // Normalize values to a 0-100 scale
+  const normalizeValue = (value: number, metric: string) => {    
+    // Find reasonable maximum values for each metric
+    const maxValues = {
+      impressions: 1000000, // 1M
+      likes: 5000,        // 1K
+      comments: 250,      // 100
+      bookmarks: 3500,     // 100
+      retweets: 1000, 
+      engagement_rate: 3,
+    };
+
+    const max = maxValues[metric as keyof typeof maxValues];
+    return (value / max) * 100 > 100 ? 100 : (value / max) * 100;
+  };
+
+  const radarData = [
+    { metric: "impressions", value: normalizeValue(tweet.impressions, "impressions") },
+    { metric: "likes", value: normalizeValue(tweet.likes, "likes") },
+    { metric: "comments", value: normalizeValue(tweet.comments, "comments") },
+    { metric: "bookmarks", value: normalizeValue(tweet.bookmarks, "bookmarks") },
+    { metric: "retweets", value: normalizeValue(tweet.retweets, "retweets") },    
+    { metric: "engagement_rate", value: normalizeValue(tweet.engagement_rate, "engagement_rate") },
+  ];
+
+  const formatValue = (value: number, name: string): string => {
+    if (name === "Engagement Rate") {
+      const rounded = value.toFixed(1);
+      return rounded.endsWith(".0") ? `${Math.round(value)}%` : `${rounded}%`;
+    }
+
+    if (value >= 1_000_000) {
+      const rounded = (value / 1_000_000).toFixed(1);
+      return rounded.endsWith(".0") ? `${Math.round(value / 1_000_000)}M` : `${rounded}M`;
+    }
+
+    if (value >= 1_000) {
+      const rounded = (value / 1_000).toFixed(1);
+      return rounded.endsWith(".0") ? `${Math.round(value / 1_000)}K` : `${rounded}K`;
+    }
+
+    return Math.round(value).toString();
+  };
+
+  const renderPolarAngleAxis = ({ payload, x, y, cx, cy, ...rest }: any) => {
+    const icon = metricIcons[payload.value as keyof typeof metricIcons];
+    const isSelectedMetric = payload.value === selectedMetric;
+    
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <foreignObject
+          x="-12"
+          y="-12"
+          width="24"
+          height="24"
+          style={{ 
+            color: isSelectedMetric 
+              ? "hsl(var(--primary))" 
+              : "hsl(var(--foreground))" 
+          }}
+        >
+          <div className={`h-full w-full flex items-center justify-center transition-colors
+            ${isSelectedMetric ? 'text-primary' : ''}`}
+          >
+            {icon}
+          </div>
+        </foreignObject>
+      </g>
+    );
+  };
+
+  return (
+    <div className="bg-background border rounded-lg p-4 shadow-lg">
+      <p className="font-medium">{format(new Date(label), "MMM d, yyyy")}</p>
+      <div className="w-[200px] h-[200px] mt-2">
+        <ResponsiveContainer>
+          <RadarChart data={radarData}>
+            <PolarGrid />
+            <PolarAngleAxis 
+              dataKey="metric" 
+              tick={renderPolarAngleAxis}
+            />
+            <Radar
+              name="Metrics"
+              dataKey="value"
+              fill="hsl(var(--primary))"
+              fillOpacity={0.5}
+            />
+          </RadarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-2 space-y-1">
+        <p className="font-medium">
+          {metricLabels[payload[0].name.toLowerCase().replaceAll(" ", "_") as Metric]}: {formatValue(payload[0].value, payload[0].name)}
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export function TweetPerformance({
   tweets,
-  metricLabels,
   showTimeRange = false,
 }: TweetPerformanceProps) {
   const [selectedMetric, setSelectedMetric] = useState<Metric>("impressions");
@@ -90,25 +193,6 @@ export function TweetPerformance({
     }
   }, []);
 
-  const formatValue = (value: number, name: string): string => {
-    if (name === "Engagement Rate") {
-      const rounded = value.toFixed(1);
-      return rounded.endsWith(".0") ? `${Math.round(value)}%` : `${rounded}%`;
-    }
-
-    if (value >= 1_000_000) {
-      const rounded = (value / 1_000_000).toFixed(1);
-      return rounded.endsWith(".0") ? `${Math.round(value / 1_000_000)}M` : `${rounded}M`;
-    }
-
-    if (value >= 1_000) {
-      const rounded = (value / 1_000).toFixed(1);
-      return rounded.endsWith(".0") ? `${Math.round(value / 1_000)}K` : `${rounded}K`;
-    }
-
-    return Math.round(value).toString();
-  };
-
   if (!tweets.length) {
     return (
       <Card className="w-full">
@@ -161,14 +245,6 @@ export function TweetPerformance({
                 >
                   28d
                 </Toggle>
-                {/* <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === 'all'}
-                  onPressedChange={() => setTimeRange('all')}
-                >
-                  All
-                </Toggle> */}
               </div>
             </div>
           )}
@@ -209,13 +285,7 @@ export function TweetPerformance({
                       : value.toString()
                 }
               />
-              <Tooltip
-                formatter={(value: number, name: string) => [
-                  formatValue(value, name),
-                  metricLabels[name as Metric] || name,
-                ]}
-                labelFormatter={(value: string) => format(new Date(value), "MMM d, yyyy")}
-              />
+              <Tooltip content={(props) => <CustomTooltip {...props} selectedMetric={selectedMetric} />} />
               <Legend />
               <Bar
                 dataKey={selectedMetric}

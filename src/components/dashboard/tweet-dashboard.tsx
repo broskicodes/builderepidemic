@@ -9,15 +9,6 @@ import { TweetPerformance } from "./tweet-performance";
 import { Tweet } from "@/lib/types";
 import { useSession } from "next-auth/react";
 
-const metricLabels = {
-  impressions: "Views",
-  likes: "Likes",
-  comments: "Comments",
-  bookmarks: "Bookmarks",
-  retweets: "Retweets",
-  engagement_rate: "Engagement Rate",
-};
-
 export function TweetDashboard() {
   const [popularTweets, setPopularTweets] = useState<Tweet[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -99,7 +90,6 @@ export function TweetDashboard() {
         <div className="grid grid-cols-1">
           <TweetPerformance
             tweets={popularTweets}
-            metricLabels={metricLabels}
             showTimeRange={true}
           />
         </div>

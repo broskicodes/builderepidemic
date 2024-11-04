@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Metric, StatType, Tweet } from "@/lib/types";
+import { Metric, metricLabels, StatType, Tweet } from "@/lib/types";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -18,7 +18,6 @@ import { useMemo, useState } from "react";
 interface MetricsProps {
   tweets: Tweet[];
   prevPeriodTweets: Tweet[];
-  metricLabels: Record<Metric, string>;
 }
 
 const metricToDataKey: Record<Metric, (tweet: Tweet) => number> = {
@@ -60,7 +59,7 @@ const formatNumber = (num: number): string => {
   return formatted.endsWith(".0") ? formatted.slice(0, -2) : formatted;
 };
 
-export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps) => {
+export const Metrics = ({ tweets, prevPeriodTweets }: MetricsProps) => {
   const [statType, setStatType] = useState<StatType>("average");
 
   const handleStatTypeChange = (value: string | undefined) => {
@@ -192,7 +191,7 @@ export const Metrics = ({ tweets, prevPeriodTweets, metricLabels }: MetricsProps
         }
       >,
     );
-  }, [tweets, prevPeriodTweets, metricLabels]);
+  }, [tweets, prevPeriodTweets]);
 
   return (
     <div>

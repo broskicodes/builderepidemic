@@ -110,3 +110,12 @@ export type StatType = "total" | "average";
 // Events
 export const SIGNUP_EVENT = "user-signed-up";
 export const SHOW_MAP_EVENT = "show-map";
+
+export const metricLabels: Record<Metric, string> = {
+  impressions: "Impressions",
+  engagement_rate: "Engagement Rate",
+  comments: "Comments",
+  likes: "Likes",
+  bookmarks: "Bookmarks",
+  retweets: "Retweets",
+};

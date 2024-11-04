@@ -20,17 +20,18 @@ type ViewRange = {
 };
 
 const VIEW_RANGES: ViewRange[] = [
-  { min: 50000, max: 100000, label: "50K-100K views" },
-  { min: 100000, max: 500000, label: "100K-500K views" },
-  { min: 500000, max: 1000000, label: "500K-1M views" },
-  { min: 1000000, max: null, label: "1M+ views" },
+  { min: 50000, max: 100000, label: "50K-100K impressions" },
+  { min: 100000, max: 500000, label: "100K-500K impressions" },
+  { min: 500000, max: 1000000, label: "500K-1M impressions" },
+  { min: 1000000, max: null, label: "1M+ impressions" },
 ];
 
 const CATEGORIES = [
-  { name: "Plain", color: "#96CEB4" },
-  { name: "Links", color: "#45B7D1" },
-  { name: "Media", color: "#4ECDC4" },
-  { name: "Threads", color: "#FF6B6B" },
+  { name: "Plain", color: "#94A3B8" },
+  { name: "Links", color: "#3B82F6" },
+  { name: "Media", color: "#10B981" },
+  { name: "Threads", color: "#F43F5E" },
+  { name: "Long", color: "#8B5CF6" },
 ];
 
 interface CategoryCounts {
@@ -38,6 +39,7 @@ interface CategoryCounts {
   media: number;
   links: number;
   plain: number;
+  long: number;
 }
 
 export function TweetDistribution({ tweets }: TweetDistributionProps) {
@@ -66,23 +68,25 @@ export function TweetDistribution({ tweets }: TweetDistributionProps) {
     const filtered = tweets.filter(
       (tweet) =>
         tweet.view_count >= viewRange.min &&
-        (viewRange.max === null || tweet.view_count < viewRange.max)
+        (viewRange.max === null || tweet.view_count < viewRange.max),
     );
 
     return filtered.reduce(
       (acc, tweet) => {
-        if (tweet.isThreaded) {
+        if (tweet.is_thread) {
           acc.threads++;
-        } else if (tweet.hasMedia) {
+        } else if (tweet.entities?.media && tweet.entities.media.length > 0) {
           acc.media++;
-        } else if (tweet.hasLinks) {
+        } else if (tweet.entities?.urls && tweet.entities.urls.length > 0) {
           acc.links++;
+        } else if (tweet.text.length > 280) {
+          acc.long++;
         } else {
           acc.plain++;
         }
         return acc;
       },
-      { threads: 0, media: 0, links: 0, plain: 0 }
+      { threads: 0, media: 0, links: 0, plain: 0, long: 0 },
     );
   };
 
@@ -92,6 +96,7 @@ export function TweetDistribution({ tweets }: TweetDistributionProps) {
       { name: "Links", value: counts.links },
       { name: "Media", value: counts.media },
       { name: "Threads", value: counts.threads },
+      { name: "Long", value: counts.long },
     ];
   };
 
@@ -177,25 +182,19 @@ export function TweetDistribution({ tweets }: TweetDistributionProps) {
                         cx="50%"
                         cy="50%"
                         outerRadius={64}
-                        label={(entry) =>
-                          entry.value > 0 ? `${entry.value}` : ""
-                        }
+                        label={(entry) => (entry.value > 0 ? `${entry.value}` : "")}
                       >
                         {data.map((_, index) => (
                           <Cell key={index} fill={CATEGORIES[index].color} />
                         ))}
                       </Pie>
-                      <Tooltip 
-                        formatter={(value, name) => [`${value} tweets`, name]}
-                      />
+                      <Tooltip formatter={(value, name) => [`${value} tweets`, name]} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
                 <div className="text-center mt-4">
                   <h3 className="text-sm font-medium">{range.label}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Total tweets: {total}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">Total tweets: {total}</p>
                 </div>
               </div>
             );
@@ -204,4 +203,4 @@ export function TweetDistribution({ tweets }: TweetDistributionProps) {
       </CardContent>
     </Card>
   );
-} 
+}

@@ -1,7 +1,7 @@
 import { db } from "@/lib/drizzle";
 import { and, gte, sql } from "drizzle-orm";
 import { tweets, twitterHandles } from "@/lib/db-schema";
-import { Tweet } from "@/lib/types";
+import { Tweet, TweetEntity } from "@/lib/types";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -30,11 +30,14 @@ export async function GET(request: Request) {
         is_reply: tweets.is_reply,
         is_retweet: tweets.is_retweet,
         is_quote: tweets.is_quote,
+        is_thread: tweets.is_thread,
         language: tweets.language,
+        entities: tweets.entities,
         handle: twitterHandles.handle,
         name: twitterHandles.name,
         verified: twitterHandles.verified,
         profile_image_url: twitterHandles.pfp,
+        followers: twitterHandles.followers,
       })
       .from(tweets)
       .leftJoin(twitterHandles, sql`${tweets.handle_id} = ${twitterHandles.id}`)
@@ -66,7 +69,9 @@ export async function GET(request: Request) {
       is_reply: tweet.is_reply,
       is_retweet: tweet.is_retweet,
       is_quote: tweet.is_quote,
+      is_thread: tweet.is_thread,
       language: tweet.language,
+      entities: tweet.entities as TweetEntity,
       author: {
         id: tweet.handle_id.toString(),
         handle: tweet.handle!,
@@ -74,6 +79,7 @@ export async function GET(request: Request) {
         verified: tweet.verified!,
         url: `https://twitter.com/${tweet.handle}`,
         pfp: tweet.profile_image_url!,
+        followers: tweet.followers!,
       },
     }));
 

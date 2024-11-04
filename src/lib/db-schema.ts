@@ -86,6 +86,7 @@ export const twitterHandles = pgTable("twitter_handles", {
   handle: text("handle").notNull().unique(),
   name: text("name").notNull().default(""),
   verified: boolean("verified").notNull().default(false),
+  followers: integer("followers").notNull().default(0),
   url: text("url").notNull(),
   pfp: text("pfp"),
   created_at: timestamp("created_at").defaultNow().notNull(),
@@ -124,6 +125,8 @@ export const tweets = pgTable("tweets", {
   is_reply: boolean("is_reply").notNull(),
   is_retweet: boolean("is_retweet").notNull(),
   is_quote: boolean("is_quote").notNull(),
+  is_thread: boolean("is_thread").notNull(),
+  entities: jsonb("entities").notNull().default("{}"),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),
@@ -162,6 +165,19 @@ export const searches = pgTable("searches", {
     .notNull(),
   query: text("query").notNull(),
   filters: jsonb("filters").notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+  deleted_at: timestamp("deleted_at"),
+});
+
+export const threads = pgTable("threads", {
+  tweet_id: bigint("tweet_id", { mode: "bigint" }).primaryKey().notNull(),
+  parent_tweet_id: bigint("parent_tweet_id", { mode: "bigint" })
+    .references(() => tweets.tweet_id)
+    .notNull(),
+  url: text("url").notNull(),
+  text: text("text").notNull(),
+  date: timestamp("date").notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
   deleted_at: timestamp("deleted_at"),

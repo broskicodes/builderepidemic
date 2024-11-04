@@ -89,10 +89,7 @@ export function TweetDashboard() {
           </div>
         </div>
         <div className="grid grid-cols-1">
-          <TweetPerformance
-            tweets={popularTweets}
-            showTimeRange={true}
-          />
+          <TweetPerformance tweets={popularTweets} showTimeRange={true} />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <TweetDistribution tweets={popularTweets} />

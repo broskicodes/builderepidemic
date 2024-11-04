@@ -123,10 +123,7 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
           <div>
             <div className="flex items-center gap-4 justify-end">
               <Label className="text-sm whitespace-nowrap">Sort By:</Label>
-              <Select 
-                value={sortBy} 
-                onValueChange={(value) => setSortBy(value as SortMetric)}
-              >
+              <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortMetric)}>
                 <SelectTrigger className="w-[160px]">
                   <SelectValue placeholder="Sort by" />
                 </SelectTrigger>

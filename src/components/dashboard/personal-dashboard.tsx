@@ -268,10 +268,7 @@ export function PersonalDashboard() {
       </div>
       <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
         <TweetPerformance tweets={filteredTweets} />
-        <Metrics
-          tweets={filteredTweets}
-          prevPeriodTweets={prevPeriodTweets}
-        />
+        <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
       </main>
     </div>
   );

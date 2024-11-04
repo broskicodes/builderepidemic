@@ -1,6 +1,19 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Eye, ThumbsUp, Bookmark, MessageCircle, Repeat, BarChart3Icon } from "lucide-react";
@@ -32,14 +45,14 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
   const tweet = payload[0].payload;
 
   // Normalize values to a 0-100 scale
-  const normalizeValue = (value: number, metric: string) => {    
+  const normalizeValue = (value: number, metric: string) => {
     // Find reasonable maximum values for each metric
     const maxValues = {
       impressions: 1000000, // 1M
-      likes: 5000,        // 1K
-      comments: 250,      // 100
-      bookmarks: 3500,     // 100
-      retweets: 1000, 
+      likes: 5000, // 1K
+      comments: 250, // 100
+      bookmarks: 3500, // 100
+      retweets: 1000,
       engagement_rate: 3,
     };
 
@@ -52,7 +65,7 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
     { metric: "likes", value: normalizeValue(tweet.likes, "likes") },
     { metric: "comments", value: normalizeValue(tweet.comments, "comments") },
     { metric: "bookmarks", value: normalizeValue(tweet.bookmarks, "bookmarks") },
-    { metric: "retweets", value: normalizeValue(tweet.retweets, "retweets") },    
+    { metric: "retweets", value: normalizeValue(tweet.retweets, "retweets") },
     { metric: "engagement_rate", value: normalizeValue(tweet.engagement_rate, "engagement_rate") },
   ];
 
@@ -78,7 +91,7 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
   const renderPolarAngleAxis = ({ payload, x, y, cx, cy, ...rest }: any) => {
     const icon = metricIcons[payload.value as keyof typeof metricIcons];
     const isSelectedMetric = payload.value === selectedMetric;
-    
+
     return (
       <g transform={`translate(${x},${y})`}>
         <foreignObject
@@ -86,14 +99,13 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
           y="-12"
           width="24"
           height="24"
-          style={{ 
-            color: isSelectedMetric 
-              ? "hsl(var(--primary))" 
-              : "hsl(var(--foreground))" 
+          style={{
+            color: isSelectedMetric ? "hsl(var(--primary))" : "hsl(var(--foreground))",
           }}
         >
-          <div className={`h-full w-full flex items-center justify-center transition-colors
-            ${isSelectedMetric ? 'text-primary' : ''}`}
+          <div
+            className={`h-full w-full flex items-center justify-center transition-colors
+            ${isSelectedMetric ? "text-primary" : ""}`}
           >
             {icon}
           </div>
@@ -109,32 +121,22 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
         <ResponsiveContainer>
           <RadarChart data={radarData}>
             <PolarGrid />
-            <PolarAngleAxis 
-              dataKey="metric" 
-              tick={renderPolarAngleAxis}
-            />
-            <Radar
-              name="Metrics"
-              dataKey="value"
-              fill="hsl(var(--primary))"
-              fillOpacity={0.5}
-            />
+            <PolarAngleAxis dataKey="metric" tick={renderPolarAngleAxis} />
+            <Radar name="Metrics" dataKey="value" fill="hsl(var(--primary))" fillOpacity={0.5} />
           </RadarChart>
         </ResponsiveContainer>
       </div>
       <div className="mt-2 space-y-1">
         <p className="font-medium">
-          {metricLabels[payload[0].name.toLowerCase().replaceAll(" ", "_") as Metric]}: {formatValue(payload[0].value, payload[0].name)}
+          {metricLabels[payload[0].name.toLowerCase().replaceAll(" ", "_") as Metric]}:{" "}
+          {formatValue(payload[0].value, payload[0].name)}
         </p>
       </div>
     </div>
   );
 };
 
-export function TweetPerformance({
-  tweets,
-  showTimeRange = false,
-}: TweetPerformanceProps) {
+export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerformanceProps) {
   const [selectedMetric, setSelectedMetric] = useState<Metric>("impressions");
   const [timeRange, setTimeRange] = useState<TimeRange>("24h");
 
@@ -285,7 +287,9 @@ export function TweetPerformance({
                       : value.toString()
                 }
               />
-              <Tooltip content={(props) => <CustomTooltip {...props} selectedMetric={selectedMetric} />} />
+              <Tooltip
+                content={(props) => <CustomTooltip {...props} selectedMetric={selectedMetric} />}
+              />
               <Legend />
               <Bar
                 dataKey={selectedMetric}

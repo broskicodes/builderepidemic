@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { tweets, twitterHandles } from "@/lib/db-schema";
 import { eq } from "drizzle-orm";
-import { Tweet } from "@/lib/types";
+import { Tweet, TweetEntity } from "@/lib/types";
 
 export async function GET(request: Request, { params }: { params: { handle: string } }) {
   const handle = params.handle;
@@ -15,6 +15,9 @@ export async function GET(request: Request, { params }: { params: { handle: stri
         handle: twitterHandles.handle,
         url: twitterHandles.url,
         pfp: twitterHandles.pfp,
+        followers: twitterHandles.followers,
+        name: twitterHandles.name,
+        verified: twitterHandles.verified,
       })
       .from(twitterHandles)
       .where(eq(twitterHandles.handle, handle))
@@ -38,6 +41,9 @@ export async function GET(request: Request, { params }: { params: { handle: stri
         handle: handleData[0].handle,
         pfp: handleData[0].pfp || "",
         url: handleData[0].url,
+        name: handleData[0].name,
+        verified: handleData[0].verified,
+        followers: handleData[0].followers,
       },
       tweet_id: tweet.tweets.tweet_id.toString(),
       url: tweet.tweets.url,
@@ -53,6 +59,8 @@ export async function GET(request: Request, { params }: { params: { handle: stri
       is_reply: tweet.tweets.is_reply,
       is_retweet: tweet.tweets.is_retweet,
       is_quote: tweet.tweets.is_quote,
+      is_thread: tweet.tweets.is_thread,
+      entities: tweet.tweets.entities as TweetEntity,
     }));
 
     return NextResponse.json(response);

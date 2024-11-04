@@ -66,11 +66,22 @@ export enum TwitterScrapeType {
 
 export interface TwitterAuthor {
   id: string;
-  name?: string;
+  name: string;
   handle: string;
   pfp: string;
   url: string;
-  verified?: boolean;
+  verified: boolean;
+  followers: number;
+}
+
+export interface TweetEntity {
+  urls: Array<{
+    url: string;
+  }>;
+  media: Array<{
+    type: string;
+    url: string;
+  }> | null;
 }
 
 export interface Tweet {
@@ -86,12 +97,11 @@ export interface Tweet {
   quote_count: number;
   view_count: number;
   language: string;
+  entities: TweetEntity;
   is_reply: boolean;
   is_retweet: boolean;
   is_quote: boolean;
-  // isThreaded: boolean;
-  // hasMedia: boolean;
-  // hasLinks: boolean;
+  is_thread: boolean;
 }
 
 export interface LeaderboardData {

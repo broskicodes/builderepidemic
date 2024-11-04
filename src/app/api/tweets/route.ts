@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { tweets, twitterHandles } from "@/lib/db-schema";
 import { eq } from "drizzle-orm";
-import { LeaderboardData, Tweet } from "@/lib/types";
+import { LeaderboardData, Tweet, TweetEntity } from "@/lib/types";
 
 export async function GET(request: Request) {
   try {
@@ -36,6 +36,8 @@ export async function GET(request: Request) {
           is_reply: tweets.is_reply,
           is_retweet: tweets.is_retweet,
           is_quote: tweets.is_quote,
+          is_thread: tweets.is_thread,
+          entities: tweets.entities,
         })
         .from(tweets)
         .innerJoin(twitterHandles, eq(tweets.handle_id, twitterHandles.id))
@@ -48,6 +50,7 @@ export async function GET(request: Request) {
         pfp,
         tweets: tweetData.map((tweet) => ({
           ...tweet,
+          entities: tweet.entities as TweetEntity,
           tweet_id: tweet.tweet_id.toString(),
           date: tweet.date.toISOString(),
         })),

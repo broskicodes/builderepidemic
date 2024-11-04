@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,6 +59,8 @@ export function AdvancedSearch() {
   const [searchResults, setSearchResults] = useState<Tweet[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState<SortBy>("date");
+  const [listHeight, setListHeight] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState<SearchFilters>({
     verified: false,
     mediaOnly: false,
@@ -72,6 +74,15 @@ export function AdvancedSearch() {
   });
 
   const { data: session } = useSession();
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const height = containerRef.current.offsetHeight;
+      console.log("setting height", height);
+
+      setListHeight(height);
+    }
+  }, []);
 
   const handleSearch = async () => {
     if (!session?.user?.id) {
@@ -121,12 +132,12 @@ export function AdvancedSearch() {
   });
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
+    <Card className="h-full flex flex-col">
       <CardHeader>
         <CardTitle>Advanced Twitter Search</CardTitle>
         <CardDescription>Find high performing tweets in any niche</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 flex flex-col">
         <div className="flex space-x-2 mb-4">
           <Input
             placeholder="Enter a search term and/or select filters"
@@ -343,7 +354,9 @@ export function AdvancedSearch() {
             </Select>
           </div>
         </div>
-        <TweetList tweets={sortedResults} maxHeight="400px" />
+        <div ref={containerRef} className="flex-1">
+          {listHeight && <TweetList tweets={sortedResults} maxHeight={`${listHeight}px`} />}
+        </div>
       </CardContent>
     </Card>
   );

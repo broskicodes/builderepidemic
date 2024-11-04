@@ -89,6 +89,9 @@ export interface Tweet {
   is_reply: boolean;
   is_retweet: boolean;
   is_quote: boolean;
+  // isThreaded: boolean;
+  // hasMedia: boolean;
+  // hasLinks: boolean;
 }
 
 export interface LeaderboardData {

@@ -8,6 +8,7 @@ import { TweetImporter } from "./tweet-importer";
 import { TweetPerformance } from "./tweet-performance";
 import { Tweet } from "@/lib/types";
 import { useSession } from "next-auth/react";
+import { TweetDistribution } from "./tweet-distribution";
 
 export function TweetDashboard() {
   const [popularTweets, setPopularTweets] = useState<Tweet[]>([]);
@@ -79,7 +80,7 @@ export function TweetDashboard() {
         <TweetImporter onImportSuccess={handleImportSuccess} />
       </div>
       <div className="grid grid-cols-1 gap-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-1">
             <PopularTweets tweets={popularTweets} />
           </div>
@@ -93,7 +94,8 @@ export function TweetDashboard() {
             showTimeRange={true}
           />
         </div>
-        <div className="col-span-1">
+        <div className="grid grid-cols-2 gap-4">
+          <TweetDistribution tweets={popularTweets} />
           <AdvancedSearch />
         </div>
       </div>

@@ -1,69 +1,75 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { TweetList } from './tweet-list'
-import { Tweet } from '@/lib/types'
-import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react"
-import { Label } from '@/components/ui/label'
-import { Toggle } from "@/components/ui/toggle"
+import { useState, useRef, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TweetList } from "./tweet-list";
+import { Tweet } from "@/lib/types";
+import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Toggle } from "@/components/ui/toggle";
 
-type SortMetric = 'impressions' | 'likes' | 'comments' | 'bookmarks' | 'retweets'
-type TimeRange = '24h' | '7d' | '28d' | 'all'
+type SortMetric = "impressions" | "likes" | "comments" | "bookmarks" | "retweets";
+type TimeRange = "24h" | "7d" | "28d" | "all";
 
 interface PopularTweetsProps {
-  tweets: Tweet[]
+  tweets: Tweet[];
 }
 
 export function PopularTweets({ tweets }: PopularTweetsProps) {
-  const [sortBy, setSortBy] = useState<SortMetric>('impressions')
-  const [timeRange, setTimeRange] = useState<TimeRange>('24h')
-  const [listHeight, setListHeight] = useState<number | null>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [sortBy, setSortBy] = useState<SortMetric>("impressions");
+  const [timeRange, setTimeRange] = useState<TimeRange>("24h");
+  const [listHeight, setListHeight] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
-      const height = containerRef.current.offsetHeight
-      setListHeight(height)
+      const height = containerRef.current.offsetHeight;
+      setListHeight(height);
     }
-  }, [])
+  }, []);
 
-  const filteredTweets = tweets.filter(tweet => {
-    if (timeRange === 'all') return true
-    
-    const tweetDate = new Date(tweet.date)
-    const now = new Date()
-    const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60)
-    
+  const filteredTweets = tweets.filter((tweet) => {
+    if (timeRange === "all") return true;
+
+    const tweetDate = new Date(tweet.date);
+    const now = new Date();
+    const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
+
     switch (timeRange) {
-      case '24h':
-        return diffInHours <= 24
-      case '7d':
-        return diffInHours <= 24 * 7
-      case '28d':
-        return diffInHours <= 24 * 28
+      case "24h":
+        return diffInHours <= 24;
+      case "7d":
+        return diffInHours <= 24 * 7;
+      case "28d":
+        return diffInHours <= 24 * 28;
       default:
-        return true
+        return true;
     }
-  })
+  });
 
   const sortedTweets = [...filteredTweets].sort((a, b) => {
     switch (sortBy) {
-      case 'impressions':
-        return b.view_count - a.view_count
-      case 'likes':
-        return b.like_count - a.like_count
-      case 'comments':
-        return b.reply_count - a.reply_count
-      case 'bookmarks':
-        return b.bookmark_count - a.bookmark_count
-      case 'retweets':
-        return b.retweet_count - a.retweet_count
+      case "impressions":
+        return b.view_count - a.view_count;
+      case "likes":
+        return b.like_count - a.like_count;
+      case "comments":
+        return b.reply_count - a.reply_count;
+      case "bookmarks":
+        return b.bookmark_count - a.bookmark_count;
+      case "retweets":
+        return b.retweet_count - a.retweet_count;
       default:
-        return b.view_count - a.view_count
+        return b.view_count - a.view_count;
     }
-  })
+  });
 
   return (
     <Card className="h-full flex flex-col">
@@ -81,32 +87,32 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
               <Toggle
                 variant="outline"
                 size="sm"
-                pressed={timeRange === '24h'}
-                onPressedChange={() => setTimeRange('24h')}
+                pressed={timeRange === "24h"}
+                onPressedChange={() => setTimeRange("24h")}
               >
                 24h
               </Toggle>
               <Toggle
                 variant="outline"
                 size="sm"
-                pressed={timeRange === '7d'}
-                onPressedChange={() => setTimeRange('7d')}
+                pressed={timeRange === "7d"}
+                onPressedChange={() => setTimeRange("7d")}
               >
                 7d
               </Toggle>
               <Toggle
                 variant="outline"
                 size="sm"
-                pressed={timeRange === '28d'}
-                onPressedChange={() => setTimeRange('28d')}
+                pressed={timeRange === "28d"}
+                onPressedChange={() => setTimeRange("28d")}
               >
                 28d
               </Toggle>
               <Toggle
                 variant="outline"
                 size="sm"
-                pressed={timeRange === 'all'}
-                onPressedChange={() => setTimeRange('all')}
+                pressed={timeRange === "all"}
+                onPressedChange={() => setTimeRange("all")}
               >
                 All
               </Toggle>
@@ -154,14 +160,9 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
           </div>
         </div>
         <div ref={containerRef} className="flex-1">
-          {listHeight && (
-            <TweetList 
-              tweets={sortedTweets} 
-              maxHeight={`${listHeight}px`}
-            />
-          )}
+          {listHeight && <TweetList tweets={sortedTweets} maxHeight={`${listHeight}px`} />}
         </div>
       </CardContent>
     </Card>
-  )
-} 
+  );
+}

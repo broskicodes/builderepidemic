@@ -55,7 +55,7 @@ export function PersonalDashboard() {
 
   useEffect(() => {
     if (session?.user?.handle) {
-      setSelectedHandle({ 
+      setSelectedHandle({
         handle: session.user.handle,
         pfp: `https://unavatar.io/twitter/${session.user.handle}`,
         url: `https://x.com/${session.user.handle}`,
@@ -160,7 +160,7 @@ export function PersonalDashboard() {
         if (!response.ok) {
           throw new Error("Failed to fetch handles");
         }
-        const data: TwitterHandle[] = (await response.json())
+        const data: TwitterHandle[] = await response.json();
         setHandles(data);
       } catch (err) {
         console.error("Error fetching handles:", err);
@@ -202,17 +202,20 @@ export function PersonalDashboard() {
             <h1 className="text-2xl font-bold">Twitter Analytics for:</h1>
             {selectedHandle && selectedHandle.pfp && (
               <a href={selectedHandle.url} target="_blank" rel="noopener noreferrer">
-                <img 
-                  src={selectedHandle.pfp} 
-                  alt={`@${selectedHandle.handle}`} 
+                <img
+                  src={selectedHandle.pfp}
+                  alt={`@${selectedHandle.handle}`}
                   className="w-10 h-10 rounded-full"
                 />
               </a>
             )}
             <div className="w-48">
-              <Select value={selectedHandle?.handle} onValueChange={(value) => 
-                setSelectedHandle(handles.find(handle => handle.handle === value) || null)
-              }>
+              <Select
+                value={selectedHandle?.handle}
+                onValueChange={(value) =>
+                  setSelectedHandle(handles.find((handle) => handle.handle === value) || null)
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select handle" />
                 </SelectTrigger>
@@ -231,15 +234,13 @@ export function PersonalDashboard() {
                     )}
                     {/* Show filtered handles */}
                     {handles
-                      .filter(h => 
-                        h.handle.toLowerCase().includes(searchQuery.toLowerCase()) &&
-                        h.handle !== session?.user?.handle
+                      .filter(
+                        (h) =>
+                          h.handle.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                          h.handle !== session?.user?.handle,
                       )
                       .map((handle) => (
-                        <SelectItem 
-                          key={handle.handle} 
-                          value={handle.handle}
-                        >
+                        <SelectItem key={handle.handle} value={handle.handle}>
                           @{handle.handle}
                         </SelectItem>
                       ))}
@@ -276,7 +277,7 @@ export function PersonalDashboard() {
         </div>
       </div>
       <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
-          <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
+        <TweetPerformance tweets={filteredTweets} metricLabels={metricLabels} />
         <Metrics
           tweets={filteredTweets}
           prevPeriodTweets={prevPeriodTweets}

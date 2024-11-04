@@ -46,12 +46,12 @@ const completedTasks: Task[] = [
   },
   {
     text: "View analytics data for other users (your competitors?)",
-    dateRange: "2024-10-31"
+    dateRange: "2024-10-31",
   },
   {
     text: `Add advanced Twitter search with filters to [the dashboard](${process.env.NEXT_PUBLIC_ENV_URL}/dashboard).`,
-    dateRange: "2024-10-31"
-  }
+    dateRange: "2024-10-31",
+  },
 ];
 
 const comingSoon: Omit<Task, "dateRange">[] = [

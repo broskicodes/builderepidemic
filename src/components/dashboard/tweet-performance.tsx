@@ -19,7 +19,7 @@ const metricIcons = {
   engagement_rate: <BarChart3Icon className="h-4 w-4" />,
 };
 
-type TimeRange = '24h' | '7d' | '28d' | 'all'
+type TimeRange = "24h" | "7d" | "28d" | "all";
 
 interface TweetPerformanceProps {
   tweets: Tweet[];
@@ -27,9 +27,13 @@ interface TweetPerformanceProps {
   showTimeRange?: boolean;
 }
 
-export function TweetPerformance({ tweets, metricLabels, showTimeRange = false }: TweetPerformanceProps) {
+export function TweetPerformance({
+  tweets,
+  metricLabels,
+  showTimeRange = false,
+}: TweetPerformanceProps) {
   const [selectedMetric, setSelectedMetric] = useState<Metric>("impressions");
-  const [timeRange, setTimeRange] = useState<TimeRange>('24h');
+  const [timeRange, setTimeRange] = useState<TimeRange>("24h");
 
   const handleMetricChange = (value: string | undefined) => {
     if (value) {
@@ -37,19 +41,19 @@ export function TweetPerformance({ tweets, metricLabels, showTimeRange = false }
     }
   };
 
-  const filteredTweets = tweets.filter(tweet => {
-    if (!showTimeRange || timeRange === 'all') return true;
-    
+  const filteredTweets = tweets.filter((tweet) => {
+    if (!showTimeRange || timeRange === "all") return true;
+
     const tweetDate = new Date(tweet.date);
     const now = new Date();
     const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
-    
+
     switch (timeRange) {
-      case '24h':
+      case "24h":
         return diffInHours <= 24;
-      case '7d':
+      case "7d":
         return diffInHours <= 24 * 7;
-      case '28d':
+      case "28d":
         return diffInHours <= 24 * 28;
       default:
         return true;
@@ -89,19 +93,19 @@ export function TweetPerformance({ tweets, metricLabels, showTimeRange = false }
   const formatValue = (value: number, name: string): string => {
     if (name === "Engagement Rate") {
       const rounded = value.toFixed(1);
-      return rounded.endsWith('.0') ? `${Math.round(value)}%` : `${rounded}%`;
+      return rounded.endsWith(".0") ? `${Math.round(value)}%` : `${rounded}%`;
     }
-    
+
     if (value >= 1_000_000) {
       const rounded = (value / 1_000_000).toFixed(1);
-      return rounded.endsWith('.0') ? `${Math.round(value / 1_000_000)}M` : `${rounded}M`;
+      return rounded.endsWith(".0") ? `${Math.round(value / 1_000_000)}M` : `${rounded}M`;
     }
-    
+
     if (value >= 1_000) {
       const rounded = (value / 1_000).toFixed(1);
-      return rounded.endsWith('.0') ? `${Math.round(value / 1_000)}K` : `${rounded}K`;
+      return rounded.endsWith(".0") ? `${Math.round(value / 1_000)}K` : `${rounded}K`;
     }
-    
+
     return Math.round(value).toString();
   };
 
@@ -136,24 +140,24 @@ export function TweetPerformance({ tweets, metricLabels, showTimeRange = false }
                 <Toggle
                   variant="outline"
                   size="sm"
-                  pressed={timeRange === '24h'}
-                  onPressedChange={() => setTimeRange('24h')}
+                  pressed={timeRange === "24h"}
+                  onPressedChange={() => setTimeRange("24h")}
                 >
                   24h
                 </Toggle>
                 <Toggle
                   variant="outline"
                   size="sm"
-                  pressed={timeRange === '7d'}
-                  onPressedChange={() => setTimeRange('7d')}
+                  pressed={timeRange === "7d"}
+                  onPressedChange={() => setTimeRange("7d")}
                 >
                   7d
                 </Toggle>
                 <Toggle
                   variant="outline"
                   size="sm"
-                  pressed={timeRange === '28d'}
-                  onPressedChange={() => setTimeRange('28d')}
+                  pressed={timeRange === "28d"}
+                  onPressedChange={() => setTimeRange("28d")}
                 >
                   28d
                 </Toggle>
@@ -196,13 +200,13 @@ export function TweetPerformance({ tweets, metricLabels, showTimeRange = false }
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData}>
               <XAxis dataKey="date" tickFormatter={(value) => format(new Date(value), "MMM d")} />
-              <YAxis 
-                tickFormatter={(value) => 
+              <YAxis
+                tickFormatter={(value) =>
                   value >= 1_000_000
                     ? `${(value / 1_000_000).toFixed(1)}M`
                     : value >= 1_000
-                    ? `${(value / 1_000).toFixed(1)}K`
-                    : value.toString()
+                      ? `${(value / 1_000).toFixed(1)}K`
+                      : value.toString()
                 }
               />
               <Tooltip

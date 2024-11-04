@@ -1,102 +1,124 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { Filter, Search, Heart, Bookmark, BarChart2, ExternalLink, MessageCircle, Calendar, Users, Image, Link as LinkIcon, Quote, Repeat, BadgeCheck, ScrollText } from "lucide-react"
-import Link from 'next/link'
-import { Tweet } from '@/lib/types'
-import { useSession } from 'next-auth/react'
-import posthog from 'posthog-js'
-import { TweetList } from './tweet-list'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import {
+  Filter,
+  Search,
+  Heart,
+  Bookmark,
+  BarChart2,
+  ExternalLink,
+  MessageCircle,
+  Calendar,
+  Users,
+  Image,
+  Link as LinkIcon,
+  Quote,
+  Repeat,
+  BadgeCheck,
+  ScrollText,
+} from "lucide-react";
+import Link from "next/link";
+import { Tweet } from "@/lib/types";
+import { useSession } from "next-auth/react";
+import posthog from "posthog-js";
+import { TweetList } from "./tweet-list";
 
-type SortBy = 'date' | 'impressions' | 'likes' | 'comments' | 'bookmarks' | 'retweets';
+type SortBy = "date" | "impressions" | "likes" | "comments" | "bookmarks" | "retweets";
 
 interface SearchFilters {
-  verified: boolean
-  mediaOnly: boolean
-  linksOnly: boolean
-  threadOnly: boolean
-  quoteTweetsOnly: boolean
-  minLikes: string
-  minComments: string
-  minRetweets: string
-  dateRange: string
+  verified: boolean;
+  mediaOnly: boolean;
+  linksOnly: boolean;
+  threadOnly: boolean;
+  quoteTweetsOnly: boolean;
+  minLikes: string;
+  minComments: string;
+  minRetweets: string;
+  dateRange: string;
 }
 
 export function AdvancedSearch() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<Tweet[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [sortBy, setSortBy] = useState<SortBy>('date')
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Tweet[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<SortBy>("date");
   const [filters, setFilters] = useState<SearchFilters>({
     verified: false,
     mediaOnly: false,
     linksOnly: false,
     threadOnly: false,
     quoteTweetsOnly: false,
-    minLikes: '',
-    minComments: '',
-    minRetweets: '',
-    dateRange: '24h'
-  })
+    minLikes: "",
+    minComments: "",
+    minRetweets: "",
+    dateRange: "24h",
+  });
 
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   const handleSearch = async () => {
     if (!session?.user?.id) {
-      return
+      return;
     }
 
-    setIsLoading(true)
-    posthog.capture('search_submitted', {
+    setIsLoading(true);
+    posthog.capture("search_submitted", {
       userId: session?.user?.id,
       query: searchQuery,
-      filters: filters
-    })
+      filters: filters,
+    });
 
     const results = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/search`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         userId: session?.user?.id,
         query: searchQuery,
-        filters: filters
-      })
+        filters: filters,
+      }),
     });
     const data = await results.json();
     setSearchResults(data.results);
     console.log(data);
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   const sortedResults = [...searchResults].sort((a, b) => {
     switch (sortBy) {
-      case 'impressions':
-        return b.view_count - a.view_count
-      case 'likes':
-        return b.like_count - a.like_count
-      case 'comments':
-        return b.reply_count - a.reply_count
-      case 'bookmarks':
-        return b.bookmark_count - a.bookmark_count
-      case 'retweets':
-        return b.retweet_count - a.retweet_count
-      case 'date':
+      case "impressions":
+        return b.view_count - a.view_count;
+      case "likes":
+        return b.like_count - a.like_count;
+      case "comments":
+        return b.reply_count - a.reply_count;
+      case "bookmarks":
+        return b.bookmark_count - a.bookmark_count;
+      case "retweets":
+        return b.retweet_count - a.retweet_count;
+      case "date":
       default:
-        return new Date(b.date).getTime() - new Date(a.date).getTime()
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
     }
-  })
+  });
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
@@ -122,9 +144,7 @@ export function AdvancedSearch() {
               <div className="grid gap-4 p-6">
                 <div className="space-y-2">
                   <h4 className="font-medium leading-none">Filters</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Customize your search results
-                  </p>
+                  <p className="text-sm text-muted-foreground">Customize your search results</p>
                 </div>
                 <div className="grid gap-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -132,7 +152,7 @@ export function AdvancedSearch() {
                       <Label>Date Range</Label>
                       <Select
                         value={filters.dateRange}
-                        onValueChange={(value) => setFilters({...filters, dateRange: value})}
+                        onValueChange={(value) => setFilters({ ...filters, dateRange: value })}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select date range" />
@@ -156,7 +176,9 @@ export function AdvancedSearch() {
                           <Switch
                             id="verified"
                             checked={filters.verified}
-                            onCheckedChange={(checked) => setFilters({...filters, verified: checked})}
+                            onCheckedChange={(checked) =>
+                              setFilters({ ...filters, verified: checked })
+                            }
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -167,7 +189,9 @@ export function AdvancedSearch() {
                           <Switch
                             id="mediaOnly"
                             checked={filters.mediaOnly}
-                            onCheckedChange={(checked) => setFilters({...filters, mediaOnly: checked})}
+                            onCheckedChange={(checked) =>
+                              setFilters({ ...filters, mediaOnly: checked })
+                            }
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -178,7 +202,9 @@ export function AdvancedSearch() {
                           <Switch
                             id="linksOnly"
                             checked={filters.linksOnly}
-                            onCheckedChange={(checked) => setFilters({...filters, linksOnly: checked})}
+                            onCheckedChange={(checked) =>
+                              setFilters({ ...filters, linksOnly: checked })
+                            }
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -189,7 +215,9 @@ export function AdvancedSearch() {
                           <Switch
                             id="quoteTweetsOnly"
                             checked={filters.quoteTweetsOnly}
-                            onCheckedChange={(checked) => setFilters({...filters, quoteTweetsOnly: checked})}
+                            onCheckedChange={(checked) =>
+                              setFilters({ ...filters, quoteTweetsOnly: checked })
+                            }
                           />
                         </div>
                         <div className="flex items-center justify-between">
@@ -200,7 +228,9 @@ export function AdvancedSearch() {
                           <Switch
                             id="threadOnly"
                             checked={filters.threadOnly}
-                            onCheckedChange={(checked) => setFilters({...filters, threadOnly: checked})}
+                            onCheckedChange={(checked) =>
+                              setFilters({ ...filters, threadOnly: checked })
+                            }
                           />
                         </div>
                       </div>
@@ -219,7 +249,7 @@ export function AdvancedSearch() {
                           id="minLikes"
                           type="number"
                           value={filters.minLikes}
-                          onChange={(e) => setFilters({...filters, minLikes: e.target.value})}
+                          onChange={(e) => setFilters({ ...filters, minLikes: e.target.value })}
                           placeholder="Min likes"
                         />
                       </div>
@@ -232,7 +262,7 @@ export function AdvancedSearch() {
                           id="minComments"
                           type="number"
                           value={filters.minComments}
-                          onChange={(e) => setFilters({...filters, minComments: e.target.value})}
+                          onChange={(e) => setFilters({ ...filters, minComments: e.target.value })}
                           placeholder="Min comments"
                         />
                       </div>
@@ -245,7 +275,7 @@ export function AdvancedSearch() {
                           id="minRetweets"
                           type="number"
                           value={filters.minRetweets}
-                          onChange={(e) => setFilters({...filters, minRetweets: e.target.value})}
+                          onChange={(e) => setFilters({ ...filters, minRetweets: e.target.value })}
                           placeholder="Min retweets"
                         />
                       </div>
@@ -316,5 +346,5 @@ export function AdvancedSearch() {
         <TweetList tweets={sortedResults} maxHeight="400px" />
       </CardContent>
     </Card>
-  )
+  );
 }

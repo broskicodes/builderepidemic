@@ -6,12 +6,12 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
-  const minLikes = parseInt(searchParams.get('minLikes') || '0');
-  const minViews = parseInt(searchParams.get('minViews') || '0');
-  const minComments = parseInt(searchParams.get('minComments') || '0');
-  const minBookmarks = parseInt(searchParams.get('minBookmarks') || '0');
-  const minRetweets = parseInt(searchParams.get('minRetweets') || '0');
+
+  const minLikes = parseInt(searchParams.get("minLikes") || "0");
+  const minViews = parseInt(searchParams.get("minViews") || "0");
+  const minComments = parseInt(searchParams.get("minComments") || "0");
+  const minBookmarks = parseInt(searchParams.get("minBookmarks") || "0");
+  const minRetweets = parseInt(searchParams.get("minRetweets") || "0");
 
   try {
     const results = await db
@@ -44,13 +44,15 @@ export async function GET(request: Request) {
           gte(tweets.view_count, minViews),
           gte(tweets.reply_count, minComments),
           gte(tweets.bookmark_count, minBookmarks),
-          gte(tweets.retweet_count, minRetweets)
-        )
+          gte(tweets.retweet_count, minRetweets),
+        ),
       )
-      .orderBy(sql`${tweets.view_count} + ${tweets.like_count} + ${tweets.reply_count} + ${tweets.bookmark_count} + ${tweets.retweet_count} DESC`)
+      .orderBy(
+        sql`${tweets.view_count} + ${tweets.like_count} + ${tweets.reply_count} + ${tweets.bookmark_count} + ${tweets.retweet_count} DESC`,
+      )
       .limit(100);
 
-    const mappedTweets: Tweet[] = results.map(tweet => ({
+    const mappedTweets: Tweet[] = results.map((tweet) => ({
       tweet_id: tweet.tweet_id.toString(),
       text: tweet.text,
       date: tweet.date.toISOString(),
@@ -71,13 +73,13 @@ export async function GET(request: Request) {
         name: tweet.name!,
         verified: tweet.verified!,
         url: `https://twitter.com/${tweet.handle}`,
-        pfp: tweet.profile_image_url!
-      }
+        pfp: tweet.profile_image_url!,
+      },
     }));
 
     return NextResponse.json(mappedTweets);
   } catch (error) {
-    console.error('Error fetching popular tweets:', error);
-    return NextResponse.json({ error: 'Failed to fetch tweets' }, { status: 500 });
+    console.error("Error fetching popular tweets:", error);
+    return NextResponse.json({ error: "Failed to fetch tweets" }, { status: 500 });
   }
-} 
+}

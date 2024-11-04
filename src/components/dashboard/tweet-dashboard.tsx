@@ -15,7 +15,7 @@ const metricLabels = {
   comments: "Comments",
   bookmarks: "Bookmarks",
   retweets: "Retweets",
-  engagement_rate: "Engagement Rate"
+  engagement_rate: "Engagement Rate",
 };
 
 export function TweetDashboard() {
@@ -27,26 +27,29 @@ export function TweetDashboard() {
   useEffect(() => {
     const fetchPopularTweets = async () => {
       if (!session?.user?.id) return;
-      
+
       try {
         setIsLoading(true);
-        const response = await fetch('/api/tweets/popular?' + new URLSearchParams({
-          minViews: '50000',    // Minimum 50k views
-          minLikes: '100',      // Minimum 10 likes
-          minComments: '1',    // Minimum 1 comment
-          minBookmarks: '1',   // Minimum 1 bookmark
-          minRetweets: '1',    // Minimum 1 retweet
-        }));
+        const response = await fetch(
+          "/api/tweets/popular?" +
+            new URLSearchParams({
+              minViews: "50000", // Minimum 50k views
+              minLikes: "100", // Minimum 10 likes
+              minComments: "1", // Minimum 1 comment
+              minBookmarks: "1", // Minimum 1 bookmark
+              minRetweets: "1", // Minimum 1 retweet
+            }),
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch tweets');
+          throw new Error("Failed to fetch tweets");
         }
 
         const data = await response.json();
         setPopularTweets(data);
       } catch (error) {
-        console.error('Error fetching popular tweets:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load tweets');
+        console.error("Error fetching popular tweets:", error);
+        setError(error instanceof Error ? error.message : "Failed to load tweets");
       } finally {
         setIsLoading(false);
       }
@@ -56,7 +59,7 @@ export function TweetDashboard() {
   }, [session?.user?.id]);
 
   const handleImportSuccess = (newTweets: Tweet[]) => {
-    setPopularTweets(prev => [...prev, ...newTweets]);
+    setPopularTweets((prev) => [...prev, ...newTweets]);
   };
 
   if (isLoading) {
@@ -94,9 +97,9 @@ export function TweetDashboard() {
           </div>
         </div>
         <div className="grid grid-cols-1">
-          <TweetPerformance 
-            tweets={popularTweets} 
-            metricLabels={metricLabels} 
+          <TweetPerformance
+            tweets={popularTweets}
+            metricLabels={metricLabels}
             showTimeRange={true}
           />
         </div>

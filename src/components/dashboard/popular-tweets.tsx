@@ -14,6 +14,7 @@ import { Tweet } from "@/lib/types";
 import { Heart, BarChart2, MessageCircle, Bookmark, Repeat } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Toggle } from "@/components/ui/toggle";
+import { FilterPopover, SearchFilters } from "./filter-popover";
 
 type SortMetric = "impressions" | "likes" | "comments" | "bookmarks" | "retweets";
 type TimeRange = "24h" | "7d" | "28d" | "all";
@@ -27,6 +28,17 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
   const [timeRange, setTimeRange] = useState<TimeRange>("24h");
   const [listHeight, setListHeight] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [filters, setFilters] = useState<SearchFilters>({
+    verified: false,
+    mediaOnly: false,
+    linksOnly: false,
+    threadOnly: false,
+    quoteTweetsOnly: false,
+    minLikes: "",
+    minComments: "",
+    minRetweets: "",
+    dateRange: "24h",
+  });
 
   useEffect(() => {
     if (containerRef.current) {
@@ -36,22 +48,34 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
   }, []);
 
   const filteredTweets = tweets.filter((tweet) => {
-    if (timeRange === "all") return true;
+    if (filters.dateRange !== 'all') {
+      const tweetDate = new Date(tweet.date);
+      const now = new Date();
+      const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
 
-    const tweetDate = new Date(tweet.date);
-    const now = new Date();
-    const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
-
-    switch (timeRange) {
-      case "24h":
-        return diffInHours <= 24;
-      case "7d":
-        return diffInHours <= 24 * 7;
-      case "28d":
-        return diffInHours <= 24 * 28;
-      default:
-        return true;
+      switch (filters.dateRange) {
+        case "24h":
+          if (diffInHours > 24) return false;
+          break;
+        case "7d":
+          if (diffInHours > 24 * 7) return false;
+          break;
+        case "28d":
+          if (diffInHours > 24 * 28) return false;
+          break;
+      }
     }
+
+    if (filters.verified && !tweet.author.verified) return false;
+    if (filters.mediaOnly && !tweet.entities?.media?.length) return false;
+    if (filters.linksOnly && !tweet.entities?.urls?.length) return false;
+    if (filters.threadOnly && !tweet.is_thread) return false;
+    if (filters.quoteTweetsOnly && !tweet.is_quote) return false;
+    if (filters.minLikes && tweet.like_count < parseInt(filters.minLikes)) return false;
+    if (filters.minComments && tweet.reply_count < parseInt(filters.minComments)) return false;
+    if (filters.minRetweets && tweet.retweet_count < parseInt(filters.minRetweets)) return false;
+    
+    return true;
   });
 
   const sortedTweets = [...filteredTweets].sort((a, b) => {
@@ -80,87 +104,50 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
         </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col">
-        <div className="flex flex-col gap-4 mb-4">
-          <div>
-            <div className="flex items-center gap-4 justify-end">
-              <Label className="text-base whitespace-nowrap">Time Range:</Label>
-              <div className="flex items-center rounded-md space-x-1">
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "24h"}
-                  onPressedChange={() => setTimeRange("24h")}
-                >
-                  24h
-                </Toggle>
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "7d"}
-                  onPressedChange={() => setTimeRange("7d")}
-                >
-                  7d
-                </Toggle>
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "28d"}
-                  onPressedChange={() => setTimeRange("28d")}
-                >
-                  28d
-                </Toggle>
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "all"}
-                  onPressedChange={() => setTimeRange("all")}
-                >
-                  All
-                </Toggle>
-              </div>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 justify-end sm:justify-start">
+            <Label className="text-base">Filters:</Label>
+            <FilterPopover filters={filters} setFilters={setFilters} />
           </div>
-          <div>
-            <div className="flex items-center gap-4 justify-end">
-              <Label className="text-sm whitespace-nowrap">Sort By:</Label>
-              <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortMetric)}>
-                <SelectTrigger className="w-[160px]">
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="impressions">
-                    <div className="flex items-center">
-                      <BarChart2 className="w-4 h-4 mr-2" />
-                      Impressions
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="likes">
-                    <div className="flex items-center">
-                      <Heart className="w-4 h-4 mr-2" />
-                      Likes
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="comments">
-                    <div className="flex items-center">
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Comments
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bookmarks">
-                    <div className="flex items-center">
-                      <Bookmark className="w-4 h-4 mr-2" />
-                      Bookmarks
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="retweets">
-                    <div className="flex items-center">
-                      <Repeat className="w-4 h-4 mr-2" />
-                      Retweets
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="flex items-center gap-4 justify-end">
+            <Label className="text-sm whitespace-nowrap">Sort By:</Label>
+            <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortMetric)}>
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="impressions">
+                  <div className="flex items-center">
+                    <BarChart2 className="w-4 h-4 mr-2" />
+                    Impressions
+                  </div>
+                </SelectItem>
+                <SelectItem value="likes">
+                  <div className="flex items-center">
+                    <Heart className="w-4 h-4 mr-2" />
+                    Likes
+                  </div>
+                </SelectItem>
+                <SelectItem value="comments">
+                  <div className="flex items-center">
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Comments
+                  </div>
+                </SelectItem>
+                <SelectItem value="bookmarks">
+                  <div className="flex items-center">
+                    <Bookmark className="w-4 h-4 mr-2" />
+                    Bookmarks
+                  </div>
+                </SelectItem>
+                <SelectItem value="retweets">
+                  <div className="flex items-center">
+                    <Repeat className="w-4 h-4 mr-2" />
+                    Retweets
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div ref={containerRef} className="flex-1">

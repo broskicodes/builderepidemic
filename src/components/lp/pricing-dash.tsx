@@ -52,11 +52,11 @@ export function PricingDash() {
       .then((data) => {
         const subCount = data.length;
         if (subCount < 10) {
-          setCurrentPrice(9);
-          setNextPrice(29);
+          setCurrentPrice(29);
+          setNextPrice(49);
           setProgressValue(subCount * 10);
           setRemainingPurchases(10 - subCount);
-          setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_10);
+          setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_30);
         } else if (subCount < 50) {
           setCurrentPrice(29);
           setNextPrice(49);

@@ -22,6 +22,7 @@ import { useState, useCallback } from "react";
 import { format } from "date-fns";
 import { Toggle } from "@/components/ui/toggle";
 import { Label } from "@/components/ui/label";
+import { FilterPopover, SearchFilters } from "./filter-popover";
 
 const metricIcons = {
   impressions: <Eye className="h-4 w-4" />,
@@ -138,7 +139,17 @@ const CustomTooltip = ({ active, payload, label, selectedMetric }: any) => {
 
 export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerformanceProps) {
   const [selectedMetric, setSelectedMetric] = useState<Metric>("impressions");
-  const [timeRange, setTimeRange] = useState<TimeRange>("24h");
+  const [filters, setFilters] = useState<SearchFilters>({
+    verified: false,
+    mediaOnly: false,
+    linksOnly: false,
+    threadOnly: false,
+    quoteTweetsOnly: false,
+    minLikes: "",
+    minComments: "",
+    minRetweets: "",
+    dateRange: "24h",
+  });
 
   const handleMetricChange = (value: string | undefined) => {
     if (value) {
@@ -147,22 +158,36 @@ export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerform
   };
 
   const filteredTweets = tweets.filter((tweet) => {
-    if (!showTimeRange || timeRange === "all") return true;
-
+    // Date range filter
     const tweetDate = new Date(tweet.date);
     const now = new Date();
     const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
 
-    switch (timeRange) {
-      case "24h":
-        return diffInHours <= 24;
-      case "7d":
-        return diffInHours <= 24 * 7;
-      case "28d":
-        return diffInHours <= 24 * 28;
-      default:
-        return true;
+    if (filters.dateRange !== 'all') {
+      switch (filters.dateRange) {
+        case "24h":
+          if (diffInHours > 24) return false;
+          break;
+        case "7d":
+          if (diffInHours > 24 * 7) return false;
+          break;
+        case "28d":
+          if (diffInHours > 24 * 28) return false;
+          break;
+      }
     }
+
+    // Other filters
+    if (filters.verified && !tweet.author.verified) return false;
+    if (filters.mediaOnly && !tweet.entities?.media?.length) return false;
+    if (filters.linksOnly && !tweet.entities?.urls?.length) return false;
+    if (filters.threadOnly && !tweet.is_thread) return false;
+    if (filters.quoteTweetsOnly && !tweet.is_quote) return false;
+    if (filters.minLikes && tweet.like_count < parseInt(filters.minLikes)) return false;
+    if (filters.minComments && tweet.reply_count < parseInt(filters.minComments)) return false;
+    if (filters.minRetweets && tweet.retweet_count < parseInt(filters.minRetweets)) return false;
+    
+    return true;
   });
 
   // Transform tweet data for the chart
@@ -218,38 +243,11 @@ export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerform
         <CardDescription>Analyze different metrics for your tweets</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col space-y-4 mb-6">
-          {showTimeRange && (
-            <div className="flex space-x-2 items-center justify-end w-full">
-              <Label className="text-base">Time Range:</Label>
-              <div className="flex items-center rounded-md  p-1 space-x-1 w-fit">
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "24h"}
-                  onPressedChange={() => setTimeRange("24h")}
-                >
-                  24h
-                </Toggle>
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "7d"}
-                  onPressedChange={() => setTimeRange("7d")}
-                >
-                  7d
-                </Toggle>
-                <Toggle
-                  variant="outline"
-                  size="sm"
-                  pressed={timeRange === "28d"}
-                  onPressedChange={() => setTimeRange("28d")}
-                >
-                  28d
-                </Toggle>
-              </div>
-            </div>
-          )}
+        <div className="flex flex-col space-y-2 mb-6">
+          <div className="flex space-x-2 items-center justify-end w-full">
+            <Label className="text-base">Filters:</Label>
+            <FilterPopover filters={filters} setFilters={setFilters} />
+          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 text-lg font-medium">
               {selectedMetric.charAt(0).toUpperCase() +

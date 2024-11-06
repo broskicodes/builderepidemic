@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { Metric, Tweet } from "@/lib/types";
+import { Metric, Tweet, TwitterScrapeType } from "@/lib/types";
 import { TweetPerformance } from "./tweet-performance";
 import { Metrics } from "./metrics";
 import {
@@ -16,6 +16,9 @@ import {
   SelectSearch,
 } from "@/components/ui/select";
 import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
+import { toast } from "sonner";
 
 interface DateRange {
   start: Date;
@@ -160,6 +163,47 @@ export function PersonalDashboard() {
     fetchHandles();
   }, []);
 
+  const refreshTweets = async () => {
+    if (!selectedHandle) return;
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/scrape`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ scrapeType: TwitterScrapeType.Update, handles: [selectedHandle.handle] }),
+      });
+
+      if (!response.ok) throw new Error("Failed to refresh tweets");
+      
+      toast.success("Scraping tweets, refreshing in 10 seconds...");
+
+      // Wait 5 seconds before refetching tweets
+      setTimeout(async () => {
+        // Refetch tweets after scraping
+        setIsLoading(true);
+
+        const tweetsResponse = await fetch(`/api/tweets/${selectedHandle.handle}`);
+        if (!tweetsResponse.ok) {
+          toast.error("Failed to fetch new tweets");
+          setIsLoading(false);
+          return;
+        }
+        
+        const data: Tweet[] = await tweetsResponse.json();
+        setTweetData(data);
+        setFilteredTweets(data);
+        setIsLoading(false);
+
+        toast.success("Tweets refreshed!");
+      }, 10000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred");
+      console.error("Error refreshing tweets:", err);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -186,7 +230,7 @@ export function PersonalDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 pb-8">
+      <div className="container mx-auto px-4 pb-4">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <h1 className="text-2xl font-bold">Twitter Analytics for:</h1>
@@ -240,33 +284,44 @@ export function PersonalDashboard() {
             </div>
           </div>
         </div>
-        <div className="w-fit ml-auto flex space-x-2 items-center">
-          <label
-            htmlFor="date-range"
-            className="whitespace-nowrap text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        <div className="w-fit ml-auto flex flex-col space-y-2 items-end">
+          <Button
+            variant="outline"
+            onClick={refreshTweets}
+            disabled={isLoading || !selectedHandle}
+            className="flex items-center gap-2 w-fit"
           >
-            Select Date Range:
-          </label>
-          <div className="w-64">
-            <Select value={selectedRange} onValueChange={setSelectedRange}>
-              <SelectTrigger id="date-range">
-                <SelectValue placeholder="Select date range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Available Ranges</SelectLabel>
-                  {dateRanges.map((range) => (
-                    <SelectItem key={range.value} value={range.value}>
-                      {range.label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            Refresh Tweets
+          </Button>
+          <div className="flex space-x-2 items-center">
+            <label
+              htmlFor="date-range"
+              className="whitespace-nowrap text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Select Date Range:
+            </label>
+            <div className="w-64">
+              <Select value={selectedRange} onValueChange={setSelectedRange}>
+                <SelectTrigger id="date-range">
+                  <SelectValue placeholder="Select date range" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Available Ranges</SelectLabel>
+                    {dateRanges.map((range) => (
+                      <SelectItem key={range.value} value={range.value}>
+                        {range.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
       </div>
-      <main className="container mx-auto px-4 py-8 flex flex-col gap-4">
+      <main className="container mx-auto px-4 pt-2 pb-8 flex flex-col gap-4">
         <TweetPerformance tweets={filteredTweets} />
         <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
       </main>

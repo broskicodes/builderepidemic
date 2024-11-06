@@ -57,13 +57,15 @@ export function PricingDash() {
           setProgressValue(subCount * 10);
           setRemainingPurchases(10 - subCount);
           setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_30);
-        } else if (subCount < 50) {
-          setCurrentPrice(29);
-          setNextPrice(49);
-          setProgressValue(subCount * 2);
-          setRemainingPurchases(50 - subCount);
-          setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_30);
-        } else {
+        } 
+        // else if (subCount < 50) {
+        //   setCurrentPrice(29);
+        //   setNextPrice(49);
+        //   setProgressValue(subCount * 2);
+        //   setRemainingPurchases(50 - subCount);
+        //   setPriceId(process.env.NEXT_PUBLIC_PRICE_ID_30);
+        // } 
+        else {
           setCurrentPrice(49);
           setNextPrice(0);
           setProgressValue(0);

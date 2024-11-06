@@ -35,6 +35,7 @@ import { useSession } from "next-auth/react";
 import posthog from "posthog-js";
 import { TweetList } from "./tweet-list";
 import { FilterPopover, SearchFilters } from "./filter-popover";
+import { toast } from "sonner";
 
 type SortBy = "date" | "impressions" | "likes" | "comments" | "bookmarks" | "retweets";
 
@@ -91,9 +92,15 @@ export function AdvancedSearch() {
         filters: filters,
       }),
     });
+
+    if (!results.ok) {
+      toast.error("Failed to search tweets");
+      setIsLoading(false);
+      return;
+    }
+
     const data = await results.json();
     setSearchResults(data.results);
-    console.log(data);
     setIsLoading(false);
   };
 

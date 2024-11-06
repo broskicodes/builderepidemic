@@ -55,7 +55,7 @@ export default function FriendsPage() {
         ) : (
           <>
             <Zap className="mr-2 h-5 w-5" />
-            {session?.user?.subscribed ? "Subscribed" : isLoading ? "Loading..." : "Get Access"}
+            {session?.user?.subscribed ? "Subscribed" : isLoading ? "Loading..." : "Get Access ($9)"}
           </>
         )}
       </Button>

@@ -19,10 +19,10 @@ export default function DashboardPage() {
         <Header />
         {session?.user.subscribed ? (
           <div className="container mx-auto py-6">
-            <Tabs defaultValue="tweets" className="w-full">
+            <Tabs defaultValue="personal" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-8">
-                <TabsTrigger value="tweets">Latest Tweets</TabsTrigger>
                 <TabsTrigger value="personal">Personal Dashboard</TabsTrigger>
+                <TabsTrigger value="tweets">Latest Viral Tweets</TabsTrigger>
               </TabsList>
               <TabsContent value="personal">
                 <PersonalDashboard />

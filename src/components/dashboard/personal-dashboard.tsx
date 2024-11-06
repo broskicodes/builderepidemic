@@ -255,9 +255,15 @@ export function PersonalDashboard() {
             <div className="w-48">
               <Select
                 value={selectedHandle?.handle}
-                onValueChange={(value) =>
-                  setSelectedHandle(handles.find((handle) => handle.handle === value) || null)
-                }
+                onValueChange={(value) => {
+                  const handle = handles.find((handle) => handle.handle === value);
+
+                  setSelectedHandle(handle ? {
+                    handle: handle.handle,
+                    pfp: `https://unavatar.io/twitter/${handle.handle}`,
+                    url: `https://x.com/${handle.handle}`,
+                  } : null);
+                }}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select handle" />

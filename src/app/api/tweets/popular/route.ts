@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         name: twitterHandles.name,
         verified: twitterHandles.verified,
         profile_image_url: twitterHandles.pfp,
-        followers: twitterHandles.followers,
+        description: twitterHandles.description,
       })
       .from(tweets)
       .leftJoin(twitterHandles, sql`${tweets.handle_id} = ${twitterHandles.id}`)
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
         verified: tweet.verified!,
         url: `https://twitter.com/${tweet.handle}`,
         pfp: tweet.profile_image_url!,
-        followers: tweet.followers!,
+        description: tweet.description || "",
       },
     }));
 

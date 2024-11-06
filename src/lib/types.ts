@@ -72,7 +72,8 @@ export interface TwitterAuthor {
   pfp: string;
   url: string;
   verified: boolean;
-  followers: number;
+  followers?: number;
+  description?: string;
 }
 
 export interface TweetEntity {

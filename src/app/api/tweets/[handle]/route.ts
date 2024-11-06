@@ -15,7 +15,7 @@ export async function GET(request: Request, { params }: { params: { handle: stri
         handle: twitterHandles.handle,
         url: twitterHandles.url,
         pfp: twitterHandles.pfp,
-        followers: twitterHandles.followers,
+        description: twitterHandles.description,
         name: twitterHandles.name,
         verified: twitterHandles.verified,
       })
@@ -43,7 +43,7 @@ export async function GET(request: Request, { params }: { params: { handle: stri
         url: handleData[0].url,
         name: handleData[0].name,
         verified: handleData[0].verified,
-        followers: handleData[0].followers,
+        description: handleData[0].description || "",
       },
       tweet_id: tweet.tweets.tweet_id.toString(),
       url: tweet.tweets.url,

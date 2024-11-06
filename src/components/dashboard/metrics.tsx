@@ -219,7 +219,7 @@ export const Metrics = ({ tweets, prevPeriodTweets }: MetricsProps) => {
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-3">
+          <div className="grid gap-4 grid-cols-2">
             {(Object.keys(metricLabels) as Metric[]).map((metric) => (
               <Card key={metric} className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

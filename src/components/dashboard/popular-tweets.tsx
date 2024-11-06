@@ -25,7 +25,6 @@ interface PopularTweetsProps {
 
 export function PopularTweets({ tweets }: PopularTweetsProps) {
   const [sortBy, setSortBy] = useState<SortMetric>("impressions");
-  const [timeRange, setTimeRange] = useState<TimeRange>("24h");
   const [listHeight, setListHeight] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState<SearchFilters>({

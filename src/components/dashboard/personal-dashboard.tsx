@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { Metric, Tweet, TwitterScrapeType } from "@/lib/types";
 import { TweetPerformance } from "./tweet-performance";
 import { Metrics } from "./metrics";
+import { PopularTweets } from "./popular-tweets";
 import {
   Select,
   SelectContent,
@@ -322,8 +323,11 @@ export function PersonalDashboard() {
         </div>
       </div>
       <main className="container mx-auto px-4 pt-2 pb-8 flex flex-col gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <PopularTweets tweets={filteredTweets} />
+          <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
+        </div>
         <TweetPerformance tweets={filteredTweets} />
-        <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
       </main>
     </div>
   );

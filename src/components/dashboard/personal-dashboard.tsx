@@ -177,7 +177,7 @@ export function PersonalDashboard() {
 
       if (!response.ok) throw new Error("Failed to refresh tweets");
       
-      toast.success("Scraping tweets, refreshing in 10 seconds...");
+      toast.success("Scraping tweets, will refresh in 2 minutes...");
 
       // Wait 5 seconds before refetching tweets
       setTimeout(async () => {
@@ -197,7 +197,7 @@ export function PersonalDashboard() {
         setIsLoading(false);
 
         toast.success("Tweets refreshed!");
-      }, 10000);
+      }, 120000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
       console.error("Error refreshing tweets:", err);

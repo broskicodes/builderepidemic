@@ -3,13 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { User, Zap } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function FriendsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+  const formattedName = pathname.slice(1).charAt(0).toUpperCase() + pathname.slice(2);
 
   const handleAction = async () => {
     setIsLoading(true);
@@ -37,7 +39,10 @@ export default function FriendsPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <h1 className="text-2xl font-bold text-center">
+        Hi {formattedName}, thanks for your support!
+      </h1>
       <Button
         disabled={isLoading || !!session?.user?.subscribed}
         size="lg"

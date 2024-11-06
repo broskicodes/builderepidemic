@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, Download } from "lucide-react";
 import { toast } from "sonner";
 
 interface DateRange {
@@ -46,6 +46,7 @@ export function PersonalDashboard() {
   const [selectedHandle, setSelectedHandle] = useState<TwitterHandle | null>(null);
   const [handles, setHandles] = useState<TwitterHandle[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isScraping, setIsScraping] = useState(false);
 
   useEffect(() => {
     if (session?.user?.handle) {
@@ -164,31 +165,36 @@ export function PersonalDashboard() {
     fetchHandles();
   }, []);
 
-  const refreshTweets = async () => {
+  const handleTweetScrape = async (scrapeType: TwitterScrapeType) => {
     if (!selectedHandle) return;
     
     try {
+      setIsScraping(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/scrape`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ scrapeType: TwitterScrapeType.Update, handles: [selectedHandle.handle] }),
+        body: JSON.stringify({ scrapeType, handles: [selectedHandle.handle] }),
       });
 
-      if (!response.ok) throw new Error("Failed to refresh tweets");
+      if (!response.ok) throw new Error(`Failed to ${scrapeType} tweets`);
       
-      toast.success("Scraping tweets, will refresh in 2 minutes...");
+      const waitTime = scrapeType === TwitterScrapeType.Update ? 120000 : 300000;
+      const message = scrapeType === TwitterScrapeType.Update 
+        ? "Scraping tweets, will refresh in 2 minutes..."
+        : "Initializing tweets, this may take a few minutes...";
+      
+      toast.success(message);
 
-      // Wait 5 seconds before refetching tweets
       setTimeout(async () => {
-        // Refetch tweets after scraping
         setIsLoading(true);
 
         const tweetsResponse = await fetch(`/api/tweets/${selectedHandle.handle}`);
         if (!tweetsResponse.ok) {
           toast.error("Failed to fetch new tweets");
           setIsLoading(false);
+          setIsScraping(false);
           return;
         }
         
@@ -196,12 +202,14 @@ export function PersonalDashboard() {
         setTweetData(data);
         setFilteredTweets(data);
         setIsLoading(false);
+        setIsScraping(false);
 
-        toast.success("Tweets refreshed!");
-      }, 120000);
+        toast.success(scrapeType === TwitterScrapeType.Update ? "Tweets refreshed!" : "Tweets initialized!");
+      }, waitTime);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
-      console.error("Error refreshing tweets:", err);
+      console.error(`Error ${scrapeType} tweets:`, err);
+      setIsScraping(false);
     }
   };
 
@@ -286,15 +294,28 @@ export function PersonalDashboard() {
           </div>
         </div>
         <div className="w-fit ml-auto flex flex-col space-y-2 items-end">
-          <Button
-            variant="outline"
-            onClick={refreshTweets}
-            disabled={isLoading || !selectedHandle}
-            className="flex items-center gap-2 w-fit"
-          >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh Tweets
-          </Button>
+          <div className="flex items-center gap-2">
+            {process.env.NEXT_PUBLIC_ENV_URL === 'http://localhost:3000' && (
+              <Button
+                variant="outline"
+                onClick={() => handleTweetScrape(TwitterScrapeType.Initialize)}
+                disabled={isLoading || !selectedHandle || isScraping}
+                className="flex items-center gap-2"
+              >
+                <Download className={`h-4 w-4 ${isScraping ? 'animate-spin' : ''}`} />
+                {isScraping ? 'Initializing...' : 'Initialize Tweets'}
+              </Button>
+            )}
+            <Button
+              variant="outline"
+              onClick={() => handleTweetScrape(TwitterScrapeType.Update)}
+              disabled={isLoading || !selectedHandle || isScraping}
+              className="flex items-center gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${isScraping ? 'animate-spin' : ''}`} />
+              {isScraping ? 'Refreshing...' : 'Refresh Tweets'}
+            </Button>
+          </div>
           <div className="flex space-x-2 items-center">
             <label
               htmlFor="date-range"

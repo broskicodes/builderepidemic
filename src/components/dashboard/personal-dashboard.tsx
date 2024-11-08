@@ -213,6 +213,40 @@ export function PersonalDashboard() {
     }
   };
 
+  const handleImportNewHandle = async () => {
+    if (!searchQuery) return;
+    
+    try {
+      setIsScraping(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/scrape`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          scrapeType: TwitterScrapeType.Initialize, 
+          handles: [searchQuery] 
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to initialize tweets");
+      
+      toast.success("Initializing tweets for new handle, this may take a few minutes...");
+      
+      // Refresh handles list after 5 minutes
+      setTimeout(async () => {
+        const handlesResponse = await fetch('/api/handles');
+        if (handlesResponse.ok) {
+          const newHandles = await handlesResponse.json();
+          setHandles(newHandles);
+          setIsScraping(false);
+          toast.success("New handle initialized!");
+        }
+      }, 300000);
+    } catch (err) {
+      toast.error("Failed to initialize new handle");
+      setIsScraping(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -275,13 +309,11 @@ export function PersonalDashboard() {
                   />
                   <SelectGroup>
                     <SelectLabel>Handles</SelectLabel>
-                    {/* Show current user's handle first */}
                     {session?.user?.handle && (
                       <SelectItem value={session.user.handle}>
                         @{session.user.handle} (You)
                       </SelectItem>
                     )}
-                    {/* Show filtered handles */}
                     {handles
                       .filter(
                         (h) =>
@@ -294,6 +326,14 @@ export function PersonalDashboard() {
                         </SelectItem>
                       ))}
                   </SelectGroup>
+                  <Button 
+                    variant="outline"
+                    className="w-full mt-2"
+                    onClick={handleImportNewHandle}
+                    disabled={isScraping}
+                  >
+                    {isScraping ? 'Initializing...' : `Add @${searchQuery}`}
+                  </Button>
                 </SelectContent>
               </Select>
             </div>

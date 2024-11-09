@@ -303,10 +303,12 @@ export function PersonalDashboard() {
                   <SelectValue placeholder="Select handle" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectSearch
-                    placeholder="Search handles..."
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                  <div className="sticky top-0 bg-popover z-10 border-b">
+                    <SelectSearch
+                      placeholder="Search handles..."
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
                   <SelectGroup>
                     <SelectLabel>Handles</SelectLabel>
                     {session?.user?.handle && (
@@ -326,14 +328,16 @@ export function PersonalDashboard() {
                         </SelectItem>
                       ))}
                   </SelectGroup>
-                  <Button 
-                    variant="outline"
-                    className="w-full mt-2"
-                    onClick={handleImportNewHandle}
-                    disabled={isScraping}
-                  >
-                    {isScraping ? 'Initializing...' : `Add @${searchQuery}`}
-                  </Button>
+                  {searchQuery && !handles.some(h => h.handle.toLowerCase() === searchQuery.toLowerCase()) && (
+                    <Button 
+                      variant="outline"
+                      className="w-full mt-2 mx-2"
+                      onClick={handleImportNewHandle}
+                      disabled={isScraping}
+                    >
+                      {isScraping ? 'Initializing...' : `Add @${searchQuery}`}
+                    </Button>
+                  )}
                 </SelectContent>
               </Select>
             </div>

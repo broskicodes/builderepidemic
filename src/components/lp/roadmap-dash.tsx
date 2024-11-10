@@ -103,7 +103,7 @@ function getWeekKey(date: Date): string {
   // Ensure we're working with a clone of the date
   sunday.setHours(0, 0, 0, 0);
   sunday.setDate(date.getDate() - date.getDay());
-  return `week-${sunday.toISOString().split('T')[0]}`;  // Only use the date part
+  return `week-${sunday.toISOString().split("T")[0]}`; // Only use the date part
 }
 
 // Organize tasks by weeks

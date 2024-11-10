@@ -62,7 +62,7 @@ export enum TwitterScrapeType {
   Monthly = "monthly",
   Weekly = "weekly",
   Daily = "daily",
-  Update = "update"
+  Update = "update",
 }
 
 export interface TwitterAuthor {

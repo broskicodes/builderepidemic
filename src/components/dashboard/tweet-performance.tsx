@@ -148,7 +148,7 @@ export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerform
     minLikes: "",
     minComments: "",
     minRetweets: "",
-    dateRange: "24h",
+    dateRange: "7d",
   });
 
   const handleMetricChange = (value: string | undefined) => {
@@ -163,7 +163,7 @@ export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerform
     const now = new Date();
     const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
 
-    if (filters.dateRange !== 'all') {
+    if (filters.dateRange !== "all") {
       switch (filters.dateRange) {
         case "24h":
           if (diffInHours > 24) return false;
@@ -186,7 +186,7 @@ export function TweetPerformance({ tweets, showTimeRange = false }: TweetPerform
     if (filters.minLikes && tweet.like_count < parseInt(filters.minLikes)) return false;
     if (filters.minComments && tweet.reply_count < parseInt(filters.minComments)) return false;
     if (filters.minRetweets && tweet.retweet_count < parseInt(filters.minRetweets)) return false;
-    
+
     return true;
   });
 

@@ -188,4 +188,4 @@ export function FilterPopover({ filters, setFilters }: FilterPopoverProps) {
       </PopoverContent>
     </Popover>
   );
-} 
+}

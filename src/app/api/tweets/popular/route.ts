@@ -52,7 +52,7 @@ export async function GET(request: Request) {
       )
       .orderBy(
         sql`${tweets.view_count} + ${tweets.like_count} + ${tweets.reply_count} + ${tweets.bookmark_count} + ${tweets.retweet_count} DESC`,
-      )
+      );
 
     const mappedTweets: Tweet[] = results.map((tweet) => ({
       tweet_id: tweet.tweet_id.toString(),

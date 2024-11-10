@@ -20,6 +20,7 @@ import { addWeeks, format, startOfWeek, endOfWeek } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Download } from "lucide-react";
 import { toast } from "sonner";
+import { SimilarAccounts } from "./similar-accounts";
 
 interface DateRange {
   start: Date;
@@ -167,7 +168,7 @@ export function PersonalDashboard() {
 
   const handleTweetScrape = async (scrapeType: TwitterScrapeType) => {
     if (!selectedHandle) return;
-    
+
     try {
       setIsScraping(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/scrape`, {
@@ -179,12 +180,13 @@ export function PersonalDashboard() {
       });
 
       if (!response.ok) throw new Error(`Failed to ${scrapeType} tweets`);
-      
+
       const waitTime = scrapeType === TwitterScrapeType.Update ? 120000 : 300000;
-      const message = scrapeType === TwitterScrapeType.Update 
-        ? "Scraping tweets, will refresh in 2 minutes..."
-        : "Initializing tweets, this may take a few minutes...";
-      
+      const message =
+        scrapeType === TwitterScrapeType.Update
+          ? "Scraping tweets, will refresh in 2 minutes..."
+          : "Initializing tweets, this may take a few minutes...";
+
       toast.success(message);
 
       setTimeout(async () => {
@@ -197,14 +199,16 @@ export function PersonalDashboard() {
           setIsScraping(false);
           return;
         }
-        
+
         const data: Tweet[] = await tweetsResponse.json();
         setTweetData(data);
         setFilteredTweets(data);
         setIsLoading(false);
         setIsScraping(false);
 
-        toast.success(scrapeType === TwitterScrapeType.Update ? "Tweets refreshed!" : "Tweets initialized!");
+        toast.success(
+          scrapeType === TwitterScrapeType.Update ? "Tweets refreshed!" : "Tweets initialized!",
+        );
       }, waitTime);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -215,25 +219,25 @@ export function PersonalDashboard() {
 
   const handleImportNewHandle = async () => {
     if (!searchQuery) return;
-    
+
     try {
       setIsScraping(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_SCRAPER_URL}/twitter/scrape`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          scrapeType: TwitterScrapeType.Initialize, 
-          handles: [searchQuery] 
+        body: JSON.stringify({
+          scrapeType: TwitterScrapeType.Initialize,
+          handles: [searchQuery],
         }),
       });
 
       if (!response.ok) throw new Error("Failed to initialize tweets");
-      
+
       toast.success("Initializing tweets for new handle, this may take a few minutes...");
-      
+
       // Refresh handles list after 5 minutes
       setTimeout(async () => {
-        const handlesResponse = await fetch('/api/handles');
+        const handlesResponse = await fetch("/api/handles");
         if (handlesResponse.ok) {
           const newHandles = await handlesResponse.json();
           setHandles(newHandles);
@@ -245,6 +249,16 @@ export function PersonalDashboard() {
       toast.error("Failed to initialize new handle");
       setIsScraping(false);
     }
+  };
+
+  const doIt = async () => {
+    const response = await fetch("/api/it", {
+      method: "POST",
+      body: JSON.stringify({ handle: selectedHandle?.handle }),
+    });
+
+    const data = await response.json();
+    console.log(data);
   };
 
   if (isLoading) {
@@ -292,11 +306,15 @@ export function PersonalDashboard() {
                 onValueChange={(value) => {
                   const handle = handles.find((handle) => handle.handle === value);
 
-                  setSelectedHandle(handle ? {
-                    handle: handle.handle,
-                    pfp: `https://unavatar.io/twitter/${handle.handle}`,
-                    url: `https://x.com/${handle.handle}`,
-                  } : null);
+                  setSelectedHandle(
+                    handle
+                      ? {
+                          handle: handle.handle,
+                          pfp: `https://unavatar.io/twitter/${handle.handle}`,
+                          url: `https://x.com/${handle.handle}`,
+                        }
+                      : null,
+                  );
                 }}
               >
                 <SelectTrigger>
@@ -328,32 +346,36 @@ export function PersonalDashboard() {
                         </SelectItem>
                       ))}
                   </SelectGroup>
-                  {searchQuery && !handles.some(h => h.handle.toLowerCase() === searchQuery.toLowerCase()) && (
-                    <Button 
-                      variant="outline"
-                      className="w-full mt-2 mx-2"
-                      onClick={handleImportNewHandle}
-                      disabled={isScraping}
-                    >
-                      {isScraping ? 'Initializing...' : `Add @${searchQuery}`}
-                    </Button>
-                  )}
+                  {searchQuery &&
+                    !handles.some((h) => h.handle.toLowerCase() === searchQuery.toLowerCase()) && (
+                      <Button
+                        variant="outline"
+                        className="w-full mt-2 mx-2"
+                        onClick={handleImportNewHandle}
+                        disabled={isScraping}
+                      >
+                        {isScraping ? "Initializing..." : `Add @${searchQuery}`}
+                      </Button>
+                    )}
                 </SelectContent>
               </Select>
             </div>
           </div>
         </div>
         <div className="w-fit ml-auto flex flex-col space-y-2 items-end">
-          <div className="flex items-center gap-2">
-            {process.env.NEXT_PUBLIC_ENV_URL === 'http://localhost:3000' && (
+          {/* <Button variant="outline" onClick={doIt}>
+            do it
+          </Button> */}
+          <div className="flex items-center gap-2 mt-4">
+            {process.env.NEXT_PUBLIC_ENV_URL === "http://localhost:3000" && (
               <Button
                 variant="outline"
                 onClick={() => handleTweetScrape(TwitterScrapeType.Initialize)}
                 disabled={isLoading || !selectedHandle || isScraping}
                 className="flex items-center gap-2"
               >
-                <Download className={`h-4 w-4 ${isScraping ? 'animate-spin' : ''}`} />
-                {isScraping ? 'Initializing...' : 'Initialize Tweets'}
+                <Download className={`h-4 w-4 ${isScraping ? "animate-spin" : ""}`} />
+                {isScraping ? "Initializing..." : "Initialize Tweets"}
               </Button>
             )}
             <Button
@@ -362,8 +384,8 @@ export function PersonalDashboard() {
               disabled={isLoading || !selectedHandle || isScraping}
               className="flex items-center gap-2"
             >
-              <RefreshCw className={`h-4 w-4 ${isScraping ? 'animate-spin' : ''}`} />
-              {isScraping ? 'Refreshing...' : 'Refresh Tweets'}
+              <RefreshCw className={`h-4 w-4 ${isScraping ? "animate-spin" : ""}`} />
+              {isScraping ? "Refreshing..." : "Refresh Tweets"}
             </Button>
           </div>
           <div className="flex space-x-2 items-center">
@@ -396,9 +418,22 @@ export function PersonalDashboard() {
       <main className="container mx-auto px-4 pt-2 pb-8 flex flex-col gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PopularTweets tweets={filteredTweets} />
-          <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
+          {selectedHandle && <SimilarAccounts 
+            handle={selectedHandle.handle} 
+            onAccountSelect={(handle) => {
+              const newHandle = handles.find(h => h.handle === handle);
+              setSelectedHandle(
+                newHandle ? {
+                  handle: newHandle.handle,
+                  pfp: `https://unavatar.io/twitter/${newHandle.handle}`,
+                  url: `https://x.com/${newHandle.handle}`
+                } : null
+              );
+            }} 
+          />}
         </div>
         <TweetPerformance tweets={filteredTweets} />
+        <Metrics tweets={filteredTweets} prevPeriodTweets={prevPeriodTweets} />
       </main>
     </div>
   );

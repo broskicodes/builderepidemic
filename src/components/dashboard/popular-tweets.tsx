@@ -36,7 +36,7 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
     minLikes: "",
     minComments: "",
     minRetweets: "",
-    dateRange: "24h",
+    dateRange: "7d",
   });
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
   }, []);
 
   const filteredTweets = tweets.filter((tweet) => {
-    if (filters.dateRange !== 'all') {
+    if (filters.dateRange !== "all") {
       const tweetDate = new Date(tweet.date);
       const now = new Date();
       const diffInHours = (now.getTime() - tweetDate.getTime()) / (1000 * 60 * 60);
@@ -73,7 +73,7 @@ export function PopularTweets({ tweets }: PopularTweetsProps) {
     if (filters.minLikes && tweet.like_count < parseInt(filters.minLikes)) return false;
     if (filters.minComments && tweet.reply_count < parseInt(filters.minComments)) return false;
     if (filters.minRetweets && tweet.retweet_count < parseInt(filters.minRetweets)) return false;
-    
+
     return true;
   });
 

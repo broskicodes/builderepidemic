@@ -15,7 +15,7 @@ export default function FriendsPage() {
 
   const handleAction = async () => {
     setIsLoading(true);
-    
+
     if (!session) {
       await signIn("twitter");
       setIsLoading(false);
@@ -24,9 +24,9 @@ export default function FriendsPage() {
 
     const response = await fetch("/api/stripe/checkout", {
       method: "POST",
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         priceId: process.env.NEXT_PUBLIC_PRICE_ID_10,
-        user: session.user 
+        user: session.user,
       }),
     });
 
@@ -43,11 +43,7 @@ export default function FriendsPage() {
       <h1 className="text-2xl font-bold text-center">
         Hi {formattedName}, thanks for your support!
       </h1>
-      <Button
-        disabled={isLoading || !!session?.user?.subscribed}
-        size="lg"
-        onClick={handleAction}
-      >
+      <Button disabled={isLoading || !!session?.user?.subscribed} size="lg" onClick={handleAction}>
         {!session ? (
           <>
             <User className="mr-2 h-5 w-5" /> Sign in with Twitter
@@ -55,10 +51,14 @@ export default function FriendsPage() {
         ) : (
           <>
             <Zap className="mr-2 h-5 w-5" />
-            {session?.user?.subscribed ? "Subscribed" : isLoading ? "Loading..." : "Get Access ($9)"}
+            {session?.user?.subscribed
+              ? "Subscribed"
+              : isLoading
+                ? "Loading..."
+                : "Get Access ($9)"}
           </>
         )}
       </Button>
     </div>
   );
-} 
+}

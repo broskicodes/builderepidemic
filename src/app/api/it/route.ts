@@ -26,7 +26,7 @@ const analysisSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-//     const { handle } = await request.json();
+    const { handle } = await request.json();
 
 //     if (!handle) {
 //       return NextResponse.json({ error: "Handle is required" }, { status: 400 });

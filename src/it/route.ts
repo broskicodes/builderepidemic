@@ -46,43 +46,43 @@ export async function POST(request: NextRequest) {
       .innerJoin(subscriptions, eq(subscriptions.user_id, users.id))
       .where(eq(subscriptions.active, true));
 
-    const founderKeywords = [
-      "build",        "indie hacker", "founder",      "entrepreneur",
-      "startup",      "maker",        "ceo",          "bootstrap",
-      "launched",     "shipping",     "created",      "mrr",
-      "built",        "market",       "prev",         "product",
-      "pricing",      "launch",       "ai",           "ml",
-      "code",         "user",         "growth",       "dev",
-      "customer",     "product",      "VP",           "sell",
-      "sales",        "engineer",     "swe",          "pm",
-      "design",       "ux",           "ui",           "software",
-      "business",     "computer",     "content",      "community",
-      "tool",         "tech",         "data",         "science",
-      "analytics",    "money",        "eng",          "github",
-      "blog",         "youtube"       
-    ];
+    // const founderKeywords = [
+    //   "build",        "indie hacker", "founder",      "entrepreneur",
+    //   "startup",      "maker",        "ceo",          "bootstrap",
+    //   "launched",     "shipping",     "created",      "mrr",
+    //   "built",        "market",       "prev",         "product",
+    //   "pricing",      "launch",       "ai",           "ml",
+    //   "code",         "user",         "growth",       "dev",
+    //   "customer",     "product",      "VP",           "sell",
+    //   "sales",        "engineer",     "swe",          "pm",
+    //   "design",       "ux",           "ui",           "software",
+    //   "business",     "computer",     "content",      "community",
+    //   "tool",         "tech",         "data",         "science",
+    //   "analytics",    "money",        "eng",          "github",
+    //   "blog",         "youtube"       
+    // ];
 
-    const otherKeywords = [
-      "write",        
-      "book", 
-      "ship", 
-      "work"
-    ];
+    // const otherKeywords = [
+    //   "write",        
+    //   "book", 
+    //   "ship", 
+    //   "work"
+    // ];
     // const politicsKeywords = [
     //   "president",
     //   "democrat",
     // ];
 
-    const ok = [
-      "https://x.com/CtrlAltDwayne",
-      "https://x.com/admiralrohan",
-      "https://x.com/postmarkapp",
-      "https://x.com/RichardHanania",
-      "https://x.com/gdb",
-      "https://x.com/KatColeATL",
-      "https://x.com/emollick",
-      "https://x.com/AndrewRousso"
-    ];
+    // const ok = [
+    //   "https://x.com/CtrlAltDwayne",
+    //   "https://x.com/admiralrohan",
+    //   "https://x.com/postmarkapp",
+    //   "https://x.com/RichardHanania",
+    //   "https://x.com/gdb",
+    //   "https://x.com/KatColeATL",
+    //   "https://x.com/emollick",
+    //   "https://x.com/AndrewRousso"
+    // ];
     // Get follower counts and filter handles
     const handleWithFollowers = await Promise.all(
       handleRecord

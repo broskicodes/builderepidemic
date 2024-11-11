@@ -226,7 +226,7 @@ export function PersonalDashboard() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          scrapeType: TwitterScrapeType.Initialize,
+          scrapeType: TwitterScrapeType.Micro,
           handles: [searchQuery],
         }),
       });

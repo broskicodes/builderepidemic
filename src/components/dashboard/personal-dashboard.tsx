@@ -251,15 +251,15 @@ export function PersonalDashboard() {
     }
   };
 
-  // const doIt = async () => {
-  //   const response = await fetch("/api/it", {
-  //     method: "POST",
-  //     body: JSON.stringify({ handle: selectedHandle?.handle }),
-  //   });
+  const doIt = async () => {
+    const response = await fetch("/api/it", {
+      method: "POST",
+      body: JSON.stringify({ handle: selectedHandle?.handle }),
+    });
 
-  //   const data = await response.json();
-  //   console.log(data);
-  // };
+    const data = await response.json();
+    console.log(data);
+  };
 
   if (isLoading) {
     return (

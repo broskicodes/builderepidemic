@@ -14,12 +14,11 @@ export async function GET(request: Request) {
         url: twitterHandles.url,
         pfp: twitterHandles.pfp,
       })
-      .from(twitterHandles);
+      .from(twitterHandles)
+      .limit(100);
 
-    const tweetsByHandle: Record<string, LeaderboardData> = {};
-
-    // Fetch tweets for each handle
-    for (const { user_id, handle, url, pfp } of handles) {
+    // Fetch tweets for all handles concurrently
+    const tweetPromises = handles.map(async ({ user_id, handle, url, pfp }) => {
       const tweetData = await db
         .select({
           date: tweets.date,
@@ -42,20 +41,29 @@ export async function GET(request: Request) {
         .from(tweets)
         .innerJoin(twitterHandles, eq(tweets.handle_id, twitterHandles.id))
         .where(eq(twitterHandles.handle, handle))
-        .orderBy(tweets.date);
+        .orderBy(tweets.date)
+        .limit(100);
 
-      tweetsByHandle[handle] = {
-        user_id: user_id.toString(),
-        url,
-        pfp,
-        tweets: tweetData.map((tweet) => ({
-          ...tweet,
-          entities: tweet.entities as TweetEntity,
-          tweet_id: tweet.tweet_id.toString(),
-          date: tweet.date.toISOString(),
-        })),
+      return {
+        handle,
+        data: {
+          user_id: user_id.toString(),
+          url,
+          pfp,
+          tweets: tweetData.map((tweet) => ({
+            ...tweet,
+            entities: tweet.entities as TweetEntity,
+            tweet_id: tweet.tweet_id.toString(),
+            date: tweet.date.toISOString(),
+          })),
+        },
       };
-    }
+    });
+
+    const results = await Promise.all(tweetPromises);
+    const tweetsByHandle = Object.fromEntries(
+      results.map(({ handle, data }) => [handle, data])
+    );
 
     return NextResponse.json(tweetsByHandle);
   } catch (error) {

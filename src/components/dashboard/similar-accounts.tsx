@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,7 @@ export function SimilarAccounts({ handle, onAccountSelect }: SimilarAccountsProp
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const fetchSimilarAccounts = async (pageNum: number) => {
+  const fetchSimilarAccounts = useCallback(async (pageNum: number) => {
     try {
       const response = await fetch("/api/profiles/similar", {
         method: "POST",
@@ -45,14 +45,16 @@ export function SimilarAccounts({ handle, onAccountSelect }: SimilarAccountsProp
       setHasMore(data.length === 5);
     } catch (error) {
       console.error("Error fetching similar accounts:", error);
-    }
-  };
+      }
+    },
+    [handle],
+  );
 
   useEffect(() => {
     setIsLoading(true);
     setPage(0);
     fetchSimilarAccounts(0).finally(() => setIsLoading(false));
-  }, [handle]);
+  }, [fetchSimilarAccounts]);
 
   const loadMore = async () => {
     setIsLoadingMore(true);

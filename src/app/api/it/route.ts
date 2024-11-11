@@ -32,81 +32,101 @@ export async function POST(request: NextRequest) {
 //       return NextResponse.json({ error: "Handle is required" }, { status: 400 });
 //     }
 
-//     // Get handle info
-//     const handleRecord = await db
-//       .select({
-//         id: twitterHandles.id,
-//         description: twitterHandles.description,
-//         name: twitterHandles.name,
-//         verified: twitterHandles.verified,
-//       })
-//       .from(twitterHandles);
+    // Get handle info
+    // const handleRecord = await db
+    //   .select({
+    //     id: twitterHandles.id,
+    //     description: twitterHandles.description,
+    //     name: twitterHandles.name,
+    //     verified: twitterHandles.verified,
+    //     url: twitterHandles.url,
+    //   })
+    //   .from(twitterHandles);
 
-//     const founderKeywords = [
-//       "build",
-//       "indie hacker",
-//       "founder",
-//       "entrepreneur",
-//       "startup",
-//       "maker",
-//       "ceo",
-//       "bootstrap",
-//       "launched",
-//       "shipping",
-//       "created",
-//       "mrr",
-//     ];
+    // const founderKeywords = [
+    //   "build",        "indie hacker", "founder",      "entrepreneur",
+    //   "startup",      "maker",        "ceo",          "bootstrap",
+    //   "launched",     "shipping",     "created",      "mrr",
+    //   "built",        "market",       "prev",         "product",
+    //   "pricing",      "launch",       "ai",           "ml",
+    //   "code",         "user",         "growth",       "dev",
+    //   "customer",     "product",      "VP",           "sell",
+    //   "sales",        "engineer",     "swe",          "pm",
+    //   "design",       "ux",           "ui",           "software",
+    //   "business",     "computer",     "content",      "community",
+    //   "tool",         "tech",         "data",         "science",
+    //   "analytics",    "money",        "eng",          "github",
+    //   "blog",         "youtube"       
+    // ];
 
-//     const politicsKeywords = [
-//       "politics",
-//       "political",
-//       "democrat",
-//       "republican",
-//       "conservative",
-//       "liberal",
-//       "leftist",
-//       "rightist",
-//       "activist",
-//       "policy",
-//       "government",
-//       "election",
-//       "campaign",
-//       "senator",
-//       "congress",
-//       "president",
-//       "vote",
-//       "voting",
-//     ];
+    // const otherKeywords = [
+    //   "write",        
+    //   "book", 
+    //   "ship", 
+    //   "work"
+    // ];
+    // // const politicsKeywords = [
+    // //   "president",
+    // //   "democrat",
+    // // ];
 
-//     // Get follower counts and filter handles
-//     const handleWithFollowers = await Promise.all(
-//       handleRecord
-//         .filter(
-//           (handle) =>
-//             handle.description &&
-//             founderKeywords.some((keyword) =>
-//               handle.description?.toLowerCase().includes(keyword.toLowerCase()),
-//             ) &&
-//             !politicsKeywords.some((keyword) =>
-//               handle.description?.toLowerCase().includes(keyword.toLowerCase()),
-//             ),
-//         )
-//         .map(async (handle) => {
-//           const followerCount = await db
-//             .select({ followers: twitterFollowers.followers })
-//             .from(twitterFollowers)
-//             .where(eq(twitterFollowers.handle_id, handle.id))
-//             .orderBy(desc(twitterFollowers.created_at))
-//             .limit(1);
+    // const ok = [
+    //   "https://x.com/CtrlAltDwayne",
+    //   "https://x.com/admiralrohan",
+    //   "https://x.com/postmarkapp",
+    //   "https://x.com/RichardHanania",
+    //   "https://x.com/gdb",
+    //   "https://x.com/KatColeATL",
+    //   "https://x.com/emollick",
+    //   "https://x.com/AndrewRousso"
+    // ];
+    // // Get follower counts and filter handles
+    // const handleWithFollowers = await Promise.all(
+    //   handleRecord
+    //     .filter(
+    //       (handle) =>
+    //         handle.description &&
+    //         !founderKeywords.some((keyword) =>
+    //           handle.description?.toLowerCase().includes(keyword.toLowerCase()),
+    //         )
+    //         &&
+    //         !ok.includes(handle.url)
+    //         &&
+    //         !otherKeywords.some((keyword) =>
+    //           handle.description?.toLowerCase().includes(keyword.toLowerCase()),
+    //         )
+    //         // politicsKeywords.some((keyword) =>
+    //         //   handle.description?.toLowerCase().includes(keyword.toLowerCase()),
+    //         // ),
+    //     )
+    //     .map(async (handle) => {
+    //       const followerCount = await db
+    //         .select({ followers: twitterFollowers.followers })
+    //         .from(twitterFollowers)
+    //         .where(eq(twitterFollowers.handle_id, handle.id))
+    //         .orderBy(desc(twitterFollowers.created_at))
+    //         .limit(1);
 
-//           return {
-//             ...handle,
-//             followers: followerCount[0]?.followers ?? 0,
-//           };
-//         }),
-//     );
+    //       return {
+    //         ...handle,
+    //         followers: followerCount[0]?.followers ?? 0,
+    //       };
+    //     })
+    // );
 
-//     // Filter for handles with >1000 followers
+    
+    // await Promise.all(
+    //   handleWithFollowers.filter((handle) => handle.followers < 10000)
+    //     .map(async (handle) => {
+    //       await db.delete(tweets).where(eq(tweets.handle_id, handle.id));
+    //       await db.delete(twitterFollowers).where(eq(twitterFollowers.handle_id, handle.id));
+    //       await db.delete(twitterHandles).where(eq(twitterHandles.id, handle.id));
+    //     })
+    // );
+
+    // console.log(handleWithFollowers.filter((handle) => handle.followers < 10000).map((handle) => handle.url));
+
+    // Filter for handles with >1000 followers
 //     const filteredHandles = handleWithFollowers
 //       .filter((handle) => handle.followers > 1000 && handle.followers < 1000000)
 //       .sort((a, b) => b.followers - a.followers);
@@ -116,8 +136,8 @@ export async function POST(request: NextRequest) {
 //     // });
 
 //     const batchSize = 10;
-//     const startIndex = 100; // Skip first 10
-//     const endIndex = 1000; // Process up to 100
+//     const startIndex = 0; // Skip first 10
+//     const endIndex = 100; // Process up to 100
 
 //     for (let i = startIndex; i < Math.min(filteredHandles.length, endIndex); i += batchSize) {
 //       const batch = filteredHandles.slice(i, i + batchSize);

@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Twitter Resonator",
+  title: "Tweet Maestro",
   description: "A tool to help you find and replicate content that is working on Twitter.",
   openGraph: {
-    siteName: "Twitter Resonator",
+    siteName: "Tweet Maestro",
     images: [
       {
         url: "https://builderepidemic.com/images/dash-stats.png",
         width: 1200,
         height: 630,
-        alt: "Twitter Resonator",
+        alt: "Tweet Maestro",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Twitter Resonator",
+    title: "Tweet Maestro",
     description: "A tool to help you find and replicate content that is working on Twitter.",
     images: ["https://builderepidemic.com/images/dash-stats.png"],
     creator: "@braedenhall_",

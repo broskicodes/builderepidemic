@@ -26,25 +26,46 @@ const analysisSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const { handle } = await request.json();
+    const { handle, all } = await request.json();
 
     if (!handle) {
       return NextResponse.json({ error: "Handle is required" }, { status: 400 });
     }
 
     // Get handle info
-    const handleRecord = await db
-      .select({
-        id: twitterHandles.id,
-        description: twitterHandles.description,
-        name: twitterHandles.name,
-        verified: twitterHandles.verified,
-        url: twitterHandles.url,
-      })
-      .from(twitterHandles)
-      .innerJoin(users, eq(users.twitter_handle_id, twitterHandles.id))
-      .innerJoin(subscriptions, eq(subscriptions.user_id, users.id))
-      .where(eq(subscriptions.active, true));
+    let handleRecord: {
+      id: bigint;
+      description: string | null;
+      name: string;
+      verified: boolean;
+      url: string;
+    }[];
+
+    if (all) {
+      handleRecord = await db
+        .select({
+          id: twitterHandles.id,
+          description: twitterHandles.description,
+          name: twitterHandles.name,
+          verified: twitterHandles.verified,
+          url: twitterHandles.url,
+        })
+        .from(twitterHandles)
+        .innerJoin(users, eq(users.twitter_handle_id, twitterHandles.id))
+        .innerJoin(subscriptions, eq(subscriptions.user_id, users.id))
+        .where(eq(subscriptions.active, true));
+    } else {
+      handleRecord = await db
+        .select({
+          id: twitterHandles.id,
+          description: twitterHandles.description,
+          name: twitterHandles.name,
+          verified: twitterHandles.verified,
+          url: twitterHandles.url,
+        })
+        .from(twitterHandles)
+        .where(eq(twitterHandles.handle, handle));
+    }
 
     // const founderKeywords = [
     //   "build",        "indie hacker", "founder",      "entrepreneur",

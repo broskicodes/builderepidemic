@@ -17,7 +17,10 @@ export default function DashboardPage() {
     <div className="flex flex-col min-h-screen w-full bg-background relative">
       <main className="flex-1 flex flex-col h-screen w-full bg-background">
         <Header />
-        {session?.user.subscribed ? (
+        <span className="text-center text-2xl text-muted-foreground my-auto">
+          Website moved to <a href="https://tweetmaestro.com" className="text-primary font-semibold">TweetMaestro.com</a>
+        </span>
+        {/* {session?.user.subscribed ? (
           <div className="container mx-auto py-6">
             <Tabs defaultValue="personal" className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -38,7 +41,7 @@ export default function DashboardPage() {
             <RoadmapDash />
             <PricingDash />
           </>
-        )}
+        )} */}
       </main>
       <Footer />
     </div>
